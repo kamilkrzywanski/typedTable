@@ -1,10 +1,13 @@
 package org.krzywanski.table;
 
+import net.miginfocom.swing.MigLayout;
 import org.krzywanski.table.table.TypedTable;
+import org.krzywanski.table.table.TypedTablePanel;
 import org.krzywanski.table.test.TestModel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -20,20 +23,18 @@ public class Main {
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("JTable Example");
+        frame.setLayout(new MigLayout());
         TestModel testModel = new TestModel();
         testModel.setColumnA("TEST VALUE");
-
+        TestModel testModel2 = new TestModel();
+        testModel2.setColumnA("TEST VALUE2");
         List<TestModel> list = new ArrayList<TestModel>() {}; // creates a generic sub-type
         list.add(testModel);
+        list.add(testModel2);
 
 
-        TypedTable<TestModel> table = new TypedTable<>(Collections.singletonList(testModel), testModel.getClass());
-
-
-        JScrollPane scrollPane = new JScrollPane(table);
-        frame.add(scrollPane);
-        frame.setSize(500, 200);
-
+        frame.add(new TypedTablePanel<>(list, testModel.getClass()));
+        frame.setSize(new Dimension(500,500));
         frame.setVisible(true);
     }
 }

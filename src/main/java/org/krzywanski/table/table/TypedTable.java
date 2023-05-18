@@ -5,6 +5,7 @@ import org.krzywanski.table.procressor.ColumnCreator;
 import javax.swing.*;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ public class TypedTable<T> extends JTable {
 
     ColumnCreator columnCreator;
     DefaultTableModel model;
-    public TypedTable(List<T> dataList, Class<? extends T> typeClass) {
+    protected TypedTable(List<T> dataList, Class<? extends T> typeClass) {
         super(new DefaultTableModel());
         this.dataList = dataList;
         this.setColumnModel(new DefaultTableColumnModel());
@@ -44,7 +45,7 @@ public class TypedTable<T> extends JTable {
     }
 
 
-    private void addData(){
+    private void addData() {
         dataList.forEach(t -> {
             Vector<Object> element = new Vector<>();
             columnCreator.getTableColumns().forEach((field, tableColumn) -> {
@@ -54,14 +55,12 @@ public class TypedTable<T> extends JTable {
                     throw new RuntimeException(e);
                 }
             });
-        model.addRow(element);
-
+            model.addRow(element);
 
 
         });
 
 
     }
-
 
 }
