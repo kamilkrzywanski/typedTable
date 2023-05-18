@@ -21,15 +21,7 @@ public class Main {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("JTable Example");
         TestModel testModel = new TestModel();
-
-////        String[] columnNames = {"Imię", "Nazwisko", "Wiek"};
-//
-//        Object[][] data = {
-//                {"Jan", "Kowalski", 32},
-//                {"Anna", "Nowak", 27},
-//                {"Marek", "Pawlak", 41},
-//                {"Karolina", "Wójcik", 22}
-//        };
+        testModel.setColumnA("TEST VALUE");
 
         List<TestModel> list = new ArrayList<TestModel>() {}; // creates a generic sub-type
         list.add(testModel);
