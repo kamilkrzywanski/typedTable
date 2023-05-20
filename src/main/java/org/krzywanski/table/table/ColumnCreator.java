@@ -1,6 +1,7 @@
-package org.krzywanski.table.procressor;
+package org.krzywanski.table.table;
 
 import org.krzywanski.table.annot.MyTableColumn;
+import org.krzywanski.table.table.TableWidthProvider;
 
 import javax.swing.table.TableColumn;
 import java.lang.reflect.Field;

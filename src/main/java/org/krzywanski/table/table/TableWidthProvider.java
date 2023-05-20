@@ -1,7 +1,4 @@
-package org.krzywanski.table.procressor;
-
-import org.krzywanski.table.table.WidthMockReader;
-import org.krzywanski.table.table.WidthMockWriter;
+package org.krzywanski.table.table;
 
 public class TableWidthProvider {
 

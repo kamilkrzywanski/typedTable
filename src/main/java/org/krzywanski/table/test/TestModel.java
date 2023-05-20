@@ -16,6 +16,10 @@ public class TestModel {
     @MyTableColumn(label = "Test label2", width = 250)
     public String columnD;
 
+    public String columnE;
+
+    @MyTableColumn(label = "Test label2", width = 220)
+    public String columnF;
 
     public String getColumnA() {
         return columnA;
@@ -47,5 +51,21 @@ public class TestModel {
 
     public void setColumnD(String columnD) {
         this.columnD = columnD;
+    }
+
+    public String getColumnE() {
+        return columnE;
+    }
+
+    public void setColumnE(String columnE) {
+        this.columnE = columnE;
+    }
+
+    public String getColumnF() {
+        return columnF;
+    }
+
+    public void setColumnF(String columnF) {
+        this.columnF = columnF;
     }
 }

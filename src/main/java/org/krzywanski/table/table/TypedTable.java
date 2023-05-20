@@ -1,15 +1,18 @@
 package org.krzywanski.table.table;
 
-import org.krzywanski.table.procressor.ColumnCreator;
-
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.TableColumnModelEvent;
+import javax.swing.event.TableColumnModelListener;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
-import java.lang.reflect.Field;
+import javax.swing.table.TableColumn;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Objects;
 import java.util.Vector;
 
 /**
@@ -21,13 +24,17 @@ public class TypedTable<T> extends JTable {
 
     ColumnCreator columnCreator;
     DefaultTableModel model;
+
+    Class<? extends T> typeClass;
+
+    TableWidthProvider instance = TableWidthProvider.getInstance();
     protected TypedTable(List<T> dataList, Class<? extends T> typeClass) {
         super(new DefaultTableModel());
+        this.typeClass = typeClass;
         this.dataList = dataList;
-        this.setColumnModel(new DefaultTableColumnModel());
+        this.setColumnModel(new MyColumnModel());
 
         model = (DefaultTableModel) this.getModel();
-
             columnCreator = new ColumnCreator(typeClass);
             columnCreator.getTableColumns().forEach( (field,tableColumn) -> {
                 model.addColumn(tableColumn.getHeaderValue());
@@ -35,12 +42,22 @@ public class TypedTable<T> extends JTable {
 
 
             });
-            Vector v = new Vector();
-        v.add("A");
-        v.add("B");
-        v.add("C");
-        this.getColumnModel().getColumn(0).setPreferredWidth(333);
-//        model.addRow(v);
+
+        tableHeader.addMouseListener( new MouseAdapter() {
+
+            public void mouseReleased(MouseEvent arg0){
+
+                LinkedHashMap<String, Integer> columns = new LinkedHashMap<>();
+                for(int i=0;i<tableHeader.getColumnModel().getColumnCount();i++ ) {
+                    TableColumn column = tableHeader.getColumnModel().getColumn(i);
+                    int tableColWidth = column.getWidth();
+                    columns.put((String) column.getHeaderValue(),column.getWidth());
+                }
+
+                if(instance != null && instance.getWriter() != null)
+                    instance.getWriter().updateColumns(typeClass.getName(),columns);
+            }
+        });
         addData();
     }
 
@@ -57,10 +74,38 @@ public class TypedTable<T> extends JTable {
             });
             model.addRow(element);
 
-
         });
+    }
+
+
+    private class MyColumnModel extends DefaultTableColumnModel{
+        private String fieldName;
+
+        MyColumnModel(){
+            super();
+        }
+
 
 
     }
 
+    private class TableHeader{
+
+        String field;
+
+        String descritpon;
+
+        public TableHeader(String field, String descritpon) {
+            this.field = field;
+            this.descritpon = descritpon;
+        }
+
+        public String getField() {
+            return field;
+        }
+
+        public String getDescritpon() {
+            return descritpon;
+        }
+    }
 }
