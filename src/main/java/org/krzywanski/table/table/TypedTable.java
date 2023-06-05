@@ -23,9 +23,9 @@ public class TypedTable<T> extends JTable {
     DefaultTableModel model;
 
     Class<? extends T> typeClass;
-
+    Pagination pagination;
     TableWidthProvider instance = TableWidthProvider.getInstance();
-    protected TypedTable(List<T> dataList, Class<? extends T> typeClass) {
+    protected TypedTable(List<T> dataList, Class<? extends T> typeClass, Pagination pagination) {
         super(new DefaultTableModel());
         this.typeClass = typeClass;
         this.dataList = dataList;
@@ -45,22 +45,7 @@ public class TypedTable<T> extends JTable {
 
 
             });
-
-        tableHeader.addMouseListener( new MouseAdapter() {
-
-            public void mouseReleased(MouseEvent arg0){
-
-                LinkedHashMap<String, Integer> columns = new LinkedHashMap<>();
-                for(int i=0;i<tableHeader.getColumnModel().getColumnCount();i++ ) {
-                    TableColumn column = tableHeader.getColumnModel().getColumn(i);
-                    int tableColWidth = column.getWidth();
-                    columns.put((String) column.getHeaderValue(),column.getWidth());
-                }
-
-                if(instance != null && instance.getWriter() != null)
-                    instance.getWriter().updateColumns(typeClass.getName(),columns);
-            }
-        });
+        tableHeader.addMouseListener( new TableOrderColumnsMouseAdapter());
         addData();
     }
 
@@ -92,23 +77,25 @@ public class TypedTable<T> extends JTable {
 
     }
 
-    private class TableHeader{
+    /**
+     * This adapter is listening for changes on table header
+     * and once mouse is released new defintions of columns are saved
+     */
+    class TableOrderColumnsMouseAdapter extends MouseAdapter{
 
-        String field;
+        public void mouseReleased(MouseEvent arg0){
 
-        String descritpon;
+            LinkedHashMap<String, Integer> columns = new LinkedHashMap<>();
+            for(int i=0;i<tableHeader.getColumnModel().getColumnCount();i++ ) {
+                TableColumn column = tableHeader.getColumnModel().getColumn(i);
+                int tableColWidth = column.getWidth();
+                columns.put((String) column.getHeaderValue(),column.getWidth());
+            }
 
-        public TableHeader(String field, String descritpon) {
-            this.field = field;
-            this.descritpon = descritpon;
+            if(instance != null && instance.getWriter() != null)
+                instance.getWriter().updateColumns(typeClass.getName(),columns);
         }
 
-        public String getField() {
-            return field;
-        }
 
-        public String getDescritpon() {
-            return descritpon;
-        }
     }
 }

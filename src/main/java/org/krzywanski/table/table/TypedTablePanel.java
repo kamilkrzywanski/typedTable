@@ -22,12 +22,18 @@ public class TypedTablePanel<T> extends JPanel {
 
     JLabel page;
 
-    public TypedTablePanel(List<T> dataList, Class<? extends T> typeClass) {
+    private Pagination pagination;
+
+    public TypedTablePanel(List<T> dataList, Class<? extends T> typeClass, Pagination pagination) {
         super(new MigLayout());
         createButtons();
-        TypedTable<T> table = new TypedTable<>(dataList,typeClass);
+        TypedTable<T> table = new TypedTable<>(dataList,typeClass, pagination);
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane,"wrap");
+        this.pagination = pagination;
+    }
+    public TypedTablePanel(List<T> dataList, Class<? extends T> typeClass) {
+        this(dataList,typeClass, null);
     }
 
 
