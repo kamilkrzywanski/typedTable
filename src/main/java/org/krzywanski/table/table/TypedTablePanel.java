@@ -20,6 +20,8 @@ public class TypedTablePanel<T> extends JPanel {
     JButton lastButton;
     JButton firstButton;
 
+    JLabel page;
+
     public TypedTablePanel(List<T> dataList, Class<? extends T> typeClass) {
         super(new MigLayout());
         createButtons();
@@ -34,17 +36,18 @@ public class TypedTablePanel<T> extends JPanel {
         prevButton = new RoundButton("<");
         lastButton = new RoundButton(">>");
         firstButton = new RoundButton("<<");
+        page = new JLabel("");
 
 
-        addButton(firstButton,"split 4, al right");
+        addButton(firstButton,"split 5, al right");
         addButton(prevButton,"");
+        add(page);
         addButton(nextButton,"");
         addButton(lastButton,"wrap");
 
     }
 
     void addButton(JButton button,String constraints){
-        button.setFont(new Font("Arial", Font.PLAIN, 10));
         add(button,constraints);
     }
 
