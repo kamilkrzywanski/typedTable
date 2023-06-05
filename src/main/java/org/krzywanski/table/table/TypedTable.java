@@ -10,10 +10,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 
 /**
  * Table which is created from Entity List
@@ -38,7 +35,13 @@ public class TypedTable<T> extends JTable {
             columnCreator = new ColumnCreator(typeClass);
             columnCreator.getTableColumns().forEach( (field,tableColumn) -> {
                 model.addColumn(tableColumn.getHeaderValue());
-                this.getColumnModel().getColumn(0).setPreferredWidth(333);
+
+                if(instance != null && instance.getReader() != null) {
+                   Map<String,Integer> cols =  instance.getReader().getTableList().get(typeClass.getName());
+                    this.getColumnModel().getColumn(((DefaultTableColumnModel) this.getColumnModel())
+                            .getColumnIndex(tableColumn.getHeaderValue()))
+                            .setPreferredWidth(cols.get(tableColumn.getHeaderValue()));
+                }
 
 
             });

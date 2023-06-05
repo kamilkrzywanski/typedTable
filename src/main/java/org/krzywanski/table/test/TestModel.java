@@ -18,7 +18,7 @@ public class TestModel {
 
     public String columnE;
 
-    @MyTableColumn(label = "Test label2", width = 220)
+    @MyTableColumn(label = "Test label3", width = 220)
     public String columnF;
 
     public String getColumnA() {
