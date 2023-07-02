@@ -2,6 +2,8 @@ package org.krzywanski.table.test;
 
 import org.krzywanski.table.annot.MyTableColumn;
 
+import java.util.Date;
+
 public class TestModel {
 
 
@@ -20,6 +22,9 @@ public class TestModel {
 
     @MyTableColumn(label = "Test label3", width = 220)
     public String columnF;
+
+    @MyTableColumn(label = "DataLable", width = 220, format = "YYYY")
+    public Date date = new Date();
 
     public String getColumnA() {
         return columnA;
@@ -67,5 +72,13 @@ public class TestModel {
 
     public void setColumnF(String columnF) {
         this.columnF = columnF;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

@@ -3,8 +3,14 @@ package org.krzywanski.table.table;
 import org.krzywanski.table.annot.MyTableColumn;
 import org.krzywanski.table.table.TableWidthProvider;
 
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import java.awt.*;
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -56,4 +62,5 @@ public class ColumnCreator {
     public Map<Field,TableColumn> getTableColumns() {
         return tableColumns;
     }
+
 }

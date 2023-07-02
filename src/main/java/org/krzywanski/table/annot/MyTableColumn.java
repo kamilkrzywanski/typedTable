@@ -19,6 +19,15 @@ public @interface MyTableColumn {
      */
     String label() default "";
 
+    /**
+     * width for column
+     * @return
+     */
     int width() default 100;
+
+    /**
+     * format for table cell
+     */
+    String format() default "";
 
 }
