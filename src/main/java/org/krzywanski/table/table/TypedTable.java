@@ -129,6 +129,7 @@ public class TypedTable<T> extends JTable {
             }
         };
 
+
         return tableCellRenderer;
     }
 
