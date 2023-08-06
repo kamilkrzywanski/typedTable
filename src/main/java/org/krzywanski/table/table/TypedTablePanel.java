@@ -3,10 +3,12 @@ package org.krzywanski.table.table;
 import net.miginfocom.swing.MigLayout;
 import org.krzywanski.table.test.TestModel;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -37,11 +39,11 @@ public class TypedTablePanel<T> extends JPanel {
     }
 
 
-    void createButtons(){
-        nextButton = new RoundButton(">");
-        prevButton = new RoundButton("<");
-        lastButton = new RoundButton(">>");
-        firstButton = new RoundButton("<<");
+    void createButtons() {
+        nextButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("next.png")));
+        prevButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("back.png")));
+        lastButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("fast-forward-button.png")));
+        firstButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("fast-backward.png")));
         page = new JLabel("");
 
 
@@ -54,46 +56,13 @@ public class TypedTablePanel<T> extends JPanel {
     }
 
     void addButton(JButton button,String constraints){
+        button.setBackground(null);
+        button.setOpaque(true);
+        button.setBackground(null);
+        button.setMargin(new Insets(0, 0, 0, 0));
+        button.setContentAreaFilled(false);
+        button.setBorderPainted(false);
         add(button,constraints);
-    }
-
-    public class RoundButton extends JButton {
-
-        public RoundButton(String label) {
-            super(label);
-            setPreferredSize(new Dimension(5,5));
-            setBackground(Color.lightGray);
-            setFocusable(false);
-
-            setContentAreaFilled(false);
-        }
-
-        protected void paintComponent(Graphics g) {
-            if (getModel().isArmed()) {
-                g.setColor(Color.gray);
-            } else {
-                g.setColor(getBackground());
-            }
-            g.fillOval(0, 0, getSize().width - 1, getSize().height - 1);
-
-            super.paintComponent(g);
-        }
-
-        protected void paintBorder(Graphics g) {
-            g.setColor(Color.darkGray);
-            g.drawOval(0, 0, getSize().width - 1, getSize().height - 1);
-        }
-
-        // Hit detection.
-        Shape shape;
-
-        public boolean contains(int x, int y) {
-            // If the button has changed size,  make a new shape object.
-            if (shape == null || !shape.getBounds().equals(getBounds())) {
-                shape = new Ellipse2D.Float(0, 0, getWidth(), getHeight());
-            }
-            return shape.contains(x, y);
-        }
     }
 }
 

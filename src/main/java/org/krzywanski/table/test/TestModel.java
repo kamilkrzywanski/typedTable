@@ -6,7 +6,6 @@ import java.util.Date;
 
 public class TestModel {
 
-
     @MyTableColumn(label = "XXX")
     public String columnA;
 

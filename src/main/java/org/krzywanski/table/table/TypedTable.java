@@ -143,4 +143,8 @@ public class TypedTable<T> extends JTable {
         return format;
     }
 
+    @Override
+    public boolean isCellEditable(int row, int column) {
+        return false;
+    }
 }
