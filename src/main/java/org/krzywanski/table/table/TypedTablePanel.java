@@ -17,10 +17,10 @@ import java.util.List;
  */
 public class TypedTablePanel<T> extends JPanel {
 
-    JButton nextButton;
-    JButton prevButton;
-    JButton lastButton;
-    JButton firstButton;
+    JButton nextPageButton;
+    JButton prevPageButton;
+    JButton lastPageButton;
+    JButton firstPageButton;
 
     JLabel page;
 
@@ -40,19 +40,37 @@ public class TypedTablePanel<T> extends JPanel {
 
 
     void createButtons() {
-        nextButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("next.png")));
-        prevButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("back.png")));
-        lastButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("fast-forward-button.png")));
-        firstButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("fast-backward.png")));
+        nextPageButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("next.png")));
+        prevPageButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("back.png")));
+        lastPageButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("fast-forward-button.png")));
+        firstPageButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("fast-backward.png")));
         page = new JLabel("");
 
 
-        addButton(firstButton,"split 5, al right");
-        addButton(prevButton,"");
+        addButton(firstPageButton,"split 5, al right");
+        addButton(prevPageButton,"");
         add(page);
-        addButton(nextButton,"");
-        addButton(lastButton,"wrap");
+        addButton(nextPageButton,"");
+        addButton(lastPageButton,"wrap");
+        
+        firstPageButton.addActionListener(e -> firstPageAction());
+        prevPageButton.addActionListener(e -> prevPageAction());
+        lastPageButton.addActionListener(e -> lastPageAction());
+        nextPageButton.addActionListener(e -> nextPageAction());
+        
 
+    }
+
+    private void nextPageAction() {
+    }
+
+    private void lastPageAction() {
+    }
+
+    private void prevPageAction() {
+    }
+
+    private void firstPageAction() {
     }
 
     void addButton(JButton button,String constraints){
@@ -64,6 +82,9 @@ public class TypedTablePanel<T> extends JPanel {
         button.setBorderPainted(false);
         add(button,constraints);
     }
+    
+    
+    
 }
 
 
