@@ -1,15 +1,12 @@
 package org.krzywanski.table;
 
 import net.miginfocom.swing.MigLayout;
-import org.krzywanski.table.table.TypedTable;
 import org.krzywanski.table.table.TypedTablePanel;
 import org.krzywanski.table.test.TestModel;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class Main {
@@ -33,7 +30,7 @@ public class Main {
         list.add(testModel2);
 
 
-        frame.add(new TypedTablePanel<>(list, testModel.getClass()));
+        frame.add(TypedTablePanel.getTableWithData(list, testModel.getClass()));
         frame.setSize(new Dimension(500,500));
         frame.setVisible(true);
     }

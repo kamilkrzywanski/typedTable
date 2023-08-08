@@ -3,25 +3,21 @@ package org.krzywanski.table.table;
 import org.krzywanski.table.annot.MyTableColumn;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.TableColumnModelEvent;
-import javax.swing.event.TableColumnModelListener;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * Table which is created from Entity List
  * @param <T> - type of table data
  */
 public class TypedTable<T> extends JTable {
-    List<T> dataList = new ArrayList<>();
+    List<T> dataList;
 
     /**
      * Tool for create columns label
@@ -33,13 +29,11 @@ public class TypedTable<T> extends JTable {
      * Entity for create table
      */
     Class<? extends T> typeClass;
-    Pagination pagination;
-
     /**
      * Provide a custom sizes of columns when user change
      */
     TableWidthProvider instance = TableWidthProvider.getInstance();
-    protected TypedTable(List<T> dataList, Class<? extends T> typeClass, Pagination pagination) {
+    protected TypedTable(List<T> dataList, Class<? extends T> typeClass, DataProvider<T> provider) {
         super(new DefaultTableModel());
         this.typeClass = typeClass;
         this.dataList = dataList;
@@ -52,7 +46,7 @@ public class TypedTable<T> extends JTable {
 
                 if(instance != null && instance.getReader() != null) {
                    Map<String,Integer> cols =  instance.getReader().getTableList().get(typeClass.getName());
-                    this.getColumnModel().getColumn(((DefaultTableColumnModel) this.getColumnModel())
+                    this.getColumnModel().getColumn(this.getColumnModel()
                             .getColumnIndex(tableColumn.getHeaderValue()))
                             .setPreferredWidth(cols.get(tableColumn.getHeaderValue()));
                 }
@@ -86,7 +80,7 @@ public class TypedTable<T> extends JTable {
     /**
      * Simple model for coulm
      */
-    private class MyColumnModel extends DefaultTableColumnModel{
+    private static class MyColumnModel extends DefaultTableColumnModel{
         private String fieldName;
 
         MyColumnModel(){
@@ -105,7 +99,6 @@ public class TypedTable<T> extends JTable {
             LinkedHashMap<String, Integer> columns = new LinkedHashMap<>();
             for(int i=0;i<tableHeader.getColumnModel().getColumnCount();i++ ) {
                 TableColumn column = tableHeader.getColumnModel().getColumn(i);
-                int tableColWidth = column.getWidth();
                 columns.put((String) column.getHeaderValue(),column.getWidth());
             }
 

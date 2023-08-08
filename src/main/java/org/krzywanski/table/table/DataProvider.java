@@ -2,12 +2,19 @@ package org.krzywanski.table.table;
 
 import java.util.List;
 
-public interface DataProvider<T> {
+public abstract class DataProvider<T> implements DataProviderInterface{
 
-    long getOffest();
+    long limit;
 
-    long getLimit();
-    public List<T> getData(long limit, long offest);
+    public DataProvider(long limit){
+        this.limit = limit;
+    }
 
-    public long getSize();
+    public abstract List<T> getData(long limit, long offest);
+
+    public abstract long getSize();
+
+    public long getLimit(){
+        return limit;
+    }
 }

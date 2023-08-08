@@ -1,14 +1,9 @@
 package org.krzywanski.table.table;
 
 import net.miginfocom.swing.MigLayout;
-import org.krzywanski.table.test.TestModel;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.geom.Ellipse2D;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -24,20 +19,22 @@ public class TypedTablePanel<T> extends JPanel {
 
     JLabel page;
 
-    private Pagination pagination;
+    public static<T> TypedTablePanel<T> getTableWithData(List<T> dataList, Class<? extends T> typeClass){
+        return new TypedTablePanel<>(dataList,typeClass, null);
+    }
 
-    public TypedTablePanel(List<T> dataList, Class<? extends T> typeClass, Pagination pagination) {
+    public static<T> TypedTablePanel<T> getTableWithProvider(DataProvider<T> provider, Class<? extends T> typeClass){
+        return new TypedTablePanel<>(null,typeClass, provider);
+    }
+
+
+    private TypedTablePanel(List<T> dataList, Class<? extends T> typeClass, DataProvider<T> provider) {
         super(new MigLayout());
         createButtons();
-        TypedTable<T> table = new TypedTable<>(dataList,typeClass, pagination);
+        TypedTable<T> table = new TypedTable<>(dataList,typeClass, provider);
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane,"wrap");
-        this.pagination = pagination;
     }
-    public TypedTablePanel(List<T> dataList, Class<? extends T> typeClass) {
-        this(dataList,typeClass, null);
-    }
-
 
     void createButtons() {
         nextPageButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("next.png")));
