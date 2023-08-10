@@ -8,8 +8,8 @@ import org.krzywanski.table.test.TestModel;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Main {
 
@@ -29,7 +29,7 @@ public class Main {
         frame.add(TypedTablePanel.getTableWithProvider(new DataProvider<TestModel>(5) {
             @Override
             public List<TestModel> getData(int limit, int offest) {
-                return Collections.singletonList(Main.getData().get(offest));
+                return Main.getData().stream().skip(offest).limit(limit).collect(Collectors.toList());
             }
 
             @Override

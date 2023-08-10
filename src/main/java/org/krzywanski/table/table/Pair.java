@@ -55,4 +55,11 @@ public class Pair<F, S> {
         return (first == null ? 0 : first.hashCode()) ^ (second == null ? 0 : second.hashCode());
     }
 
+    public F getFirst() {
+        return first;
+    }
+
+    public S getSecond() {
+        return second;
+    }
 }

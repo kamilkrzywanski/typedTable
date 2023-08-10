@@ -60,19 +60,23 @@ public class TypedTablePanel<T> extends JPanel {
     }
 
     private void nextPageAction() {
-        table.nextPageAction();
+        Pair<Integer,Integer> pair = table.nextPageAction();
+        page.setText(pair.getFirst() + "/" + pair.getSecond());
     }
 
     private void lastPageAction() {
-        table.lastPageAction();
+        Pair<Integer,Integer> pair = table.lastPageAction();
+        page.setText(pair.getFirst() + "/" + pair.getSecond());
     }
 
     private void prevPageAction() {
-        table.prevPageAction();
+        Pair<Integer,Integer> pair = table.prevPageAction();
+        page.setText(pair.getFirst() + "/" + pair.getSecond());
     }
 
     private void firstPageAction() {
-        table.firstPageAction();
+        Pair<Integer,Integer> pair =  table.firstPageAction();
+        page.setText(pair.getFirst() + "/" + pair.getSecond());
     }
 
     void addButton(JButton button,String constraints){
