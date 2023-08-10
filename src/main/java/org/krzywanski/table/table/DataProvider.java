@@ -4,13 +4,13 @@ import java.util.List;
 
 public abstract class DataProvider<T> implements DataProviderInterface{
 
-    long limit;
+    int limit;
 
-    public DataProvider(long limit){
+    public DataProvider(int limit){
         this.limit = limit;
     }
 
-    public abstract List<T> getData(long limit, long offest);
+    public abstract List<T> getData(int limit, int offest);
 
     public abstract long getSize();
 

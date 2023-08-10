@@ -33,10 +33,16 @@ public class TypedTable<T> extends JTable {
      * Provide a custom sizes of columns when user change
      */
     TableWidthProvider instance = TableWidthProvider.getInstance();
+    /**
+     * If dynamic provider used insead of list;
+     */
+    DataProvider<T> provider;
+
     protected TypedTable(List<T> dataList, Class<? extends T> typeClass, DataProvider<T> provider) {
         super(new DefaultTableModel());
         this.typeClass = typeClass;
         this.dataList = dataList;
+        this.provider = provider;
         this.setColumnModel(new MyColumnModel());
 
         model = (DefaultTableModel) this.getModel();
@@ -55,15 +61,18 @@ public class TypedTable<T> extends JTable {
                         .getColumnIndex(tableColumn.getHeaderValue())).setCellRenderer(createRenderer(field));
             });
         tableHeader.addMouseListener( new TableOrderColumnsMouseAdapter());
-        addData();
+        addData(provider != null ? provider.limit : 0, 0);
     }
 
 
     /**
      * Filing table with data
      */
-    private void addData() {
-        dataList.forEach(t -> {
+    private void addData(int limit, int offset) {
+
+        List<T> data = provider != null ? provider.getData(limit, offset) : dataList;
+
+        data.forEach(t -> {
             Vector<Object> element = new Vector<>();
             columnCreator.getTableColumns().forEach((field, tableColumn) -> {
                 try {
@@ -139,5 +148,18 @@ public class TypedTable<T> extends JTable {
     @Override
     public boolean isCellEditable(int row, int column) {
         return false;
+    }
+
+    private void nextPageAction() {
+                
+    }
+
+    private void lastPageAction() {
+    }
+
+    private void prevPageAction() {
+    }
+
+    private void firstPageAction() {
     }
 }

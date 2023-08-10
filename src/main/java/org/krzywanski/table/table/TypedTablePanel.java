@@ -59,6 +59,7 @@ public class TypedTablePanel<T> extends JPanel {
     }
 
     private void nextPageAction() {
+
     }
 
     private void lastPageAction() {

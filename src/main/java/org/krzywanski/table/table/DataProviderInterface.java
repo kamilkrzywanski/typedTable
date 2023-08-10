@@ -5,7 +5,7 @@ import java.util.List;
 public interface DataProviderInterface<T> {
 
 
-    List<T> getData(long limit, long offest);
+    List<T> getData(int limit, int offest);
 
     long getSize();
 
