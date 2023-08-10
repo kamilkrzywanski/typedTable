@@ -41,6 +41,8 @@ public class TypedTable<T> extends JTable {
 
     int offset = 0;
 
+    PaginationUtils paginationUtils = new PaginationUtils();
+
     protected TypedTable(List<T> dataList, Class<? extends T> typeClass, DataProvider<T> provider) {
         super(new DefaultTableModel());
         this.typeClass = typeClass;
@@ -158,8 +160,7 @@ public class TypedTable<T> extends JTable {
         offset += (provider != null ? provider.limit : 0);
         offset = Math.min(offset, provider != null ? provider.getSize() / limit : 0);
         addData(limit, offset);
-        return new Pair<>(offset, provider != null ? provider.getSize() / limit : 1);
-
+        return new Pair<>(paginationUtils.calculatePagesCount(offset,provider != null? provider.limit : 1), 1);
 
     }
 
@@ -177,8 +178,7 @@ public class TypedTable<T> extends JTable {
         offset = Math.max(offset, 0);
         addData(limit, offset);
 
-        return new Pair<>(offset, provider != null ? provider.getSize() / limit : 1);
-
+        return new Pair<>(paginationUtils.calculatePagesCount(offset,provider != null? provider.limit : 1), 1);
     }
 
     public Pair<Integer, Integer> firstPageAction() {
@@ -186,5 +186,19 @@ public class TypedTable<T> extends JTable {
         addData(limit, 0);
 
         return new Pair<>(1, provider != null ? provider.getSize() / limit : 1);
+    }
+
+    public class PaginationUtils {
+
+        /**
+         * Calculates number of pages for given page size and total number of items.
+         *
+         * Assumption:
+         *     we suppose that if we have 0 items we want 1 empty page
+         */
+        public int calculatePagesCount(int index, int totalCount) {
+
+            return index / totalCount + 1;
+        }
     }
 }
