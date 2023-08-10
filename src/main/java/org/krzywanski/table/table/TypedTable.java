@@ -38,6 +38,8 @@ public class TypedTable<T> extends JTable {
      */
     DataProvider<T> provider;
 
+    int offset = 0;
+
     protected TypedTable(List<T> dataList, Class<? extends T> typeClass, DataProvider<T> provider) {
         super(new DefaultTableModel());
         this.typeClass = typeClass;
@@ -71,7 +73,7 @@ public class TypedTable<T> extends JTable {
     private void addData(int limit, int offset) {
 
         List<T> data = provider != null ? provider.getData(limit, offset) : dataList;
-
+        model.getDataVector().clear();
         data.forEach(t -> {
             Vector<Object> element = new Vector<>();
             columnCreator.getTableColumns().forEach((field, tableColumn) -> {
@@ -150,16 +152,26 @@ public class TypedTable<T> extends JTable {
         return false;
     }
 
-    private void nextPageAction() {
-                
+    public void nextPageAction() {
+            int limit = provider!=null?provider.limit:0;
+            offset += (provider!=null?provider.limit:0);
+           addData(limit,offset);
     }
 
-    private void lastPageAction() {
+    public void lastPageAction() {
+        int limit = provider!=null?provider.limit:0;
+        int offset = provider != null? provider.getSize()/limit : 0;
+        addData(limit,0);
     }
 
-    private void prevPageAction() {
+    public void prevPageAction() {
+        int limit = provider!=null?provider.limit:0;
+        offset += (provider!=null?provider.limit:0);
+        addData(limit,offset);
     }
 
-    private void firstPageAction() {
+    public void firstPageAction() {
+        int limit = provider!=null?provider.limit:0;
+        addData(limit,0);
     }
 }

@@ -7,7 +7,7 @@ public interface DataProviderInterface<T> {
 
     List<T> getData(int limit, int offest);
 
-    long getSize();
+    int getSize();
 
-    long getLimit();
+    int getLimit();
 }

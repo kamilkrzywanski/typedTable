@@ -16,8 +16,9 @@ public class TypedTablePanel<T> extends JPanel {
     JButton prevPageButton;
     JButton lastPageButton;
     JButton firstPageButton;
-
     JLabel page;
+
+    final TypedTable<T> table;
 
     public static<T> TypedTablePanel<T> getTableWithData(List<T> dataList, Class<? extends T> typeClass){
         return new TypedTablePanel<>(dataList,typeClass, null);
@@ -31,7 +32,7 @@ public class TypedTablePanel<T> extends JPanel {
     private TypedTablePanel(List<T> dataList, Class<? extends T> typeClass, DataProvider<T> provider) {
         super(new MigLayout());
         createButtons();
-        TypedTable<T> table = new TypedTable<>(dataList,typeClass, provider);
+        table = new TypedTable<>(dataList,typeClass, provider);
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane,"wrap");
     }
@@ -59,16 +60,19 @@ public class TypedTablePanel<T> extends JPanel {
     }
 
     private void nextPageAction() {
-
+        table.nextPageAction();
     }
 
     private void lastPageAction() {
+        table.lastPageAction();
     }
 
     private void prevPageAction() {
+        table.prevPageAction();
     }
 
     private void firstPageAction() {
+        table.firstPageAction();
     }
 
     void addButton(JButton button,String constraints){

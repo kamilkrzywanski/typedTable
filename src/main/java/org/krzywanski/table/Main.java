@@ -26,14 +26,14 @@ public class Main {
 
 //        frame.add(TypedTablePanel.getTableWithData(getData(), TestModel.class));
 
-        frame.add(TypedTablePanel.getTableWithProvider(new DataProvider<TestModel>(10) {
+        frame.add(TypedTablePanel.getTableWithProvider(new DataProvider<TestModel>(5) {
             @Override
             public List<TestModel> getData(int limit, int offest) {
                 return Collections.singletonList(Main.getData().get(offest));
             }
 
             @Override
-            public long getSize() {
+            public int getSize() {
                 return Main.getData().size();
             }
         }, TestModel.class));
