@@ -155,18 +155,20 @@ public class TypedTable<T> extends JTable {
     public void nextPageAction() {
             int limit = provider!=null?provider.limit:0;
             offset += (provider!=null?provider.limit:0);
+            offset = Math.min(offset,provider!= null ? provider.getSize()/limit : 0);
            addData(limit,offset);
     }
 
     public void lastPageAction() {
         int limit = provider!=null?provider.limit:0;
         int offset = provider != null? provider.getSize()/limit : 0;
-        addData(limit,0);
+        addData(limit,offset);
     }
 
     public void prevPageAction() {
         int limit = provider!=null?provider.limit:0;
-        offset += (provider!=null?provider.limit:0);
+        offset -= (provider!=null?provider.limit:0);
+        offset = Math.max(offset, 0);
         addData(limit,offset);
     }
 

@@ -43,42 +43,13 @@ public class Main {
 
 
     static List<TestModel> getData(){
-
-        TestModel testModel = new TestModel();
-        testModel.setColumnA("TEST VALUE");
-        TestModel testModel2 = new TestModel();
-        testModel2.setColumnA("TEST VALUE2");
         List<TestModel> list = new ArrayList<TestModel>() {}; // creates a generic sub-type
-        list.add(testModel);
-        list.add(testModel2);
-        list.add(testModel);
-        list.add(testModel2);
-        list.add(testModel);
-        list.add(testModel2);
-        list.add(testModel);
-        list.add(testModel2);
-        list.add(testModel);
-        list.add(testModel2);
-        list.add(testModel);
-        list.add(testModel2);
-        list.add(testModel);
-        list.add(testModel2);
-        list.add(testModel);
-        list.add(testModel2);
-        list.add(testModel);
-        list.add(testModel2);
-        list.add(testModel);
-        list.add(testModel2);
-        list.add(testModel);
-        list.add(testModel2);
-        list.add(testModel);
-        list.add(testModel2);
-        list.add(testModel);
-        list.add(testModel2);
-        list.add(testModel);
-        list.add(testModel2);
-        list.add(testModel);
-        list.add(testModel2);
+
+        for(int i = 0 ; i<100;i++){
+            TestModel testModel = new TestModel();
+            testModel.setColumnA("TEST VALUE" + i);
+            list.add(testModel);
+        }
         return  list;
     }
 }
