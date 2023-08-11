@@ -41,6 +41,8 @@ public class TypedTable<T> extends JTable {
 
     int offset = 0;
 
+    int previousOffset = 0;
+
     PaginationUtils paginationUtils = new PaginationUtils();
 
     protected TypedTable(List<T> dataList, Class<? extends T> typeClass, DataProvider<T> provider) {
@@ -66,7 +68,6 @@ public class TypedTable<T> extends JTable {
                     .getColumnIndex(tableColumn.getHeaderValue())).setCellRenderer(createRenderer(field));
         });
         tableHeader.addMouseListener(new TableOrderColumnsMouseAdapter());
-        addData(provider != null ? provider.limit : 0, 0);
     }
 
 
@@ -156,46 +157,64 @@ public class TypedTable<T> extends JTable {
     }
 
     public Pair<Integer, Integer> nextPageAction() {
-        int limit = provider != null ? provider.limit : 0;
-        offset += (provider != null ? provider.limit : 0);
-        offset = Math.min(offset, provider != null ? provider.getSize() / limit : 0);
+        int limit = provider != null ? provider.limit : 1;
+        int dataSize = provider != null ? provider.getSize() : 0;
+
+        int lastPage = (int) Math.ceil((double) dataSize / limit);
+
+        int currentPage = offset / limit;
+
+        if (currentPage < lastPage - 1) {
+            offset = Math.min(offset + limit, dataSize - limit);
+            currentPage++;
+        }
+
         addData(limit, offset);
-        return new Pair<>(paginationUtils.calculatePagesCount(offset,provider != null? provider.limit : 1), 1);
 
-    }
-
-    public Pair<Integer, Integer> lastPageAction() {
-        int limit = provider != null ? provider.limit : 0;
-        int offset = provider != null ? provider.getSize() / limit : 0;
-        addData(limit, offset);
-        return new Pair<>(provider != null ? provider.getSize() / limit : 1, provider != null ? provider.getSize() / limit : 1);
-
+        return new Pair<>(currentPage + 1, lastPage);
     }
 
     public Pair<Integer, Integer> prevPageAction() {
-        int limit = provider != null ? provider.limit : 0;
-        offset -= (provider != null ? provider.limit : 0);
-        offset = Math.max(offset, 0);
+        int limit = provider != null ? provider.limit : 1;
+
+        int currentPage = offset / limit;
+
+        if (currentPage > 0) {
+            offset = Math.max(0, offset - limit);
+            currentPage--;
+        }
+
         addData(limit, offset);
 
-        return new Pair<>(paginationUtils.calculatePagesCount(offset,provider != null? provider.limit : 1), 1);
+        return new Pair<>(currentPage + 1, (int) Math.ceil((double) (provider != null ? provider.getSize() : 0) / limit));
+    }
+
+    public Pair<Integer, Integer> lastPageAction() {
+        int limit = provider != null ? provider.limit : 1;
+        int dataSize = provider != null ? provider.getSize() : 0;
+
+        int lastPage = (int) Math.ceil((double) dataSize / limit);
+
+        offset = (lastPage - 1) * limit;
+
+        addData(limit, offset);
+
+        return new Pair<>(lastPage, lastPage);
     }
 
     public Pair<Integer, Integer> firstPageAction() {
-        int limit = provider != null ? provider.limit : 0;
-        addData(limit, 0);
+        int limit = provider != null ? provider.limit : 1;
 
-        return new Pair<>(1, provider != null ? provider.getSize() / limit : 1);
+        offset = 0;
+
+        addData(limit, offset);
+
+        return new Pair<>(1, (int) Math.ceil((double) (provider != null ? provider.getSize() : 0) / limit));
     }
 
-    public class PaginationUtils {
 
-        /**
-         * Calculates number of pages for given page size and total number of items.
-         *
-         * Assumption:
-         *     we suppose that if we have 0 items we want 1 empty page
-         */
+
+    public class PaginationUtils {
         public int calculatePagesCount(int index, int totalCount) {
 
             return index / totalCount + 1;
