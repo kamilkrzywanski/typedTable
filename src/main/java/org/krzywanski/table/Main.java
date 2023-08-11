@@ -16,7 +16,6 @@ public class Main {
 
     /**
      * ONLY FOR TEST USING CLASS
-     * @param args
      */
     public static void main(String[] args) {
         JFrame frame = new JFrame();
@@ -45,7 +44,7 @@ public class Main {
     static List<TestModel> getData(){
         List<TestModel> list = new ArrayList<TestModel>() {}; // creates a generic sub-type
 
-        for(int i = 0 ; i<100;i++){
+        for(int i = 0 ; i<101;i++){
             TestModel testModel = new TestModel();
             testModel.setColumnA("TEST VALUE" + i);
             list.add(testModel);

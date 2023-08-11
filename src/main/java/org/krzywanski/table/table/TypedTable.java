@@ -41,10 +41,6 @@ public class TypedTable<T> extends JTable {
 
     int offset = 0;
 
-    int previousOffset = 0;
-
-    PaginationUtils paginationUtils = new PaginationUtils();
-
     protected TypedTable(List<T> dataList, Class<? extends T> typeClass, DataProvider<T> provider) {
         super(new DefaultTableModel());
         this.typeClass = typeClass;
@@ -64,7 +60,7 @@ public class TypedTable<T> extends JTable {
                         .setPreferredWidth(cols.get(tableColumn.getHeaderValue()));
             }
 
-            this.getColumnModel().getColumn(((DefaultTableColumnModel) this.getColumnModel())
+            this.getColumnModel().getColumn(this.getColumnModel()
                     .getColumnIndex(tableColumn.getHeaderValue())).setCellRenderer(createRenderer(field));
         });
         tableHeader.addMouseListener(new TableOrderColumnsMouseAdapter());
@@ -165,7 +161,7 @@ public class TypedTable<T> extends JTable {
         int currentPage = offset / limit;
 
         if (currentPage < lastPage - 1) {
-            offset = Math.min(offset + limit, dataSize - limit);
+            offset = Math.min(offset + limit, dataSize);
             currentPage++;
         }
 
@@ -212,12 +208,4 @@ public class TypedTable<T> extends JTable {
         return new Pair<>(1, (int) Math.ceil((double) (provider != null ? provider.getSize() : 0) / limit));
     }
 
-
-
-    public class PaginationUtils {
-        public int calculatePagesCount(int index, int totalCount) {
-
-            return index / totalCount + 1;
-        }
-    }
 }
