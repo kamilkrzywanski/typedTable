@@ -40,7 +40,7 @@ public class Main {
 
 
     static List<TestModel> getData(){
-        List<TestModel> list = new ArrayList<TestModel>() {}; // creates a generic sub-type
+        List<TestModel> list = new ArrayList<TestModel>(); // creates a generic sub-type
 
         for(int i = 0 ; i<101;i++){
             TestModel testModel = new TestModel();
