@@ -35,6 +35,7 @@ public class TypedTablePanel<T> extends JPanel {
         table = new TypedTable<>(dataList,typeClass, provider);
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane,"wrap");
+        firstPageAction();
     }
 
     void createButtons() {
@@ -55,7 +56,6 @@ public class TypedTablePanel<T> extends JPanel {
         prevPageButton.addActionListener(e -> prevPageAction());
         lastPageButton.addActionListener(e -> lastPageAction());
         nextPageButton.addActionListener(e -> nextPageAction());
-        
 
     }
 

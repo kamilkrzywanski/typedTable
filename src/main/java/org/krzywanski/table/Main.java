@@ -25,7 +25,7 @@ public class Main {
 
 //        frame.add(TypedTablePanel.getTableWithData(getData(), TestModel.class));
 
-        frame.add(TypedTablePanel.getTableWithProvider(new DataProvider<TestModel>(5) {
+        frame.add(TypedTablePanel.getTableWithProvider(new DataProvider<TestModel>(11) {
             @Override
             public List<TestModel> getData(int limit, int offest) {
                 return Main.getData().stream().skip(offest).limit(limit).collect(Collectors.toList());
