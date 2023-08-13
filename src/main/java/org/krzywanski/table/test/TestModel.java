@@ -6,7 +6,7 @@ import java.util.Date;
 
 public class TestModel {
 
-    @MyTableColumn(label = "XXX", width = 250)
+    @MyTableColumn(label = "XXX", width = 200)
     public String columnA;
 
     @MyTableColumn(label = "Decimal column", format = "0.00$")
@@ -14,9 +14,6 @@ public class TestModel {
 
     @MyTableColumn(label = "Test label")
     public String columnC;
-
-    @MyTableColumn(label = "Test label2")
-    public String columnD;
 
     @MyTableColumn(label = "DataLable", format = "YYYY")
     public Date date = new Date();
@@ -44,15 +41,6 @@ public class TestModel {
     public void setColumnC(String columnC) {
         this.columnC = columnC;
     }
-
-    public String getColumnD() {
-        return columnD;
-    }
-
-    public void setColumnD(String columnD) {
-        this.columnD = columnD;
-    }
-
 
 
     public Date getDate() {

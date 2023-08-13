@@ -57,6 +57,18 @@ public class TypedTable<T> extends JTable {
         model = (DefaultTableModel) this.getModel();
         columnCreator.getTableColumns().forEach((field, tableColumn) -> {
             model.addColumn(tableColumn.getHeaderValue());
+        });
+
+        fixHeadersSize();
+
+        tableHeader.addMouseListener(new TableOrderColumnsMouseAdapter());
+    }
+
+    void fixHeadersSize(){
+        columnCreator.getTableColumns().forEach((field, tableColumn) -> {
+            this.getColumnModel().getColumn(this.getColumnModel()
+                            .getColumnIndex(tableColumn.getHeaderValue()))
+                    .setPreferredWidth(tableColumn.getPreferredWidth());
 
             if (instance != null && instance.getReader() != null) {
                 Map<String, Integer> cols = instance.getReader().getTableList().get(typeClass.getName());
@@ -65,12 +77,8 @@ public class TypedTable<T> extends JTable {
                         .setPreferredWidth(cols.get(tableColumn.getHeaderValue()));
             }
 
-//            this.getColumnModel().getColumn(this.getColumnModel()
-//                    .getColumnIndex(tableColumn.getHeaderValue())).setCellRenderer(createRenderer(field));
         });
-        tableHeader.addMouseListener(new TableOrderColumnsMouseAdapter());
     }
-
 
     /**
      * Filing table with data

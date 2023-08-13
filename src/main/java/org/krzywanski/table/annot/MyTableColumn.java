@@ -23,7 +23,7 @@ public @interface MyTableColumn {
      * width for column
      * @return
      */
-    int width() default 100;
+    int width() default 50;
 
     /**
      * format for table cell
