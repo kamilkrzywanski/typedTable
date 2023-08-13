@@ -7,7 +7,6 @@ import org.krzywanski.table.test.TestModel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,7 +45,7 @@ public class Main {
         for(int i = 0 ; i<101;i++){
             TestModel testModel = new TestModel();
             testModel.setColumnA("TEST VALUE" + i);
-            testModel.setColumnB(new BigDecimal(i+"."+i));
+            testModel.setColumnB(new Double(i+"."+i));
             list.add(testModel);
         }
         return  list;

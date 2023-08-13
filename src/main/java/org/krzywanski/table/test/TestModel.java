@@ -2,29 +2,23 @@ package org.krzywanski.table.test;
 
 import org.krzywanski.table.annot.MyTableColumn;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 public class TestModel {
 
-    @MyTableColumn(label = "XXX")
+    @MyTableColumn(label = "XXX", width = 250)
     public String columnA;
 
     @MyTableColumn(label = "Decimal column", format = "0.00$")
-    public BigDecimal columnB;
+    public Double columnB;
 
     @MyTableColumn(label = "Test label")
     public String columnC;
 
-    @MyTableColumn(label = "Test label2", width = 250)
+    @MyTableColumn(label = "Test label2")
     public String columnD;
 
-    public String columnE;
-
-    @MyTableColumn(label = "Test label3", width = 220)
-    public String columnF;
-
-    @MyTableColumn(label = "DataLable", width = 220, format = "YYYY")
+    @MyTableColumn(label = "DataLable", format = "YYYY")
     public Date date = new Date();
 
     public String getColumnA() {
@@ -35,11 +29,11 @@ public class TestModel {
         this.columnA = columnA;
     }
 
-    public BigDecimal getColumnB() {
+    public Double getColumnB() {
         return columnB;
     }
 
-    public void setColumnB(BigDecimal columnB) {
+    public void setColumnB(Double columnB) {
         this.columnB = columnB;
     }
 
@@ -59,21 +53,7 @@ public class TestModel {
         this.columnD = columnD;
     }
 
-    public String getColumnE() {
-        return columnE;
-    }
 
-    public void setColumnE(String columnE) {
-        this.columnE = columnE;
-    }
-
-    public String getColumnF() {
-        return columnF;
-    }
-
-    public void setColumnF(String columnF) {
-        this.columnF = columnF;
-    }
 
     public Date getDate() {
         return date;

@@ -27,7 +27,7 @@ public class TypedTableRenderer extends DefaultTableCellRenderer {
         }
         if (Number.class.isAssignableFrom(field.getType())) {
 
-            value = new DecimalFormat(Objects.toString(getFormat(field), "")).format(value);
+            value = new DecimalFormat(Objects.toString(getFormat(field), "#.#")).format(value);
 
         }
         return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
