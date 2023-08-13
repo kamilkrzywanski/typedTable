@@ -1,16 +1,13 @@
 package org.krzywanski.table.table;
 
-import org.krzywanski.table.annot.MyTableColumn;
-
 import javax.swing.*;
 import javax.swing.table.*;
-import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.lang.reflect.Field;
-import java.text.SimpleDateFormat;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.*;
+import java.util.Map;
+import java.util.Vector;
 
 /**
  * Table which is created from Entity List
@@ -24,6 +21,9 @@ public class TypedTable<T> extends JTable {
      * Tool for create columns label
      */
     ColumnCreator columnCreator;
+    /**
+     * Handle for model
+     */
     DefaultTableModel model;
 
     /**
@@ -38,18 +38,23 @@ public class TypedTable<T> extends JTable {
      * If dynamic provider used insead of list;
      */
     DataProvider<T> provider;
+    /**
+     * Handle for current data on list
+     */
+    List<T> currentData;
 
     int offset = 0;
 
     protected TypedTable(List<T> dataList, Class<? extends T> typeClass, DataProvider<T> provider) {
-        super(new DefaultTableModel());
+        super(new TypedTableModel(new ColumnCreator(typeClass)));
+        columnCreator = new ColumnCreator(typeClass);
         this.typeClass = typeClass;
         this.dataList = dataList;
         this.provider = provider;
-        this.setColumnModel(new MyColumnModel());
+
+        this.setColumnModel(new DefaultTableColumnModel());
 
         model = (DefaultTableModel) this.getModel();
-        columnCreator = new ColumnCreator(typeClass);
         columnCreator.getTableColumns().forEach((field, tableColumn) -> {
             model.addColumn(tableColumn.getHeaderValue());
 
@@ -60,8 +65,8 @@ public class TypedTable<T> extends JTable {
                         .setPreferredWidth(cols.get(tableColumn.getHeaderValue()));
             }
 
-            this.getColumnModel().getColumn(this.getColumnModel()
-                    .getColumnIndex(tableColumn.getHeaderValue())).setCellRenderer(createRenderer(field));
+//            this.getColumnModel().getColumn(this.getColumnModel()
+//                    .getColumnIndex(tableColumn.getHeaderValue())).setCellRenderer(createRenderer(field));
         });
         tableHeader.addMouseListener(new TableOrderColumnsMouseAdapter());
     }
@@ -72,9 +77,9 @@ public class TypedTable<T> extends JTable {
      */
     private void addData(int limit, int offset) {
 
-        List<T> data = provider != null ? provider.getData(limit, offset) : dataList;
+        currentData = provider != null ? provider.getData(limit, offset) : dataList;
         model.getDataVector().clear();
-        data.forEach(t -> {
+        currentData.forEach(t -> {
             Vector<Object> element = new Vector<>();
             columnCreator.getTableColumns().forEach((field, tableColumn) -> {
                 try {
@@ -88,16 +93,6 @@ public class TypedTable<T> extends JTable {
         });
     }
 
-    /**
-     * Simple model for coulm
-     */
-    private static class MyColumnModel extends DefaultTableColumnModel {
-        private String fieldName;
-
-        MyColumnModel() {
-            super();
-        }
-    }
 
     /**
      * This adapter is listening for changes on table header
@@ -120,32 +115,8 @@ public class TypedTable<T> extends JTable {
 
     }
 
-    private TableCellRenderer createRenderer(Field field) {
-        TableCellRenderer tableCellRenderer = new DefaultTableCellRenderer() {
-            public Component getTableCellRendererComponent(JTable table,
-                                                           Object value, boolean isSelected, boolean hasFocus,
-                                                           int row, int column) {
-                if (value instanceof Date) {
-                    value = new SimpleDateFormat(Objects.toString(getFormat(field), "MM/dd/yy")).format(value);
-                }
-                return super.getTableCellRendererComponent(table, value, isSelected,
-                        hasFocus, row, column);
-            }
-        };
 
 
-        return tableCellRenderer;
-    }
-
-    private String getFormat(Field field) {
-        MyTableColumn annotation = field.getAnnotation(MyTableColumn.class);
-        String format = null;
-        if (annotation != null) {
-            if (!annotation.format().isEmpty())
-                format = annotation.format();
-        }
-        return format;
-    }
 
     @Override
     public boolean isCellEditable(int row, int column) {
@@ -208,4 +179,18 @@ public class TypedTable<T> extends JTable {
         return new Pair<>(1, (int) Math.ceil((double) (provider != null ? provider.getSize() : 0) / limit));
     }
 
+    public T getSelectedItem() {
+        if (getSelectedRow() != -1) return currentData.get(getSelectedRow());
+        return null;
+    }
+
+    @Override
+    public TableCellEditor getDefaultEditor(Class<?> columnClass) {
+        return super.getDefaultEditor(columnClass);
+    }
+
+    @Override
+    public TableCellRenderer getDefaultRenderer(Class<?> columnClass) {
+        return new TypedTableRenderer(columnCreator);
+    }
 }

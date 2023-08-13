@@ -2,6 +2,7 @@ package org.krzywanski.table.test;
 
 import org.krzywanski.table.annot.MyTableColumn;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class TestModel {
@@ -9,7 +10,8 @@ public class TestModel {
     @MyTableColumn(label = "XXX")
     public String columnA;
 
-    public String columnB;
+    @MyTableColumn(label = "Decimal column", format = "0.00$")
+    public BigDecimal columnB;
 
     @MyTableColumn(label = "Test label")
     public String columnC;
@@ -33,11 +35,11 @@ public class TestModel {
         this.columnA = columnA;
     }
 
-    public String getColumnB() {
+    public BigDecimal getColumnB() {
         return columnB;
     }
 
-    public void setColumnB(String columnB) {
+    public void setColumnB(BigDecimal columnB) {
         this.columnB = columnB;
     }
 
