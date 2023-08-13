@@ -9,5 +9,4 @@ public interface DataProviderInterface<T> {
 
     int getSize();
 
-    int getLimit();
 }

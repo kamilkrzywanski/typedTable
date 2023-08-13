@@ -23,7 +23,7 @@ public class Main {
         frame.setTitle("JTable Example");
         frame.setLayout(new MigLayout());
 
-        frame.add(TypedTablePanel.getTableWithProvider(new DataProvider<TestModel>(11) {
+        frame.add(TypedTablePanel.getTableWithProvider(new DataProvider<TestModel>(15) {
             @Override
             public List<TestModel> getData(int limit, int offest) {
                 return Main.getData().stream().skip(offest).limit(limit).collect(Collectors.toList());

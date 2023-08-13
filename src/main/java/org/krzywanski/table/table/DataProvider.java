@@ -14,7 +14,4 @@ public abstract class DataProvider<T> implements DataProviderInterface<T>{
 
     public abstract int getSize();
 
-    public int getLimit(){
-        return limit;
-    }
 }

@@ -51,6 +51,7 @@ public class TypedTable<T> extends JTable {
         this.typeClass = typeClass;
         this.dataList = dataList;
         this.provider = provider;
+        this.currentData = dataList;
 
         this.setColumnModel(new DefaultTableColumnModel());
 
@@ -131,8 +132,18 @@ public class TypedTable<T> extends JTable {
         return false;
     }
 
+    private Integer findCurrentLimit(){
+
+        if(provider != null){
+            return provider.limit;
+        }
+        return currentData.size();
+    }
+
     public Pair<Integer, Integer> nextPageAction() {
-        int limit = provider != null ? provider.limit : 1;
+
+
+        int limit = findCurrentLimit();
         int dataSize = provider != null ? provider.getSize() : 0;
 
         int lastPage = (int) Math.ceil((double) dataSize / limit);
@@ -150,7 +161,7 @@ public class TypedTable<T> extends JTable {
     }
 
     public Pair<Integer, Integer> prevPageAction() {
-        int limit = provider != null ? provider.limit : 1;
+        int limit = findCurrentLimit();
 
         int currentPage = offset / limit;
 
@@ -165,7 +176,7 @@ public class TypedTable<T> extends JTable {
     }
 
     public Pair<Integer, Integer> lastPageAction() {
-        int limit = provider != null ? provider.limit : 1;
+        int limit = findCurrentLimit();
         int dataSize = provider != null ? provider.getSize() : 0;
 
         int lastPage = (int) Math.ceil((double) dataSize / limit);
@@ -178,7 +189,7 @@ public class TypedTable<T> extends JTable {
     }
 
     public Pair<Integer, Integer> firstPageAction() {
-        int limit = provider != null ? provider.limit : 1;
+        int limit = findCurrentLimit();
 
         offset = 0;
 
