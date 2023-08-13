@@ -9,4 +9,4 @@ like there:
 With default constructor you can provide data from list of entities
 ![img.png](images/img_6.png)
 Effect of this opperation will be: <br>
-![img_5.png](images/img_5.png)
+![img_7.png](images%2Fimg_7.png)
