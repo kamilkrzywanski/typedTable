@@ -13,6 +13,8 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface MyTableColumn {
 
+    final int defaultWidth = 50;
+
     /**
      * if you not passed this param then labell will be a field name
      * @return
@@ -23,7 +25,7 @@ public @interface MyTableColumn {
      * width for column
      * @return
      */
-    int width() default 50;
+    int width() default defaultWidth;
 
     /**
      * format for table cell

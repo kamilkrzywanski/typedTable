@@ -1,13 +1,15 @@
 package org.krzywanski.table.table;
 
+import org.krzywanski.table.annot.MyTableColumn;
+
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 /**
  * Table which is created from Entity List
@@ -73,9 +75,13 @@ public class TypedTable<T> extends JTable {
 
             if (instance != null && instance.getTable(typeClass.getCanonicalName()) != null) {
                 Map<String, Integer> cols = instance.getTable(typeClass.getCanonicalName());
+
+                Integer width = cols.get(tableColumn.getHeaderValue());
+                width = Optional.ofNullable(width).orElse(MyTableColumn.defaultWidth);
+
                 this.getColumnModel().getColumn(this.getColumnModel()
                                 .getColumnIndex(tableColumn.getHeaderValue()))
-                        .setPreferredWidth(cols.get(tableColumn.getHeaderValue()));
+                        .setPreferredWidth(width);
             }
 
         });
@@ -94,6 +100,7 @@ public class TypedTable<T> extends JTable {
                 try {
                     element.add(field.get(t));
                 } catch (IllegalAccessException e) {
+                    Logger.getAnonymousLogger().log(new LogRecord(Level.SEVERE, "You probably forgot about getter for." +field.getDeclaringClass() + "--" +  field.getName() ));
                     throw new RuntimeException(e);
                 }
             });
