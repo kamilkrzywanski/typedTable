@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 
 /**
  * Serialize widths of columns to separate files in User Local appdata
+ * you can Override it with
  */
 public class DefaultTableWidthProvider implements TableWidthTool {
     Path saveDirectory = Paths.get(System.getenv("LOCALAPPDATA"), "typedTable");

@@ -65,7 +65,7 @@ public class TypedTable<T> extends JTable {
         tableHeader.addMouseListener(new TableOrderColumnsMouseAdapter());
     }
 
-    void fixHeadersSize(){
+    void fixHeadersSize() {
         columnCreator.getTableColumns().forEach((field, tableColumn) -> {
             this.getColumnModel().getColumn(this.getColumnModel()
                             .getColumnIndex(tableColumn.getHeaderValue()))
@@ -125,16 +125,14 @@ public class TypedTable<T> extends JTable {
     }
 
 
-
-
     @Override
     public boolean isCellEditable(int row, int column) {
         return false;
     }
 
-    private Integer findCurrentLimit(){
+    private Integer findCurrentLimit() {
 
-        if(provider != null){
+        if (provider != null) {
             return provider.limit;
         }
         return currentData.size();
@@ -211,5 +209,10 @@ public class TypedTable<T> extends JTable {
     @Override
     public TableCellRenderer getDefaultRenderer(Class<?> columnClass) {
         return new TypedTableRenderer(columnCreator);
+    }
+
+
+    static {
+        TableWidthProvider.setProvider(new DefaultTableWidthProvider());
     }
 }
