@@ -20,21 +20,30 @@ public class TypedTableRenderer extends DefaultTableCellRenderer {
 
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 
-        Field field = getColumnField(column);
+        Field field = getColumnField(column, table);
         if (Date.class.equals(field.getType())) {
-            value = new SimpleDateFormat(Objects.toString(getFormat(field), "MM/dd/yy")).format(value);
+            if (value != null)
+                value = new SimpleDateFormat(Objects.toString(getFormat(field), "MM/dd/yy")).format(value);
 
         }
         if (Number.class.isAssignableFrom(field.getType())) {
-
-            value = new DecimalFormat(Objects.toString(getFormat(field), "#.#")).format(value);
+            if (value != null) value = new DecimalFormat(Objects.toString(getFormat(field), "#.#")).format(value);
 
         }
         return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
     }
 
-    Field getColumnField(int columnIndex) {
-        return ((Field) columnCreator.getTableColumns().keySet().toArray()[columnIndex]);
+    Field getColumnField(int columnIndex, JTable table) {
+        return ((Field) columnCreator.getTableColumns().entrySet().stream().filter(fieldTableColumnEntry -> fieldTableColumnEntry.getValue().getHeaderValue().equals(table.getTableHeader().getColumnModel().getColumn(columnIndex).getHeaderValue())).findFirst().get().getKey());
+    }
+
+    private String get(Field field) {
+        MyTableColumn annotation = field.getAnnotation(MyTableColumn.class);
+        String format = null;
+        if (annotation != null) {
+            if (!annotation.format().isEmpty()) format = annotation.format();
+        }
+        return format;
     }
 
     private String getFormat(Field field) {
