@@ -13,14 +13,16 @@ import java.util.logging.Logger;
 /**
  * Serialize widths of columns to separate files in User Local appdata
  */
-public class DefaultTableWidthProvider implements TableWidthTool{
-    Path saveDirectory = Paths.get(System.getenv("LOCALAPPDATA"),"typedTable");
+public class DefaultTableWidthProvider implements TableWidthTool {
+    Path saveDirectory = Paths.get(System.getenv("LOCALAPPDATA"), "typedTable");
+
     @Override
+    @SuppressWarnings("unchecked")
     public LinkedHashMap<String, Integer> getTable(String className) {
 
         try {
             InputStream f = null;
-            f = Files.newInputStream(saveDirectory.resolve(className.replaceAll("[-+.^:,]", "")+".properties"), StandardOpenOption.CREATE);
+            f = Files.newInputStream(saveDirectory.resolve(className.replaceAll("[-+.^:,]", "") + ".properties"), StandardOpenOption.CREATE);
             ObjectInputStream oi = new ObjectInputStream(f);
             return (LinkedHashMap<String, Integer>) oi.readObject();
         } catch (IOException | ClassNotFoundException e) {
@@ -33,10 +35,9 @@ public class DefaultTableWidthProvider implements TableWidthTool{
     @Override
     public void updateColumns(String className, LinkedHashMap<String, Integer> columnns) {
         try {
-            if (!Files.exists(saveDirectory))
-                Files.createDirectories(saveDirectory);
+            if (!Files.exists(saveDirectory)) Files.createDirectories(saveDirectory);
 
-            OutputStream f = Files.newOutputStream(saveDirectory.resolve(className.replaceAll("[-+.^:,]", "")+".properties"), StandardOpenOption.CREATE);
+            OutputStream f = Files.newOutputStream(saveDirectory.resolve(className.replaceAll("[-+.^:,]", "") + ".properties"), StandardOpenOption.CREATE);
             ObjectOutputStream o = new ObjectOutputStream(f);
             o.writeObject(columnns);
         } catch (IOException e) {
