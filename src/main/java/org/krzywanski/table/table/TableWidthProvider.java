@@ -2,26 +2,14 @@ package org.krzywanski.table.table;
 
 public class TableWidthProvider {
 
-    private WidthMockReader reader;
-    private WidthMockWriter writer;
-    private static TableWidthProvider instance;
+    private static TableWidthTool tool;
 
-    TableWidthProvider(WidthMockReader reader, WidthMockWriter writer){
-        this.writer = writer;
-        this.reader = reader;
-
-        instance = this;
+    public TableWidthProvider(TableWidthTool tool){
+        this.tool = tool;
     }
 
-    protected WidthMockReader getReader() {
-        return reader;
-    }
 
-    protected WidthMockWriter getWriter() {
-        return writer;
-    }
-
-    protected static TableWidthProvider getInstance() {
-        return instance;
+    protected static TableWidthTool getInstance() {
+        return tool;
     }
 }

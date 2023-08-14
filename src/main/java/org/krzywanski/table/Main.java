@@ -2,6 +2,8 @@ package org.krzywanski.table;
 
 import net.miginfocom.swing.MigLayout;
 import org.krzywanski.table.table.DataProvider;
+import org.krzywanski.table.table.DefaultTableWidthProvider;
+import org.krzywanski.table.table.TableWidthProvider;
 import org.krzywanski.table.table.TypedTablePanel;
 import org.krzywanski.table.test.TestModel;
 
@@ -22,7 +24,7 @@ public class Main {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("JTable Example");
         frame.setLayout(new MigLayout());
-
+        new TableWidthProvider(new DefaultTableWidthProvider());
         frame.add(TypedTablePanel.getTableWithProvider(new DataProvider<TestModel>(15) {
             @Override
             public List<TestModel> getData(int limit, int offest) {

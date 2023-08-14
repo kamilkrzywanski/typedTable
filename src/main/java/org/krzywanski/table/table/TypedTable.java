@@ -33,7 +33,7 @@ public class TypedTable<T> extends JTable {
     /**
      * Provide a custom sizes of columns when user change
      */
-    TableWidthProvider instance = TableWidthProvider.getInstance();
+    TableWidthTool instance = TableWidthProvider.getInstance();
     /**
      * If dynamic provider used insead of list;
      */
@@ -71,8 +71,8 @@ public class TypedTable<T> extends JTable {
                             .getColumnIndex(tableColumn.getHeaderValue()))
                     .setPreferredWidth(tableColumn.getPreferredWidth());
 
-            if (instance != null && instance.getReader() != null) {
-                Map<String, Integer> cols = instance.getReader().getTableList().get(typeClass.getName());
+            if (instance != null && instance.getTable(typeClass.getCanonicalName()) != null) {
+                Map<String, Integer> cols = instance.getTable(typeClass.getCanonicalName());
                 this.getColumnModel().getColumn(this.getColumnModel()
                                 .getColumnIndex(tableColumn.getHeaderValue()))
                         .setPreferredWidth(cols.get(tableColumn.getHeaderValue()));
@@ -117,8 +117,8 @@ public class TypedTable<T> extends JTable {
                 columns.put((String) column.getHeaderValue(), column.getWidth());
             }
 
-            if (instance != null && instance.getWriter() != null)
-                instance.getWriter().updateColumns(typeClass.getName(), columns);
+            if (instance != null)
+                instance.updateColumns(typeClass.getName(), columns);
         }
 
 
