@@ -8,9 +8,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
 
 /**
  * Table which is created from Entity List
@@ -100,10 +97,7 @@ public class TypedTable<T> extends JTable {
             columnCreator.getTableColumns().forEach((field, tableColumn) -> {
                 try {
                     element.add(field.getReadMethod().invoke(t));
-                } catch (IllegalAccessException e) {
-                    Logger.getAnonymousLogger().log(new LogRecord(Level.SEVERE, "You probably forgot about getter for." +field.getPropertyEditorClass() + "--" +  field.getName() ));
-                    throw new RuntimeException(e);
-                } catch (InvocationTargetException e) {
+                } catch (IllegalAccessException | InvocationTargetException e) {
                     throw new RuntimeException(e);
                 }
             });

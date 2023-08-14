@@ -50,7 +50,7 @@ public class ColumnCreator {
 
         for (PropertyDescriptor pd : beanInfo.getPropertyDescriptors()) {
 
-            if (pd.getReadMethod() == null || "class".equals(pd.getName())) continue;
+            if ("class".equals(pd.getName())) continue;
 
 
             Field field = findFieldForPd(pd);

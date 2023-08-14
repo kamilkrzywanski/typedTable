@@ -54,11 +54,4 @@ public class TestModel {
         this.date = date;
     }
 
-    public TestEnum getTestEnum() {
-        return testEnum;
-    }
-
-    public void setTestEnum(TestEnum testEnum) {
-        this.testEnum = testEnum;
-    }
 }
