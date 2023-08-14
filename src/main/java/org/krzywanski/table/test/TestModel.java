@@ -18,6 +18,9 @@ public class TestModel {
     @MyTableColumn(label = "DataLable", format = "YYYY")
     public Date date = new Date();
 
+    @MyTableColumn(label = "Test enum")
+    public TestEnum testEnum = TestEnum.MEDIUM;
+
     public String getColumnA() {
         return columnA;
     }
@@ -49,5 +52,13 @@ public class TestModel {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public TestEnum getTestEnum() {
+        return testEnum;
+    }
+
+    public void setTestEnum(TestEnum testEnum) {
+        this.testEnum = testEnum;
     }
 }
