@@ -6,7 +6,6 @@ import org.krzywanski.table.table.TypedTablePanel;
 import org.krzywanski.table.test.TestModel;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,7 +21,7 @@ public class Main {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("JTable Example");
         frame.setLayout(new MigLayout());
-        frame.add(TypedTablePanel.getTableWithProvider(new DataProvider<TestModel>(15) {
+        frame.add(TypedTablePanel.getTableWithProvider(new DataProvider<TestModel>(20) {
             @Override
             public List<TestModel> getData(int limit, int offest) {
                 return Main.getData().stream().skip(offest).limit(limit).collect(Collectors.toList());
@@ -32,9 +31,9 @@ public class Main {
             public int getSize() {
                 return Main.getData().size();
             }
-        }, TestModel.class));
-        frame.setSize(new Dimension(500, 500));
+        }, TestModel.class), "grow,push");
         frame.setVisible(true);
+        frame.pack();
     }
 
 

@@ -34,7 +34,7 @@ public class TypedTablePanel<T> extends JPanel {
         createButtons();
         table = new TypedTable<>(dataList,typeClass, provider);
         JScrollPane scrollPane = new JScrollPane(table);
-        add(scrollPane,"wrap");
+        add(scrollPane,"grow,push,wrap");
         firstPageAction();
     }
 
