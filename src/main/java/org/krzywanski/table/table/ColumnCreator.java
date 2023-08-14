@@ -9,11 +9,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Finds properties of table by reflection and {@link WidthWriter}
+ * Finds properties of table by reflection
  * from {@link TableWidthProvider}
  */
 public class ColumnCreator {
-    private Map<String,Integer> columns = new HashMap<>();
 
     /**
      * Returns list of table columns with properties from {@link MyTableColumn} annotation
@@ -21,9 +20,7 @@ public class ColumnCreator {
     Map<Field,TableColumn> tableColumns = new LinkedHashMap<>();
     public ColumnCreator(Class<?> classType) {
 
-        /**
-         * Make sure that provider is included
-         */
+        Map<String, Integer> columns = new HashMap<>();
         if(TableWidthProvider.getInstance() != null){
             if(TableWidthProvider.getInstance()!= null && TableWidthProvider.getInstance().getTable(classType.getCanonicalName()) != null
                     && TableWidthProvider.getInstance().getTable(classType.getCanonicalName()).containsKey(classType.getCanonicalName()))
@@ -54,6 +51,10 @@ public class ColumnCreator {
     }
     public Map<Field,TableColumn> getTableColumns() {
         return tableColumns;
+    }
+
+    public Field getFieldByName(Object name){
+      return tableColumns.entrySet().stream().filter(fieldTableColumnEntry -> fieldTableColumnEntry.getValue().getHeaderValue().equals(name)).findFirst().get().getKey();
     }
 
 }

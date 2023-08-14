@@ -34,16 +34,7 @@ public class TypedTableRenderer extends DefaultTableCellRenderer {
     }
 
     Field getColumnField(int columnIndex, JTable table) {
-        return ((Field) columnCreator.getTableColumns().entrySet().stream().filter(fieldTableColumnEntry -> fieldTableColumnEntry.getValue().getHeaderValue().equals(table.getTableHeader().getColumnModel().getColumn(columnIndex).getHeaderValue())).findFirst().get().getKey());
-    }
-
-    private String get(Field field) {
-        MyTableColumn annotation = field.getAnnotation(MyTableColumn.class);
-        String format = null;
-        if (annotation != null) {
-            if (!annotation.format().isEmpty()) format = annotation.format();
-        }
-        return format;
+        return columnCreator.getFieldByName(table.getTableHeader().getColumnModel().getColumn(columnIndex).getHeaderValue());
     }
 
     private String getFormat(Field field) {
