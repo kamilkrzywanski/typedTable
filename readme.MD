@@ -1,4 +1,4 @@
-Simple tool to map Entity to table in java 
+Simple tool to map Entity to jtable in java 
 @Author Kamil Krzywanski
 
 
