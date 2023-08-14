@@ -7,19 +7,19 @@ import java.util.Date;
 public class TestModel {
 
     @MyTableColumn(label = "XXX", width = 200)
-    public String columnA;
+    private String columnA;
 
     @MyTableColumn(label = "Decimal column", format = "0.00$")
-    public Double columnB;
+    private Double columnB;
 
     @MyTableColumn(label = "Test label")
-    public String columnC;
+    private String columnC;
 
     @MyTableColumn(label = "DataLable", format = "YYYY")
-    public Date date = new Date();
+    private Date date = new Date();
 
     @MyTableColumn(label = "Test enum")
-    public TestEnum testEnum = TestEnum.MEDIUM;
+    private TestEnum testEnum = TestEnum.MEDIUM;
 
     public String getColumnA() {
         return columnA;

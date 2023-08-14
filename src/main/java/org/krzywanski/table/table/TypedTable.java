@@ -6,6 +6,7 @@ import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -98,9 +99,11 @@ public class TypedTable<T> extends JTable {
             Vector<Object> element = new Vector<>();
             columnCreator.getTableColumns().forEach((field, tableColumn) -> {
                 try {
-                    element.add(field.get(t));
+                    element.add(field.getReadMethod().invoke(t));
                 } catch (IllegalAccessException e) {
-                    Logger.getAnonymousLogger().log(new LogRecord(Level.SEVERE, "You probably forgot about getter for." +field.getDeclaringClass() + "--" +  field.getName() ));
+                    Logger.getAnonymousLogger().log(new LogRecord(Level.SEVERE, "You probably forgot about getter for." +field.getPropertyEditorClass() + "--" +  field.getName() ));
+                    throw new RuntimeException(e);
+                } catch (InvocationTargetException e) {
                     throw new RuntimeException(e);
                 }
             });
