@@ -7,6 +7,7 @@ import javax.swing.table.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.lang.reflect.InvocationTargetException;
+import java.text.Format;
 import java.util.*;
 
 /**
@@ -15,6 +16,13 @@ import java.util.*;
  * @param <T> - type of table data
  */
 public class TypedTable<T> extends JTable {
+
+    static {
+        TableWidthProvider.setProvider(new DefaultTableWidthProvider());
+    }
+
+    private final Map<Class<?>, Format> formatMap= new HashMap<>();
+
     List<T> dataList;
 
     /**
@@ -56,9 +64,7 @@ public class TypedTable<T> extends JTable {
         this.setColumnModel(new DefaultTableColumnModel());
 
         model = (DefaultTableModel) this.getModel();
-        columnCreator.getTableColumns().forEach((field, tableColumn) -> {
-            model.addColumn(tableColumn.getHeaderValue());
-        });
+        columnCreator.getTableColumns().forEach((field, tableColumn) -> model.addColumn(tableColumn.getHeaderValue()));
 
         fixHeadersSize();
 
@@ -74,8 +80,7 @@ public class TypedTable<T> extends JTable {
             if (instance != null && instance.getTable(typeClass.getCanonicalName()) != null) {
                 Map<String, Integer> cols = instance.getTable(typeClass.getCanonicalName());
 
-                Integer width = cols.get(tableColumn.getHeaderValue());
-                width = Optional.ofNullable(width).orElse(MyTableColumn.defaultWidth);
+                Integer width = Optional.ofNullable(cols.get(tableColumn.getHeaderValue())).orElse(MyTableColumn.defaultWidth);
 
                 this.getColumnModel().getColumn(this.getColumnModel()
                                 .getColumnIndex(tableColumn.getHeaderValue()))
@@ -215,8 +220,11 @@ public class TypedTable<T> extends JTable {
         return new TypedTableRenderer(columnCreator);
     }
 
+    public void addCustomFormatter(Class<?> classFormat, Format format){
+        formatMap.put(classFormat,format);
+    }
 
-    static {
-        TableWidthProvider.setProvider(new DefaultTableWidthProvider());
+    public Map<Class<?>, Format> getFormatMap() {
+        return formatMap;
     }
 }

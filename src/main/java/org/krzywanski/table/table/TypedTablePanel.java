@@ -1,9 +1,13 @@
 package org.krzywanski.table.table;
 
 import net.miginfocom.swing.MigLayout;
+import org.krzywanski.table.test.TestFormatClass;
 
 import javax.swing.*;
 import java.awt.*;
+import java.text.FieldPosition;
+import java.text.Format;
+import java.text.ParsePosition;
 import java.util.List;
 
 /**
@@ -33,6 +37,17 @@ public class TypedTablePanel<T> extends JPanel {
         super(new MigLayout());
         createButtons();
         table = new TypedTable<>(dataList,typeClass, provider);
+        table.addCustomFormatter(TestFormatClass.class, new Format() {
+            @Override
+            public StringBuffer format(Object obj, StringBuffer toAppendTo, FieldPosition pos) {
+                return new StringBuffer("FORMAT SUCCES");
+            }
+
+            @Override
+            public Object parseObject(String source, ParsePosition pos) {
+                return null;
+            }
+        });
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane,"grow,push,wrap");
         firstPageAction();

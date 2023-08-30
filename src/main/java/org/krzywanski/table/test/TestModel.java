@@ -21,6 +21,9 @@ public class TestModel {
     @MyTableColumn(label = "Test enum")
     private TestEnum testEnum = TestEnum.MEDIUM;
 
+    @MyTableColumn(label = "customFormatter")
+    TestFormatClass testFormatClass = new TestFormatClass();
+
     public String getColumnA() {
         return columnA;
     }
@@ -54,4 +57,11 @@ public class TestModel {
         this.date = date;
     }
 
+    public TestFormatClass getTestFormatClass() {
+        return testFormatClass;
+    }
+
+    public void setTestFormatClass(TestFormatClass testFormatClass) {
+        this.testFormatClass = testFormatClass;
+    }
 }
