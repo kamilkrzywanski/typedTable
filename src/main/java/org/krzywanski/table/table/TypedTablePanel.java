@@ -28,11 +28,11 @@ public class TypedTablePanel<T> extends JPanel {
 
     final TypedTable<T> table;
 
-    public static <T> TypedTablePanel<T> getTableWithData(List<T> dataList, Class<? extends T> typeClass) {
+    public static <T> TypedTablePanel<T> getTableWithData(List<T> dataList, Class<T> typeClass) {
         return new TypedTablePanel<>(dataList, typeClass, null);
     }
 
-    public static <T> TypedTablePanel<T> getTableWithProvider(DataProvider<T> provider, Class<? extends T> typeClass) {
+    public static <T> TypedTablePanel<T> getTableWithProvider(DataProvider<T> provider, Class<T> typeClass) {
         return new TypedTablePanel<>(null, typeClass, provider);
     }
 
