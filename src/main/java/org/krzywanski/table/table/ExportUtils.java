@@ -51,5 +51,6 @@ public class ExportUtils {
             row = sheet.createRow((rows + 3));
         }
         wb.write(Files.newOutputStream(Paths.get(path.toString()+ ".xlsx")));//Save the file
+        wb.close();
     }
 }
