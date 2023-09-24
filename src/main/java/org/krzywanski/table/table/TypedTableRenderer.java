@@ -22,7 +22,7 @@ public class TypedTableRenderer extends DefaultTableCellRenderer {
 
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 
-        Pair<PropertyDescriptor,Field> pdFieldPair = getColumnField(column, table);
+        Pair<PropertyDescriptor, Field> pdFieldPair = getColumnField(column, table);
         if (Date.class.equals(pdFieldPair.getSecond().getType())) {
             if (value != null)
                 value = new SimpleDateFormat(Objects.toString(getFormat(pdFieldPair), "MM/dd/yy")).format(value);
@@ -32,16 +32,21 @@ public class TypedTableRenderer extends DefaultTableCellRenderer {
             if (value != null) value = new DecimalFormat(Objects.toString(getFormat(pdFieldPair), "#.#")).format(value);
 
         }
-        Format format = ((TypedTable<?>)table).getFormatMap().get(pdFieldPair.getSecond().getType());
-            if(format!=null)
-                value = format.format(value);
+        Format format = ((TypedTable<?>) table).getFormatMap().get(pdFieldPair.getSecond().getType());
+        if (format != null)
+            value = format.format(value);
 
 
         return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
     }
 
     Pair<PropertyDescriptor, Field> getColumnField(int columnIndex, JTable table) {
-        return columnCreator.getFieldByName(table.getTableHeader().getColumnModel().getColumn(columnIndex).getHeaderValue());
+        return columnCreator.getFieldByName(
+                table.getTableHeader().
+                        getColumnModel().
+                        getColumn(columnIndex).
+                        getHeaderValue()
+        );
     }
 
     private String getFormat(Pair<PropertyDescriptor, Field> pdFieldPair) {

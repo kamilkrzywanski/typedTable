@@ -10,7 +10,7 @@ public abstract class DataProvider<T> implements DataProviderInterface<T>{
         this.limit = limit;
     }
 
-    public abstract List<T> getData(int limit, int offest);
+    public abstract List<T> getData(int limit, int offest, SortColumn sortColumn);
 
     public abstract int getSize();
 

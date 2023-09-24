@@ -3,9 +3,11 @@ package org.krzywanski.table.table;
 import org.krzywanski.table.annot.MyTableColumn;
 
 import javax.swing.*;
-import javax.swing.table.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import javax.swing.table.DefaultTableColumnModel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
+import java.awt.event.ActionListener;
 import java.lang.reflect.InvocationTargetException;
 import java.text.Format;
 import java.util.*;
@@ -20,6 +22,13 @@ public class TypedTable<T> extends JTable {
     static {
         TableWidthProvider.setProvider(new DefaultTableWidthProvider());
     }
+
+    /**
+     * List of ilsteners to execute when requested is change page by table
+     */
+    List<ActionListener> changePageListeners = new ArrayList<>();
+
+    SortColumn sortColumn;
 
     private final Map<Class<?>, Format> formatMap= new HashMap<>();
 
@@ -68,7 +77,7 @@ public class TypedTable<T> extends JTable {
 
         fixHeadersSize();
 
-        tableHeader.addMouseListener(new TableOrderColumnsMouseAdapter());
+        tableHeader.addMouseListener(new TableOrderColumnsMouseAdapter(this, instance));
     }
 
     void fixHeadersSize() {
@@ -93,9 +102,9 @@ public class TypedTable<T> extends JTable {
     /**
      * Filing table with data
      */
-    protected void addData(int limit, int offset) {
+    protected void addData(int limit, int offset, SortColumn sortOrder) {
 
-        currentData = provider != null ? provider.getData(limit, offset) : dataList;
+        currentData = provider != null ? provider.getData(limit, offset, sortOrder) : dataList;
         model.getDataVector().clear();
         currentData.forEach(t -> {
             Vector<Object> element = new Vector<>();
@@ -128,28 +137,6 @@ public class TypedTable<T> extends JTable {
     }
 
 
-    /**
-     * This adapter is listening for changes on table header
-     * and once mouse is released new defintions of columns are saved
-     */
-    class TableOrderColumnsMouseAdapter extends MouseAdapter {
-
-        public void mouseReleased(MouseEvent arg0) {
-
-            LinkedHashMap<String, Integer> columns = new LinkedHashMap<>();
-            for (int i = 0; i < tableHeader.getColumnModel().getColumnCount(); i++) {
-                TableColumn column = tableHeader.getColumnModel().getColumn(i);
-                columns.put((String) column.getHeaderValue(), column.getWidth());
-            }
-
-            if (instance != null)
-                instance.updateColumns(typeClass.getName(), columns);
-        }
-
-
-    }
-
-
     @Override
     public boolean isCellEditable(int row, int column) {
         return false;
@@ -176,5 +163,25 @@ public class TypedTable<T> extends JTable {
 
     public Map<Class<?>, Format> getFormatMap() {
         return formatMap;
+    }
+
+    public SortColumn getSortColumn() {
+        return sortColumn;
+    }
+
+    public void setSortColumn(SortColumn sortColumn) {
+        this.sortColumn = sortColumn;
+    }
+
+    /**
+     * Actions to update page label or another action when change is requested by sort
+     * @param actionListener - action listener to change page
+     */
+    public void addFistPageListener(ActionListener actionListener){
+        changePageListeners.add(actionListener);
+    }
+
+    protected List<ActionListener> getChangePageListeners(){
+        return changePageListeners;
     }
 }
