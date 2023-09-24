@@ -3,7 +3,7 @@ Simple tool to map Entity to jtable in java
 
 
 It's olny idea at the moment but by annotations you can create simple table
-like there: 
+like there with export to CSV, EXCEL, Sort mechanism: 
 @annotation @MyTableColumn make entity "table-friendly"
 ![img_8.png](images%2Fimg_8.png)
 With default constructor you can provide data from list of entities
@@ -12,5 +12,7 @@ Effect of this opperation will be: <br>
 ![img_7.png](images%2Fimg_7.png)
 Custom formatter for objects example:
 ![img.png](img.png)
+You can hide columns:
+![img_9.png](img.png)
 Effect: 
 ![img_1.png](img_1.png)

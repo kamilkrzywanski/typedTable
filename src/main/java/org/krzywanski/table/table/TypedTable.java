@@ -97,7 +97,7 @@ public class TypedTable<T> extends JTable {
             if (instance != null && instance.getTable(typeClass.getCanonicalName()) != null) {
                 Map<String, Integer> cols = instance.getTable(typeClass.getCanonicalName());
 
-                int width = Optional.ofNullable(cols.get(tableColumn.getHeaderValue())).orElse(MyTableColumn.defaultWidth);
+                int width = Optional.ofNullable(cols.get(tableColumn.getHeaderValue().toString())).orElse(MyTableColumn.defaultWidth);
 
                 if (width == 0) {
                     getColumn(tableColumn.getHeaderValue()).setMinWidth(0);
