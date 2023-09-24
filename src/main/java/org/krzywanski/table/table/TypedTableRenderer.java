@@ -45,9 +45,7 @@ public class TypedTableRenderer extends DefaultTableCellRenderer {
                 table.getTableHeader().
                         getColumnModel().
                         getColumn(columnIndex).
-                        getHeaderValue().toString().
-                        replaceAll(TypedTableDefaults.CARRET_ASC_SYMBOL, "").
-                        replaceAll(TypedTableDefaults.CARRET_DESC_SYMBOL, "")
+                        getHeaderValue()
         );
     }
 

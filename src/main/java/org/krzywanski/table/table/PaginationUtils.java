@@ -34,7 +34,7 @@ public class PaginationUtils {
             currentPage++;
         }
 
-        tTypedTable.addData(limit, offset);
+        tTypedTable.addData(limit, offset, tTypedTable.getSortColumn());
 
         return new Pair<>(currentPage + 1, lastPage);
     }
@@ -49,7 +49,7 @@ public class PaginationUtils {
             currentPage--;
         }
 
-        tTypedTable.addData(limit, offset);
+        tTypedTable.addData(limit, offset, tTypedTable.getSortColumn());
 
         return new Pair<>(currentPage + 1, (int) Math.ceil((double) (provider != null ? provider.getSize() : 0) / limit));
     }
@@ -62,7 +62,7 @@ public class PaginationUtils {
 
         offset = (lastPage - 1) * limit;
 
-        tTypedTable.addData(limit, offset);
+        tTypedTable.addData(limit, offset, tTypedTable.getSortColumn());
 
         return new Pair<>(lastPage, lastPage);
     }
@@ -72,7 +72,7 @@ public class PaginationUtils {
 
         offset = 0;
 
-        tTypedTable.addData(limit, offset);
+        tTypedTable.addData(limit, offset, tTypedTable.getSortColumn());
 
         return new Pair<>(1, (int) Math.ceil((double) (provider != null ? provider.getSize() : 0) / limit));
     }

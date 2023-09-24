@@ -2,6 +2,7 @@ package org.krzywanski.table;
 
 import net.miginfocom.swing.MigLayout;
 import org.krzywanski.table.table.DataProvider;
+import org.krzywanski.table.table.SortColumn;
 import org.krzywanski.table.table.TypedTablePanel;
 import org.krzywanski.table.test.TestModel2;
 
@@ -23,7 +24,7 @@ public class Main {
         frame.setLayout(new MigLayout());
         frame.add(TypedTablePanel.getTableWithProvider(new DataProvider<TestModel2>(20) {
             @Override
-            public List<TestModel2> getData(int limit, int offest) {
+            public List<TestModel2> getData(int limit, int offest, SortColumn sortColumn) {
                 return Main.getData().stream().skip(offest).limit(limit).collect(Collectors.toList());
             }
 

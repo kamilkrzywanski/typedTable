@@ -45,17 +45,24 @@ class TableOrderColumnsMouseAdapter extends MouseAdapter {
 
             Collections.list(table.getColumnModel().getColumns()).forEach(this::removeSortCharacters);
 
-            if (currentSortAsc == null && currentSortDesc == null)
+            if (currentSortAsc == null && currentSortDesc == null){
                 table.getColumnModel().getColumn(col).setHeaderValue(table.getColumnModel().getColumn(col).getHeaderValue() + TypedTableDefaults.CARRET_ASC_SYMBOL);
+                table.setSortColumn(new SortColumn(table.columnCreator.getFieldByName(table.getColumnModel().getColumn(col).getHeaderValue()).getSecond().getName(), SortOrder.ASCENDING));
+            }
 
             if (currentSortAsc != null && currentSortAsc == table.getColumnModel().getColumn(col)) {
                 table.getColumnModel().getColumn(col).setHeaderValue(table.getColumnModel().getColumn(col).getHeaderValue() + TypedTableDefaults.CARRET_DESC_SYMBOL);
+                table.setSortColumn(new SortColumn(table.columnCreator.getFieldByName(table.getColumnModel().getColumn(col).getHeaderValue()).getSecond().getName(), SortOrder.DESCENDING));
             }
-            if (currentSortAsc != null && currentSortAsc != table.getColumnModel().getColumn(col))
+            if (currentSortAsc != null && currentSortAsc != table.getColumnModel().getColumn(col)){
                 table.getColumnModel().getColumn(col).setHeaderValue(table.getColumnModel().getColumn(col).getHeaderValue() + TypedTableDefaults.CARRET_ASC_SYMBOL);
+                table.setSortColumn(new SortColumn(table.columnCreator.getFieldByName(table.getColumnModel().getColumn(col).getHeaderValue()).getSecond().getName(), SortOrder.ASCENDING));
+            }
 
-            if (currentSortDesc != null)
+            if (currentSortDesc != null){
                 table.getColumnModel().getColumn(col).setHeaderValue(table.getColumnModel().getColumn(col).getHeaderValue().toString().replaceAll(TypedTableDefaults.CARRET_DESC_SYMBOL, ""));
+                table.setSortColumn(null);
+            }
 
         }
     }

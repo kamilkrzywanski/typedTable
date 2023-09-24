@@ -22,6 +22,8 @@ public class TypedTable<T> extends JTable {
         TableWidthProvider.setProvider(new DefaultTableWidthProvider());
     }
 
+    SortColumn sortColumn;
+
     private final Map<Class<?>, Format> formatMap= new HashMap<>();
 
     List<T> dataList;
@@ -94,9 +96,9 @@ public class TypedTable<T> extends JTable {
     /**
      * Filing table with data
      */
-    protected void addData(int limit, int offset) {
+    protected void addData(int limit, int offset, SortColumn sortOrder) {
 
-        currentData = provider != null ? provider.getData(limit, offset) : dataList;
+        currentData = provider != null ? provider.getData(limit, offset, sortOrder) : dataList;
         model.getDataVector().clear();
         currentData.forEach(t -> {
             Vector<Object> element = new Vector<>();
@@ -155,5 +157,13 @@ public class TypedTable<T> extends JTable {
 
     public Map<Class<?>, Format> getFormatMap() {
         return formatMap;
+    }
+
+    public SortColumn getSortColumn() {
+        return sortColumn;
+    }
+
+    public void setSortColumn(SortColumn sortColumn) {
+        this.sortColumn = sortColumn;
     }
 }
