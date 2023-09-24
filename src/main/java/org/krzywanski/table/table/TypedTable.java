@@ -3,9 +3,10 @@ package org.krzywanski.table.table;
 import org.krzywanski.table.annot.MyTableColumn;
 
 import javax.swing.*;
-import javax.swing.table.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import javax.swing.table.DefaultTableColumnModel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
 import java.lang.reflect.InvocationTargetException;
 import java.text.Format;
 import java.util.*;
@@ -68,7 +69,7 @@ public class TypedTable<T> extends JTable {
 
         fixHeadersSize();
 
-        tableHeader.addMouseListener(new TableOrderColumnsMouseAdapter());
+        tableHeader.addMouseListener(new TableOrderColumnsMouseAdapter(this, instance));
     }
 
     void fixHeadersSize() {
@@ -110,29 +111,6 @@ public class TypedTable<T> extends JTable {
 
         });
     }
-
-
-    /**
-     * This adapter is listening for changes on table header
-     * and once mouse is released new defintions of columns are saved
-     */
-    class TableOrderColumnsMouseAdapter extends MouseAdapter {
-
-        public void mouseReleased(MouseEvent arg0) {
-
-            LinkedHashMap<String, Integer> columns = new LinkedHashMap<>();
-            for (int i = 0; i < tableHeader.getColumnModel().getColumnCount(); i++) {
-                TableColumn column = tableHeader.getColumnModel().getColumn(i);
-                columns.put((String) column.getHeaderValue(), column.getWidth());
-            }
-
-            if (instance != null)
-                instance.updateColumns(typeClass.getName(), columns);
-        }
-
-
-    }
-
 
     @Override
     public boolean isCellEditable(int row, int column) {
