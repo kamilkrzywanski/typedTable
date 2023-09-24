@@ -15,7 +15,7 @@ import java.util.*;
  * and once mouse is released new defintions of columns are saved
  */
 class TableOrderColumnsMouseAdapter extends MouseAdapter {
-
+    ResourceBundle resourceBundle = ResourceBundle.getBundle("Bundle", Locale.getDefault());
     final TypedTable<?> table;
 
     final TableWidthTool instance;
@@ -49,7 +49,6 @@ class TableOrderColumnsMouseAdapter extends MouseAdapter {
      */
     void showColumnsOptions(MouseEvent e) {
         JPopupMenu popupMenu = new JPopupMenu();
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("Bundle", Locale.getDefault());
         popupMenu.add(new AbstractAction(resourceBundle.getString("hide.current.colum")) {
             @Override
             public void actionPerformed(ActionEvent evt) {
@@ -67,8 +66,12 @@ class TableOrderColumnsMouseAdapter extends MouseAdapter {
         popupMenu.show(table, e.getX(), e.getY());
     }
 
+    /**
+     * Creates a simple dialog with list of checkboxes with columns names
+     */
     private void showColumnOptionsDialog() {
-        JDialog dialog = new JDialog();
+        JDialog dialog = new JDialog(SwingUtilities.getWindowAncestor(table));
+        dialog.setTitle(resourceBundle.getString("column.settings"));
         dialog.setLayout(new MigLayout());
         for (int i = 1; i < table.getColumnCount() + 1; i++) {
             JCheckBox checkBox = new JCheckBox(table.getColumnName(i - 1));
@@ -99,6 +102,11 @@ class TableOrderColumnsMouseAdapter extends MouseAdapter {
 
     }
 
+    /**
+     * Update columns with passed size
+     * @param id - index of column
+     * @param width - selected width
+     */
     private void setColumnSize(int id, int width) {
         TableColumn tableColumn = table.getColumnModel().getColumn(id);
         tableColumn.setMinWidth(width);
@@ -107,6 +115,10 @@ class TableOrderColumnsMouseAdapter extends MouseAdapter {
         tableColumn.setPreferredWidth(width);
     }
 
+    /**
+     * hide column by mouse event
+     * @param e - mouse event to locate column
+     */
     private void hideColumn(MouseEvent e) {
         //Protection to don't remove last column
         if (visibleColumnCount() > 1) {
@@ -115,10 +127,18 @@ class TableOrderColumnsMouseAdapter extends MouseAdapter {
         }
     }
 
+    /**
+     * Check number of columns with size != 0
+     * @return - column colunt
+     */
     private long visibleColumnCount() {
         return Collections.list(table.getColumnModel().getColumns()).stream().filter(tableColumn -> tableColumn.getWidth() > 0).count();
     }
 
+    /**
+     * set 0 width to column by passed id
+     * @param id - index of column
+     */
     private void hideColumnById(int id) {
         TableColumn tableColumn = table.getColumnModel().getColumn(id);
         tableColumn.setMinWidth(0);
