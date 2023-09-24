@@ -8,7 +8,9 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Path;
 import java.text.Format;
 import java.util.*;
 
@@ -183,5 +185,9 @@ public class TypedTable<T> extends JTable {
 
     protected List<ActionListener> getChangePageListeners(){
         return changePageListeners;
+    }
+
+    public void exportToExcel(Path path) throws IOException {
+        ExportUtils.writeToExcell(this,path);
     }
 }

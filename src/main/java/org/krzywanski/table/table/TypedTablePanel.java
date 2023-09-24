@@ -49,6 +49,7 @@ public class TypedTablePanel<T> extends JPanel {
             }
         });
         table.addFistPageListener(e -> firstPageAction());
+
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane,"grow,push,wrap");
         firstPageAction();
