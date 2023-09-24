@@ -190,4 +190,7 @@ public class TypedTable<T> extends JTable {
     public void exportToExcel(Path path) throws IOException {
         ExportUtils.writeToExcell(this,path);
     }
+    public void exportToCsv(Path path) throws IOException {
+        ExportUtils.writeToCsv(this,path);
+    }
 }
