@@ -123,7 +123,7 @@ public class TypedTablePanel<T> extends JPanel {
     private File selectFiles() {
         JFileChooser chooser = new JFileChooser();
         chooser.setMultiSelectionEnabled(true);
-        chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("PDF Files", "pdf"));
+        chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Excel file", "xlsx"));
         int returnValue = chooser.showOpenDialog(this);
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             return chooser.getSelectedFile();
