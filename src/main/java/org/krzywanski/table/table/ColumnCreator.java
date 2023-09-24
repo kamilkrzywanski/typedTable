@@ -63,6 +63,14 @@ public class ColumnCreator {
 
                 TableColumn tableColumn = new TableColumn(iterator, tableWidth);
                 tableColumn.setHeaderValue(tableLabel);
+
+                //If you hide column in last session it will be still hidden
+                if(tableWidth == 0){
+                    tableColumn.setMinWidth(0);
+                    tableColumn.setMaxWidth(0);
+                    tableColumn.setWidth(0);
+                }
+
                 tableColumns.put(pd, tableColumn);
 
                 iterator++;

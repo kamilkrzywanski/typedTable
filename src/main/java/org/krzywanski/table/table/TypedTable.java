@@ -32,7 +32,7 @@ public class TypedTable<T> extends JTable {
 
     SortColumn sortColumn;
 
-    private final Map<Class<?>, Format> formatMap= new HashMap<>();
+    private final Map<Class<?>, Format> formatMap = new HashMap<>();
 
     List<T> dataList;
 
@@ -70,12 +70,21 @@ public class TypedTable<T> extends JTable {
         this.dataList = dataList;
         this.provider = provider;
         this.currentData = dataList;
-        this.paginationUtils = new PaginationUtils(provider,this);
+        this.paginationUtils = new PaginationUtils(provider, this);
 
         this.setColumnModel(new DefaultTableColumnModel());
 
         model = (DefaultTableModel) this.getModel();
-        columnCreator.getTableColumns().forEach((field, tableColumn) -> model.addColumn(tableColumn.getHeaderValue()));
+        columnCreator.getTableColumns().forEach((field, tableColumn) -> {
+            model.addColumn(tableColumn.getHeaderValue());
+
+            if (tableColumn.getWidth() == 0) {
+                getColumn(tableColumn.getHeaderValue()).setMinWidth(0);
+                getColumn(tableColumn.getHeaderValue()).setMaxWidth(0);
+                getColumn(tableColumn.getHeaderValue()).setWidth(0);
+            }
+
+        });
 
         fixHeadersSize();
 
@@ -84,18 +93,20 @@ public class TypedTable<T> extends JTable {
 
     void fixHeadersSize() {
         columnCreator.getTableColumns().forEach((field, tableColumn) -> {
-            this.getColumnModel().getColumn(this.getColumnModel()
-                            .getColumnIndex(tableColumn.getHeaderValue()))
-                    .setPreferredWidth(tableColumn.getPreferredWidth());
 
             if (instance != null && instance.getTable(typeClass.getCanonicalName()) != null) {
                 Map<String, Integer> cols = instance.getTable(typeClass.getCanonicalName());
 
-                Integer width = Optional.ofNullable(cols.get(tableColumn.getHeaderValue())).orElse(MyTableColumn.defaultWidth);
+                int width = Optional.ofNullable(cols.get(tableColumn.getHeaderValue())).orElse(MyTableColumn.defaultWidth);
 
-                this.getColumnModel().getColumn(this.getColumnModel()
-                                .getColumnIndex(tableColumn.getHeaderValue()))
-                        .setPreferredWidth(width);
+                if (width == 0) {
+                    getColumn(tableColumn.getHeaderValue()).setMinWidth(0);
+                    getColumn(tableColumn.getHeaderValue()).setMaxWidth(0);
+                    getColumn(tableColumn.getHeaderValue()).setWidth(0);
+                } else
+                    this.getColumnModel().getColumn(this.getColumnModel().getColumnIndex(tableColumn.getHeaderValue())).setPreferredWidth(width);
+            } else {
+                this.getColumnModel().getColumn(this.getColumnModel().getColumnIndex(tableColumn.getHeaderValue())).setPreferredWidth(tableColumn.getPreferredWidth());
             }
 
         });
@@ -123,7 +134,7 @@ public class TypedTable<T> extends JTable {
     }
 
     public Pair<Integer, Integer> nextPageAction() {
-       return paginationUtils.nextPageAction();
+        return paginationUtils.nextPageAction();
     }
 
     public Pair<Integer, Integer> lastPageAction() {
@@ -159,8 +170,8 @@ public class TypedTable<T> extends JTable {
         return new TypedTableRenderer(columnCreator);
     }
 
-    public void addCustomFormatter(Class<?> classFormat, Format format){
-        formatMap.put(classFormat,format);
+    public void addCustomFormatter(Class<?> classFormat, Format format) {
+        formatMap.put(classFormat, format);
     }
 
     public Map<Class<?>, Format> getFormatMap() {
@@ -177,20 +188,22 @@ public class TypedTable<T> extends JTable {
 
     /**
      * Actions to update page label or another action when change is requested by sort
+     *
      * @param actionListener - action listener to change page
      */
-    public void addFistPageListener(ActionListener actionListener){
+    public void addFistPageListener(ActionListener actionListener) {
         changePageListeners.add(actionListener);
     }
 
-    protected List<ActionListener> getChangePageListeners(){
+    protected List<ActionListener> getChangePageListeners() {
         return changePageListeners;
     }
 
     public void exportToExcel(Path path) throws IOException {
-        ExportUtils.writeToExcell(this,path);
+        ExportUtils.writeToExcell(this, path);
     }
+
     public void exportToCsv(Path path) throws IOException {
-        ExportUtils.writeToCsv(this,path);
+        ExportUtils.writeToCsv(this, path);
     }
 }
