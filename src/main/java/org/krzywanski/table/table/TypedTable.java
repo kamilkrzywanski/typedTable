@@ -129,28 +129,6 @@ public class TypedTable<T> extends JTable {
     }
 
 
-    /**
-     * This adapter is listening for changes on table header
-     * and once mouse is released new defintions of columns are saved
-     */
-    class TableOrderColumnsMouseAdapter extends MouseAdapter {
-
-        public void mouseReleased(MouseEvent arg0) {
-
-            LinkedHashMap<String, Integer> columns = new LinkedHashMap<>();
-            for (int i = 0; i < tableHeader.getColumnModel().getColumnCount(); i++) {
-                TableColumn column = tableHeader.getColumnModel().getColumn(i);
-                columns.put((String) column.getHeaderValue(), column.getWidth());
-            }
-
-            if (instance != null)
-                instance.updateColumns(typeClass.getName(), columns);
-        }
-
-
-    }
-
-
     @Override
     public boolean isCellEditable(int row, int column) {
         return false;
