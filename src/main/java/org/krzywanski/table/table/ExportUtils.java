@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Tool class for excel export
+ * Tool class for Excel export
  */
 public class ExportUtils {
 

@@ -19,11 +19,11 @@ public class DefaultTableWidthProvider implements TableWidthTool {
 
     @Override
     @SuppressWarnings("unchecked")
-    public LinkedHashMap<String, Integer> getTable(String className) {
+    public LinkedHashMap<String, Integer> getTable(String className, long id) {
 
         try {
             InputStream f = null;
-            f = Files.newInputStream(saveDirectory.resolve(className.replaceAll("[-+.^:,]", "") + ".properties"), StandardOpenOption.CREATE);
+            f = Files.newInputStream(saveDirectory.resolve(className.replaceAll("[-+.^:,]", "") + id +".properties"), StandardOpenOption.CREATE);
             ObjectInputStream oi = new ObjectInputStream(f);
             return (LinkedHashMap<String, Integer>) oi.readObject();
         } catch (IOException | ClassNotFoundException e) {
@@ -34,11 +34,11 @@ public class DefaultTableWidthProvider implements TableWidthTool {
     }
 
     @Override
-    public void updateColumns(String className, LinkedHashMap<String, Integer> columnns) {
+    public void updateColumns(String className, LinkedHashMap<String, Integer> columnns, long id) {
         try {
             if (!Files.exists(saveDirectory)) Files.createDirectories(saveDirectory);
 
-            OutputStream f = Files.newOutputStream(saveDirectory.resolve(className.replaceAll("[-+.^:,]", "") + ".properties"), StandardOpenOption.CREATE);
+            OutputStream f = Files.newOutputStream(saveDirectory.resolve(className.replaceAll("[-+.^:,]", "") + id + ".properties"), StandardOpenOption.CREATE);
             ObjectOutputStream o = new ObjectOutputStream(f);
             o.writeObject(columnns);
         } catch (IOException e) {

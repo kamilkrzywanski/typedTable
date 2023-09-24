@@ -61,11 +61,25 @@ public class TypedTable<T> extends JTable {
      * Handle for current data on list
      */
     List<T> currentData;
+
+    /**
+     * tools for pagination
+     */
     final PaginationUtils paginationUtils;
 
-    protected TypedTable(List<T> dataList, Class<? extends T> typeClass, DataProvider<T> provider) {
-        super(new TypedTableModel(new ColumnCreator(typeClass)));
-        columnCreator = new ColumnCreator(typeClass);
+    protected final long id;
+
+    /**
+     * Default constructor of table
+     * @param dataList - data list - list od data class
+     * @param typeClass - data class
+     * @param provider - provider of data with pagination requests
+     * @param id - identifier of instance of table to save widths of table if we use one entity in few places and want to each one have individual widths and columns
+     */
+    public TypedTable(List<T> dataList, Class<? extends T> typeClass, DataProvider<T> provider, long id) {
+        super(new TypedTableModel(new ColumnCreator(typeClass, id)));
+        this.id = id;
+        columnCreator = new ColumnCreator(typeClass, id);
         this.typeClass = typeClass;
         this.dataList = dataList;
         this.provider = provider;
@@ -91,13 +105,23 @@ public class TypedTable<T> extends JTable {
         tableHeader.addMouseListener(new TableOrderColumnsMouseAdapter(this, instance));
     }
 
+    /**
+     * Default constructor if you want to keep the same sizes for multiple tables
+     * @param dataList - data list - list od data class
+     * @param typeClass - data class
+     * @param provider - provider of data with pagination requests
+     */
+    public TypedTable(List<T> dataList, Class<? extends T> typeClass, DataProvider<T> provider){
+        this(dataList,typeClass,provider,0);
+    }
+
     void fixHeadersSize() {
+
+        Map<String,Integer> columns = instance.getTable(typeClass.getCanonicalName(), id);
         columnCreator.getTableColumns().forEach((field, tableColumn) -> {
+            if (instance != null && columns != null) {
 
-            if (instance != null && instance.getTable(typeClass.getCanonicalName()) != null) {
-                Map<String, Integer> cols = instance.getTable(typeClass.getCanonicalName());
-
-                int width = Optional.ofNullable(cols.get(tableColumn.getHeaderValue().toString())).orElse(MyTableColumn.defaultWidth);
+                int width = Optional.ofNullable(columns.get(tableColumn.getHeaderValue().toString())).orElse(MyTableColumn.defaultWidth);
 
                 if (width == 0) {
                     getColumn(tableColumn.getHeaderValue()).setMinWidth(0);
@@ -170,6 +194,11 @@ public class TypedTable<T> extends JTable {
         return new TypedTableRenderer(columnCreator);
     }
 
+    /**
+     * Adds custom formatter for selected class
+     * @param classFormat - class to format
+     * @param format - format
+     */
     public void addCustomFormatter(Class<?> classFormat, Format format) {
         formatMap.put(classFormat, format);
     }
@@ -182,6 +211,10 @@ public class TypedTable<T> extends JTable {
         return sortColumn;
     }
 
+    /**
+     * Set current colum to sort data
+     * @param sortColumn - model of sorted column
+     */
     public void setSortColumn(SortColumn sortColumn) {
         this.sortColumn = sortColumn;
     }
@@ -195,14 +228,26 @@ public class TypedTable<T> extends JTable {
         changePageListeners.add(actionListener);
     }
 
+    /**
+     * @return - list of listeners on change page
+     */
     protected List<ActionListener> getChangePageListeners() {
         return changePageListeners;
     }
 
+    /**
+     * method to export table to Excel
+     * @param path - path to save Excel file
+     * @throws IOException - in case of problem with save
+     */
     public void exportToExcel(Path path) throws IOException {
         ExportUtils.writeToExcell(this, path);
     }
-
+    /**
+     * method to export table to CSV
+     * @param path - path to save Excel file
+     * @throws IOException - in case of problem with save
+     */
     public void exportToCsv(Path path) throws IOException {
         ExportUtils.writeToCsv(this, path);
     }

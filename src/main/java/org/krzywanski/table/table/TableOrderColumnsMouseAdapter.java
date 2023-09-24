@@ -33,7 +33,7 @@ class TableOrderColumnsMouseAdapter extends MouseAdapter {
             columns.put((String) column.getHeaderValue(), column.getWidth());
         }
 
-        if (instance != null) instance.updateColumns(table.typeClass.getName(), columns);
+        if (instance != null) instance.updateColumns(table.typeClass.getName(), columns, table.id);
     }
 
     @Override
@@ -95,7 +95,6 @@ class TableOrderColumnsMouseAdapter extends MouseAdapter {
         }
 
         dialog.setModal(true);
-        dialog.setAlwaysOnTop(true);
         dialog.setLocationRelativeTo(table);
         dialog.pack();
         dialog.setVisible(true);

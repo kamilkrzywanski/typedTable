@@ -28,16 +28,22 @@ public class ColumnCreator {
 
     Map<PropertyDescriptor, TableColumn> tableColumns = new LinkedHashMap<>();
 
-    public ColumnCreator(Class<?> classType) {
+    public ColumnCreator(Class<?> classType, long id) {
 
         this.classType = classType;
         fields = classType.getDeclaredFields();
 
         Map<String, Integer> columns = new HashMap<>();
+        Map<String, Integer> tempColumns = null;
         if (TableWidthProvider.getInstance() != null) {
-            if (TableWidthProvider.getInstance() != null && TableWidthProvider.getInstance().getTable(classType.getCanonicalName()) != null && TableWidthProvider.getInstance().getTable(classType.getCanonicalName()).containsKey(classType.getCanonicalName()))
-                columns = TableWidthProvider.getInstance().getTable(classType.getCanonicalName());
+            if (TableWidthProvider.getInstance() != null) {
+                tempColumns = TableWidthProvider.getInstance().getTable(classType.getCanonicalName(), id);
+            }
         }
+
+        //To avoid multiple write TableWidthProvider.getInstance().getTable()... which is trying to ask db/read file from disk
+        if(tempColumns != null)
+            columns = tempColumns;
 
         int iterator = 0;
 
@@ -65,7 +71,7 @@ public class ColumnCreator {
                 tableColumn.setHeaderValue(tableLabel);
 
                 //If you hide column in last session it will be still hidden
-                if(tableWidth == 0){
+                if (tableWidth == 0) {
                     tableColumn.setMinWidth(0);
                     tableColumn.setMaxWidth(0);
                     tableColumn.setWidth(0);
@@ -81,7 +87,7 @@ public class ColumnCreator {
 
     }
 
-    private Field findFieldForPd(PropertyDescriptor pd){
+    private Field findFieldForPd(PropertyDescriptor pd) {
         return Arrays.stream(classType.getDeclaredFields()).filter(field -> field.getName().equals(pd.getName())).findFirst().get();
     }
 
@@ -96,7 +102,7 @@ public class ColumnCreator {
         PropertyDescriptor pd = tableColumns.entrySet().stream().filter(fieldTableColumnEntry -> fieldTableColumnEntry.getValue().getHeaderValue().equals(fixedName)).findFirst().get().getKey();
         Field field = Arrays.stream(fields).filter(field1 -> field1.getName().equals(pd.getName())).findFirst().get();
 
-        return new Pair<>(pd,field);
+        return new Pair<>(pd, field);
     }
 
 }

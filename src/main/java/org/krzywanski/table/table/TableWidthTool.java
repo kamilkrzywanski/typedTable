@@ -3,12 +3,19 @@ package org.krzywanski.table.table;
 import java.util.LinkedHashMap;
 
 public interface TableWidthTool {
-    void updateColumns(String className, LinkedHashMap<String,Integer> columnns);
 
     /**
-     * probably faster way is get all columns at once
-     * will be refferenced to shared data inform me and will add another interface per Table
-     * @return
+     * method to update columns of table
+     * @param className - name of class
+     * @param columnns - lost of data in format List<String - column name, Integer - width>
+     * @param id - id of table instance to have multiple configs to the same class
      */
-    LinkedHashMap<String,Integer> getTable(String className);
+    void updateColumns(String className, LinkedHashMap<String,Integer> columnns, long id);
+
+    /**
+     * @param className - name of data class
+     * @param  id - id of table instance to have multiple configs to the same class
+     * @return - returns data for table with List<String - column name, Integer - width>
+     */
+    LinkedHashMap<String,Integer> getTable(String className, long id);
 }

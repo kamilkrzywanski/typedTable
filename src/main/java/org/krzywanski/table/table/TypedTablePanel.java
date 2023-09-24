@@ -40,7 +40,7 @@ public class TypedTablePanel<T> extends JPanel {
     private TypedTablePanel(List<T> dataList, Class<? extends T> typeClass, DataProvider<T> provider) {
         super(new MigLayout());
         createButtons();
-        table = new TypedTable<>(dataList, typeClass, provider);
+        table = new TypedTable<>(dataList, typeClass, provider, 1);
         table.addCustomFormatter(TestFormatClass.class, new Format() {
             @Override
             public StringBuffer format(Object obj, StringBuffer toAppendTo, FieldPosition pos) {
