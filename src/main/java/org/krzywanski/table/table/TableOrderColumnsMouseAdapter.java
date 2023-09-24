@@ -49,7 +49,6 @@ class TableOrderColumnsMouseAdapter extends MouseAdapter {
             if (currentSortAsc == null && currentSortDesc == null){
                 updateColumnSymbol(col, TypedTableDefaults.CARRET_ASC_SYMBOL, SortOrder.ASCENDING);
             }
-
             if (currentSortAsc != null && currentSortAsc == table.getColumnModel().getColumn(col)) {
                 updateColumnSymbol(col, TypedTableDefaults.CARRET_DESC_SYMBOL, SortOrder.DESCENDING);
             }
