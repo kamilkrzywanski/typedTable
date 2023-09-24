@@ -3,7 +3,7 @@ package org.krzywanski.table;
 import net.miginfocom.swing.MigLayout;
 import org.krzywanski.table.table.DataProvider;
 import org.krzywanski.table.table.TypedTablePanel;
-import org.krzywanski.table.test.TestModel;
+import org.krzywanski.table.test.TestModel2;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -21,9 +21,9 @@ public class Main {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("JTable Example");
         frame.setLayout(new MigLayout());
-        frame.add(TypedTablePanel.getTableWithProvider(new DataProvider<TestModel>(20) {
+        frame.add(TypedTablePanel.getTableWithProvider(new DataProvider<TestModel2>(20) {
             @Override
-            public List<TestModel> getData(int limit, int offest) {
+            public List<TestModel2> getData(int limit, int offest) {
                 return Main.getData().stream().skip(offest).limit(limit).collect(Collectors.toList());
             }
 
@@ -31,20 +31,20 @@ public class Main {
             public int getSize() {
                 return Main.getData().size();
             }
-        }, TestModel.class), "grow,push");
+        }, TestModel2.class), "grow,push");
         frame.setVisible(true);
         frame.pack();
     }
 
 
-    static List<TestModel> getData(){
-        List<TestModel> list = new ArrayList<>();
+    static List<TestModel2> getData(){
+        List<TestModel2> list = new ArrayList<>();
 
         for(int i = 0 ; i<101;i++){
-            TestModel testModel = new TestModel();
-            testModel.setColumnA("TEST VALUE" + i);
-            testModel.setColumnB(new Double(i+"."+i));
-            list.add(testModel);
+            TestModel2 TestModel2 = new TestModel2();
+            TestModel2.setColumnA("TEST VALUE" + i);
+            TestModel2.setColumnB(new Double(i+"."+i));
+            list.add(TestModel2);
         }
         return  list;
     }

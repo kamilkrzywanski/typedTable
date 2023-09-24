@@ -51,8 +51,7 @@ public class TypedTable<T> extends JTable {
      * Handle for current data on list
      */
     List<T> currentData;
-
-    int offset = 0;
+    final PaginationUtils paginationUtils;
 
     protected TypedTable(List<T> dataList, Class<? extends T> typeClass, DataProvider<T> provider) {
         super(new TypedTableModel(new ColumnCreator(typeClass)));
@@ -61,6 +60,7 @@ public class TypedTable<T> extends JTable {
         this.dataList = dataList;
         this.provider = provider;
         this.currentData = dataList;
+        this.paginationUtils = new PaginationUtils(provider,this);
 
         this.setColumnModel(new DefaultTableColumnModel());
 
@@ -94,7 +94,7 @@ public class TypedTable<T> extends JTable {
     /**
      * Filing table with data
      */
-    private void addData(int limit, int offset) {
+    protected void addData(int limit, int offset) {
 
         currentData = provider != null ? provider.getData(limit, offset) : dataList;
         model.getDataVector().clear();
@@ -112,75 +112,48 @@ public class TypedTable<T> extends JTable {
         });
     }
 
-    @Override
-    public boolean isCellEditable(int row, int column) {
-        return false;
-    }
-
-    private Integer findCurrentLimit() {
-
-        if (provider != null) {
-            return provider.limit;
-        }
-        return currentData.size();
-    }
-
     public Pair<Integer, Integer> nextPageAction() {
-
-
-        int limit = findCurrentLimit();
-        int dataSize = provider != null ? provider.getSize() : 0;
-
-        int lastPage = (int) Math.ceil((double) dataSize / limit);
-
-        int currentPage = offset / limit;
-
-        if (currentPage < lastPage - 1) {
-            offset = Math.min(offset + limit, dataSize);
-            currentPage++;
-        }
-
-        addData(limit, offset);
-
-        return new Pair<>(currentPage + 1, lastPage);
-    }
-
-    public Pair<Integer, Integer> prevPageAction() {
-        int limit = findCurrentLimit();
-
-        int currentPage = offset / limit;
-
-        if (currentPage > 0) {
-            offset = Math.max(0, offset - limit);
-            currentPage--;
-        }
-
-        addData(limit, offset);
-
-        return new Pair<>(currentPage + 1, (int) Math.ceil((double) (provider != null ? provider.getSize() : 0) / limit));
+       return paginationUtils.nextPageAction();
     }
 
     public Pair<Integer, Integer> lastPageAction() {
-        int limit = findCurrentLimit();
-        int dataSize = provider != null ? provider.getSize() : 0;
+        return paginationUtils.lastPageAction();
+    }
 
-        int lastPage = (int) Math.ceil((double) dataSize / limit);
-
-        offset = (lastPage - 1) * limit;
-
-        addData(limit, offset);
-
-        return new Pair<>(lastPage, lastPage);
+    public Pair<Integer, Integer> prevPageAction() {
+        return paginationUtils.prevPageAction();
     }
 
     public Pair<Integer, Integer> firstPageAction() {
-        int limit = findCurrentLimit();
+        return paginationUtils.firstPageAction();
+    }
 
-        offset = 0;
 
-        addData(limit, offset);
+    /**
+     * This adapter is listening for changes on table header
+     * and once mouse is released new defintions of columns are saved
+     */
+    class TableOrderColumnsMouseAdapter extends MouseAdapter {
 
-        return new Pair<>(1, (int) Math.ceil((double) (provider != null ? provider.getSize() : 0) / limit));
+        public void mouseReleased(MouseEvent arg0) {
+
+            LinkedHashMap<String, Integer> columns = new LinkedHashMap<>();
+            for (int i = 0; i < tableHeader.getColumnModel().getColumnCount(); i++) {
+                TableColumn column = tableHeader.getColumnModel().getColumn(i);
+                columns.put((String) column.getHeaderValue(), column.getWidth());
+            }
+
+            if (instance != null)
+                instance.updateColumns(typeClass.getName(), columns);
+        }
+
+
+    }
+
+
+    @Override
+    public boolean isCellEditable(int row, int column) {
+        return false;
     }
 
     public T getSelectedItem() {
