@@ -50,6 +50,6 @@ public class ExportUtils {
             //Set the row to the next one in the sequence
             row = sheet.createRow((rows + 3));
         }
-        wb.write(Files.newOutputStream(Paths.get(path.toString())));//Save the file
+        wb.write(Files.newOutputStream(Paths.get(path.toString()+ ".xlsx")));//Save the file
     }
 }
