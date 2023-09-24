@@ -7,6 +7,7 @@ import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
+import java.awt.event.ActionListener;
 import java.lang.reflect.InvocationTargetException;
 import java.text.Format;
 import java.util.*;
@@ -21,6 +22,11 @@ public class TypedTable<T> extends JTable {
     static {
         TableWidthProvider.setProvider(new DefaultTableWidthProvider());
     }
+
+    /**
+     * List of ilsteners to execute when requested is change page by table
+     */
+    List<ActionListener> changePageListeners = new ArrayList<>();
 
     SortColumn sortColumn;
 
@@ -165,5 +171,17 @@ public class TypedTable<T> extends JTable {
 
     public void setSortColumn(SortColumn sortColumn) {
         this.sortColumn = sortColumn;
+    }
+
+    /**
+     * Actions to update page label or another action when change is requested by sort
+     * @param actionListener - action listener to change page
+     */
+    public void addFistPageListener(ActionListener actionListener){
+        changePageListeners.add(actionListener);
+    }
+
+    protected List<ActionListener> getChangePageListeners(){
+        return changePageListeners;
     }
 }

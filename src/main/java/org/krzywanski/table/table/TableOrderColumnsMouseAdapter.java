@@ -1,6 +1,7 @@
 package org.krzywanski.table.table;
 
 import javax.swing.table.TableColumn;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Collections;
@@ -63,6 +64,7 @@ class TableOrderColumnsMouseAdapter extends MouseAdapter {
                 table.getColumnModel().getColumn(col).setHeaderValue(table.getColumnModel().getColumn(col).getHeaderValue().toString().replaceAll(TypedTableDefaults.CARRET_DESC_SYMBOL, ""));
                 table.setSortColumn(null);
             }
+            table.getChangePageListeners().forEach(actionListener -> actionListener.actionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"firstPageAction")));
 
         }
     }
