@@ -47,17 +47,14 @@ class TableOrderColumnsMouseAdapter extends MouseAdapter {
             Collections.list(table.getColumnModel().getColumns()).forEach(this::removeSortCharacters);
 
             if (currentSortAsc == null && currentSortDesc == null){
-                table.getColumnModel().getColumn(col).setHeaderValue(table.getColumnModel().getColumn(col).getHeaderValue() + TypedTableDefaults.CARRET_ASC_SYMBOL);
-                table.setSortColumn(new SortColumn(table.columnCreator.getFieldByName(table.getColumnModel().getColumn(col).getHeaderValue()).getSecond().getName(), SortOrder.ASCENDING));
+                updateColumnSymbol(col, TypedTableDefaults.CARRET_ASC_SYMBOL, SortOrder.ASCENDING);
             }
 
             if (currentSortAsc != null && currentSortAsc == table.getColumnModel().getColumn(col)) {
-                table.getColumnModel().getColumn(col).setHeaderValue(table.getColumnModel().getColumn(col).getHeaderValue() + TypedTableDefaults.CARRET_DESC_SYMBOL);
-                table.setSortColumn(new SortColumn(table.columnCreator.getFieldByName(table.getColumnModel().getColumn(col).getHeaderValue()).getSecond().getName(), SortOrder.DESCENDING));
+                updateColumnSymbol(col, TypedTableDefaults.CARRET_DESC_SYMBOL, SortOrder.DESCENDING);
             }
             if (currentSortAsc != null && currentSortAsc != table.getColumnModel().getColumn(col)){
-                table.getColumnModel().getColumn(col).setHeaderValue(table.getColumnModel().getColumn(col).getHeaderValue() + TypedTableDefaults.CARRET_ASC_SYMBOL);
-                table.setSortColumn(new SortColumn(table.columnCreator.getFieldByName(table.getColumnModel().getColumn(col).getHeaderValue()).getSecond().getName(), SortOrder.ASCENDING));
+                updateColumnSymbol(col, TypedTableDefaults.CARRET_ASC_SYMBOL, SortOrder.ASCENDING);
             }
 
             if (currentSortDesc != null){
@@ -67,6 +64,17 @@ class TableOrderColumnsMouseAdapter extends MouseAdapter {
             table.getChangePageListeners().forEach(actionListener -> actionListener.actionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"firstPageAction")));
 
         }
+    }
+
+    /**
+     * update value of header of selected column
+     * @param column - column index
+     * @param newSymbol - new symbol of asceding, desceding
+     * @param sortOrder - value from sort order enum
+     */
+    private void updateColumnSymbol(int column, String newSymbol, SortOrder sortOrder){
+        table.getColumnModel().getColumn(column).setHeaderValue(table.getColumnModel().getColumn(column).getHeaderValue() + newSymbol);
+        table.setSortColumn(new SortColumn(table.columnCreator.getFieldByName(table.getColumnModel().getColumn(column).getHeaderValue()).getSecond().getName(), sortOrder));
     }
 
     void removeSortCharacters(TableColumn tableColumn) {
