@@ -10,6 +10,7 @@ import java.text.FieldPosition;
 import java.text.Format;
 import java.text.ParsePosition;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Container for table and pagination buttons
@@ -79,7 +80,7 @@ public class TypedTablePanel<T> extends JPanel {
         nextPageButton.addActionListener(e -> nextPageAction());
         exportExcelButton.addActionListener(e -> {
             try {
-                table.exportToExcel(selectFiles().toPath());
+                table.exportToExcel(Objects.requireNonNull(selectFiles()).toPath());
             } catch (Exception ex) {
              System.out.println("export failed");
             }
