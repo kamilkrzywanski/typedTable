@@ -123,6 +123,7 @@ class TableOrderColumnsMouseAdapter extends MouseAdapter {
         if (visibleColumnCount() > 1) {
             int tableColumnId = table.getTableHeader().columnAtPoint(e.getPoint());
             hideColumnById(tableColumnId);
+            mouseReleased(null);
         }
     }
 
