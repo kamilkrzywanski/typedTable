@@ -130,6 +130,10 @@ public class TypedTablePanel<T> extends JPanel {
         }
         return null;
     }
+
+    public  T getSelectedItem(){
+        return table.getSelectedItem();
+    }
 }
 
 
