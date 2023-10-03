@@ -2,11 +2,11 @@ package org.krzywanski.table.table;
 
 public class PaginationUtils {
 
-    DataProvider<?> provider;
+    DefaultDataPrivder<?> provider;
     TypedTable<?> tTypedTable;
     int offset = 0;
 
-    public <T> PaginationUtils(DataProvider<T> provider, TypedTable<T> tTypedTable) {
+    public <T> PaginationUtils(DefaultDataPrivder<T> provider, TypedTable<T> tTypedTable) {
         this.provider = provider;
         this.tTypedTable = tTypedTable;
     }

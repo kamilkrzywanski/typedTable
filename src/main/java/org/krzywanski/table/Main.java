@@ -1,7 +1,7 @@
 package org.krzywanski.table;
 
 import net.miginfocom.swing.MigLayout;
-import org.krzywanski.table.table.DataProvider;
+import org.krzywanski.table.table.DefaultDataPrivder;
 import org.krzywanski.table.table.SortColumn;
 import org.krzywanski.table.table.SortOrder;
 import org.krzywanski.table.table.TypedTablePanel;
@@ -23,30 +23,27 @@ public class Main {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("JTable Example");
         frame.setLayout(new MigLayout());
-        frame.add(TypedTablePanel.getTableWithProvider(new DataProvider<TestModel>(20) {
-            @Override
-            public List<TestModel> getData(int limit, int offest, SortColumn sortColumn) {
-
-                if(sortColumn!= null && sortColumn.getColumnName().equals("columnB")){
-
-                    if(sortColumn.getSortOrder() == SortOrder.ASCENDING)
-                        return Main.getData().stream().sorted((o1, o2) -> o1.getColumnB().compareTo(o2.getColumnB())).skip(offest).limit(limit).collect(Collectors.toList());
-                    else
-                        return Main.getData().stream().sorted((o1, o2) -> o2.getColumnB().compareTo(o1.getColumnB())).skip(offest).limit(limit).collect(Collectors.toList());
-                }
-
-                return Main.getData().stream().skip(offest).limit(limit).collect(Collectors.toList());
-            }
-
-            @Override
-            public int getSize() {
-                return Main.getData().size();
-            }
-        }, TestModel.class), "grow,push");
+        frame.add(TypedTablePanel.getTableWithProvider(new DefaultDataPrivder<>(20,Main::getData, Main::getSize), TestModel.class), "grow,push");
         frame.setVisible(true);
         frame.pack();
     }
 
+    public static List<TestModel> getData(int limit, int offest, SortColumn sortColumn) {
+
+        if(sortColumn!= null && sortColumn.getColumnName().equals("columnB")){
+
+            if(sortColumn.getSortOrder() == SortOrder.ASCENDING)
+                return Main.getData().stream().sorted((o1, o2) -> o1.getColumnB().compareTo(o2.getColumnB())).skip(offest).limit(limit).collect(Collectors.toList());
+            else
+                return Main.getData().stream().sorted((o1, o2) -> o2.getColumnB().compareTo(o1.getColumnB())).skip(offest).limit(limit).collect(Collectors.toList());
+        }
+
+        return Main.getData().stream().skip(offest).limit(limit).collect(Collectors.toList());
+    }
+
+    public static int getSize() {
+        return Main.getData().size();
+    }
 
     static List<TestModel> getData(){
         List<TestModel> list = new ArrayList<>();
