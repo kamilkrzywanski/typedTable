@@ -42,7 +42,7 @@ public class ColumnCreator {
         }
 
         //To avoid multiple write TableWidthProvider.getInstance().getTable()... which is trying to ask db/read file from disk
-        if(tempColumns != null)
+        if (tempColumns != null)
             columns = tempColumns;
 
         int iterator = 0;
@@ -53,13 +53,14 @@ public class ColumnCreator {
         } catch (IntrospectionException e) {
             throw new RuntimeException(e);
         }
+        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
 
-        for (PropertyDescriptor pd : beanInfo.getPropertyDescriptors()) {
+        for (Field field : fields) {
+            PropertyDescriptor pd = Arrays.stream(propertyDescriptors).
+                    filter(propertyDescriptor -> propertyDescriptor.getName().equals(field.getName())).
+                    findFirst().orElse(null);
+            if(pd == null) continue;
 
-            if ("class".equals(pd.getName())) continue;
-
-
-            Field field = findFieldForPd(pd);
             MyTableColumn annotation = field.getAnnotation(MyTableColumn.class);
             String tableLabel;
             if (annotation != null) {
