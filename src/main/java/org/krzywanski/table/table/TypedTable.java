@@ -13,6 +13,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.text.Format;
 import java.util.*;
+import java.util.function.Supplier;
 
 /**
  * Table which is created from Entity List
@@ -66,6 +67,8 @@ public class TypedTable<T> extends JTable {
      * tools for pagination
      */
     final PaginationUtils paginationUtils;
+
+    Supplier<String> searchPhaseSupplier;
 
     protected final long id;
 
@@ -139,9 +142,9 @@ public class TypedTable<T> extends JTable {
     /**
      * Filing table with data
      */
-    protected void addData(int limit, int offset, SortColumn sortOrder) {
+    protected void addData(int limit, int offset, SortColumn sortOrder, String searchString) {
 
-        currentData = provider != null ? provider.getData(limit, offset, sortOrder) : dataList;
+        currentData = provider != null ? provider.getData(limit, offset, sortOrder, searchString) : dataList;
         model.getDataVector().clear();
         currentData.forEach(t -> {
             Vector<Object> element = new Vector<>();
@@ -153,8 +156,8 @@ public class TypedTable<T> extends JTable {
                 }
             });
             model.addRow(element);
-
         });
+        revalidate();
     }
 
     public Pair<Integer, Integer> nextPageAction() {
@@ -250,5 +253,13 @@ public class TypedTable<T> extends JTable {
      */
     public void exportToCsv(Path path) throws IOException {
         ExportUtils.writeToCsv(this, path);
+    }
+
+    public void addSearchPhaseSupplier(Supplier<String> searchPhaseSupplier){
+        this.searchPhaseSupplier = searchPhaseSupplier;
+    }
+
+    public String getSearchPhase(){
+        return searchPhaseSupplier != null ? searchPhaseSupplier.get() : null;
     }
 }

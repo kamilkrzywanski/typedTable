@@ -28,21 +28,21 @@ public class Main {
         frame.pack();
     }
 
-    public static List<TestModel> getData(int limit, int offest, SortColumn sortColumn) {
+    public static List<TestModel> getData(int limit, int offest, SortColumn sortColumn, String searchString) {
 
         if(sortColumn!= null && sortColumn.getColumnName().equals("columnB")){
 
             if(sortColumn.getSortOrder() == SortOrder.ASCENDING)
-                return Main.getData().stream().sorted((o1, o2) -> o1.getColumnB().compareTo(o2.getColumnB())).skip(offest).limit(limit).collect(Collectors.toList());
+                return Main.getData().stream().filter(testModel -> testModel.getColumnA().toLowerCase().contains(searchString)).sorted((o1, o2) -> o1.getColumnB().compareTo(o2.getColumnB())).skip(offest).limit(limit).collect(Collectors.toList());
             else
-                return Main.getData().stream().sorted((o1, o2) -> o2.getColumnB().compareTo(o1.getColumnB())).skip(offest).limit(limit).collect(Collectors.toList());
+                return Main.getData().stream().filter(testModel -> testModel.getColumnA().toLowerCase().contains(searchString)).sorted((o1, o2) -> o2.getColumnB().compareTo(o1.getColumnB())).skip(offest).limit(limit).collect(Collectors.toList());
         }
 
-        return Main.getData().stream().skip(offest).limit(limit).collect(Collectors.toList());
+        return Main.getData().stream().filter(testModel -> testModel.getColumnA().toLowerCase().contains(searchString)).skip(offest).limit(limit).collect(Collectors.toList());
     }
 
-    public static int getSize() {
-        return Main.getData().size();
+    public static int getSize(String searchString) {
+        return (int) Main.getData().stream().filter(testModel -> testModel.getColumnA().toLowerCase().contains(searchString)).count();
     }
 
     static List<TestModel> getData(){

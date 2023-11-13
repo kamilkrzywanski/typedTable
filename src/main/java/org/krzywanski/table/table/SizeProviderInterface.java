@@ -1,5 +1,5 @@
 package org.krzywanski.table.table;
 
 public interface SizeProviderInterface {
-    int getSize();
+    int getSize(String searchString);
 }

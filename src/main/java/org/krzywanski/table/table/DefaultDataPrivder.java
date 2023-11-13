@@ -2,28 +2,27 @@ package org.krzywanski.table.table;
 
 
 import java.util.List;
-import java.util.function.Supplier;
 
 public class DefaultDataPrivder<T> implements DataProviderInterface<T>, SizeProviderInterface{
 
     int limit;
 
     DataProviderInterface<T> dataProviderInterface;
-    final Supplier<Integer> sizeSupplier;
+    final SizeSupplier sizeSupplier;
 
-    public DefaultDataPrivder(int limit, DataProviderInterface<T> dataProviderInterface , Supplier<Integer> sizeSupplier ){
+    public DefaultDataPrivder(int limit, DataProviderInterface<T> dataProviderInterface , SizeSupplier sizeSupplier ){
         this.limit = limit;
         this.dataProviderInterface = dataProviderInterface;
         this.sizeSupplier = sizeSupplier;
     }
 
     @Override
-    public int getSize() {
-        return sizeSupplier.get();
+    public int getSize(String searchString) {
+        return sizeSupplier.size(searchString);
     }
 
     @Override
-    public List<T> getData(int limit, int offest, SortColumn sortOrder) {
-        return dataProviderInterface.getData(limit,offest,sortOrder);
+    public List<T> getData(int limit, int offest, SortColumn sortOrder, String searchString) {
+        return dataProviderInterface.getData(limit,offest,sortOrder, searchString);
     }
 }

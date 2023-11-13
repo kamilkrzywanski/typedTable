@@ -18,12 +18,13 @@ import java.util.Objects;
  * @param <T>
  */
 public class TypedTablePanel<T> extends JPanel {
-
+    PopupDialog popupDialog;
     JButton nextPageButton;
     JButton exportExcelButton;
     JButton prevPageButton;
     JButton lastPageButton;
     JButton firstPageButton;
+    JButton searchButton;
     JLabel page;
 
     final TypedTable<T> table;
@@ -39,8 +40,8 @@ public class TypedTablePanel<T> extends JPanel {
 
     private TypedTablePanel(List<T> dataList, Class<? extends T> typeClass, DefaultDataPrivder<T> provider) {
         super(new MigLayout());
-        createButtons();
         table = new TypedTable<>(dataList, typeClass, provider, 1);
+        createButtons();
         table.addCustomFormatter(TestFormatClass.class, new Format() {
             @Override
             public StringBuffer format(Object obj, StringBuffer toAppendTo, FieldPosition pos) {
@@ -53,6 +54,7 @@ public class TypedTablePanel<T> extends JPanel {
             }
         });
         table.addFistPageListener(e -> firstPageAction());
+        table.addSearchPhaseSupplier(() -> popupDialog.getText());
 
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, "grow,push,wrap");
@@ -65,27 +67,36 @@ public class TypedTablePanel<T> extends JPanel {
         prevPageButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("back.png")));
         lastPageButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("fast-forward-button.png")));
         firstPageButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("fast-backward.png")));
+        searchButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("search.png")));
         page = new JLabel("");
+        popupDialog = new PopupDialog(e -> firstPageAction());
 
         addButton(exportExcelButton, "split, al right");
         addButton(firstPageButton, "");
         addButton(prevPageButton, "");
         add(page);
         addButton(nextPageButton, "");
-        addButton(lastPageButton, "wrap");
+        addButton(lastPageButton, "");
+        addButton(searchButton, "wrap");
 
         firstPageButton.addActionListener(e -> firstPageAction());
         prevPageButton.addActionListener(e -> prevPageAction());
         lastPageButton.addActionListener(e -> lastPageAction());
         nextPageButton.addActionListener(e -> nextPageAction());
-        exportExcelButton.addActionListener(e -> {
-            try {
-                table.exportToExcel(Objects.requireNonNull(selectFiles()).toPath());
-            } catch (Exception ex) {
-             System.out.println("export failed");
-            }
-        });
+        exportExcelButton.addActionListener(e -> exportExcelAction());
+        searchButton.addActionListener(e -> searchAction());
+    }
 
+    private void searchAction() {
+        popupDialog.setVisible(true, searchButton);
+    }
+
+    void exportExcelAction() {
+        try {
+            table.exportToExcel(Objects.requireNonNull(selectFiles()).toPath());
+        } catch (Exception ex) {
+         System.out.println("export failed");
+        }
     }
 
     private void nextPageAction() {

@@ -23,7 +23,7 @@ public class PaginationUtils {
 
 
         int limit = findCurrentLimit();
-        int dataSize = provider != null ? provider.getSize() : 0;
+        int dataSize = provider != null ? provider.getSize(tTypedTable.getSearchPhase()) : 0;
 
         int lastPage = (int) Math.ceil((double) dataSize / limit);
 
@@ -34,7 +34,7 @@ public class PaginationUtils {
             currentPage++;
         }
 
-        tTypedTable.addData(limit, offset, tTypedTable.getSortColumn());
+        tTypedTable.addData(limit, offset, tTypedTable.getSortColumn(), tTypedTable.getSearchPhase());
 
         return new Pair<>(currentPage + 1, lastPage);
     }
@@ -49,20 +49,20 @@ public class PaginationUtils {
             currentPage--;
         }
 
-        tTypedTable.addData(limit, offset, tTypedTable.getSortColumn());
+        tTypedTable.addData(limit, offset, tTypedTable.getSortColumn(), tTypedTable.getSearchPhase());
 
-        return new Pair<>(currentPage + 1, (int) Math.ceil((double) (provider != null ? provider.getSize() : 0) / limit));
+        return new Pair<>(currentPage + 1, (int) Math.ceil((double) (provider != null ? provider.getSize(tTypedTable.getSearchPhase()) : 0) / limit));
     }
 
     public Pair<Integer, Integer> lastPageAction() {
         int limit = findCurrentLimit();
-        int dataSize = provider != null ? provider.getSize() : 0;
+        int dataSize = provider != null ? provider.getSize(tTypedTable.getSearchPhase()) : 0;
 
         int lastPage = (int) Math.ceil((double) dataSize / limit);
 
         offset = (lastPage - 1) * limit;
 
-        tTypedTable.addData(limit, offset, tTypedTable.getSortColumn());
+        tTypedTable.addData(limit, offset, tTypedTable.getSortColumn(), tTypedTable.getSearchPhase());
 
         return new Pair<>(lastPage, lastPage);
     }
@@ -72,8 +72,8 @@ public class PaginationUtils {
 
         offset = 0;
 
-        tTypedTable.addData(limit, offset, tTypedTable.getSortColumn());
+        tTypedTable.addData(limit, offset, tTypedTable.getSortColumn(), tTypedTable.getSearchPhase());
 
-        return new Pair<>(1, (int) Math.ceil((double) (provider != null ? provider.getSize() : 0) / limit));
+        return new Pair<>(1, (int) Math.ceil((double) (provider != null ? provider.getSize(tTypedTable.getSearchPhase()) : 0) / limit));
     }
 }
