@@ -64,4 +64,13 @@ public class TestModel {
     public void setTestFormatClass(TestFormatClass testFormatClass) {
         this.testFormatClass = testFormatClass;
     }
+
+
+    public TestEnum getTestEnum() {
+        return testEnum;
+    }
+
+    public void setTestEnum(TestEnum testEnum) {
+        this.testEnum = testEnum;
+    }
 }
