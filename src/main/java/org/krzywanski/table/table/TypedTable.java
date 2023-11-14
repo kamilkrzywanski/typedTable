@@ -260,6 +260,10 @@ public class TypedTable<T> extends JTable {
     }
 
     public String getSearchPhase(){
-        return searchPhaseSupplier != null ? searchPhaseSupplier.get() : null;
+        return searchPhaseSupplier != null ? stringToNullable(searchPhaseSupplier.get()) : null;
+    }
+
+    private String stringToNullable(String string){
+        return string != null && string.isEmpty() ? null : string;
     }
 }
