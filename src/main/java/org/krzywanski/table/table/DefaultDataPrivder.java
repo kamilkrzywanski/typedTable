@@ -2,6 +2,7 @@ package org.krzywanski.table.table;
 
 
 import java.util.List;
+import java.util.Optional;
 
 public class DefaultDataPrivder<T> implements DataProviderInterface<T>, SizeProviderInterface{
 
@@ -17,12 +18,12 @@ public class DefaultDataPrivder<T> implements DataProviderInterface<T>, SizeProv
     }
 
     @Override
-    public int getSize(String searchString) {
+    public int getSize(Optional<String> searchString) {
         return sizeSupplier.size(searchString);
     }
 
     @Override
-    public List<T> getData(int limit, int offest, SortColumn sortOrder, String searchString) {
+    public List<T> getData(int limit, int offest, SortColumn sortOrder, Optional<String> searchString) {
         return dataProviderInterface.getData(limit,offest,sortOrder, searchString);
     }
 }

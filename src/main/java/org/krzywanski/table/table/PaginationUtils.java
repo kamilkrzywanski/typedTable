@@ -1,11 +1,13 @@
 package org.krzywanski.table.table;
 
+import java.util.Optional;
+
 public class PaginationUtils {
 
     DefaultDataPrivder<?> provider;
     TypedTable<?> tTypedTable;
     int offset = 0;
-
+    int limit = 0;
     public <T> PaginationUtils(DefaultDataPrivder<T> provider, TypedTable<T> tTypedTable) {
         this.provider = provider;
         this.tTypedTable = tTypedTable;
@@ -20,10 +22,8 @@ public class PaginationUtils {
     }
 
     public Pair<Integer, Integer> nextPageAction() {
-
-
-        int limit = findCurrentLimit();
-        int dataSize = provider != null ? provider.getSize(tTypedTable.getSearchPhase()) : 0;
+        limit = findCurrentLimit();
+        int dataSize = getValue(provider);
 
         int lastPage = (int) Math.ceil((double) dataSize / limit);
 
@@ -34,13 +34,13 @@ public class PaginationUtils {
             currentPage++;
         }
 
-        tTypedTable.addData(limit, offset, tTypedTable.getSortColumn(), tTypedTable.getSearchPhase());
+        localAddData();
 
         return new Pair<>(currentPage + 1, lastPage);
     }
 
     public Pair<Integer, Integer> prevPageAction() {
-        int limit = findCurrentLimit();
+        limit = findCurrentLimit();
 
         int currentPage = offset / limit;
 
@@ -49,31 +49,39 @@ public class PaginationUtils {
             currentPage--;
         }
 
-        tTypedTable.addData(limit, offset, tTypedTable.getSortColumn(), tTypedTable.getSearchPhase());
+        localAddData();
 
-        return new Pair<>(currentPage + 1, (int) Math.ceil((double) (provider != null ? provider.getSize(tTypedTable.getSearchPhase()) : 0) / limit));
+        return new Pair<>(currentPage + 1, (int) Math.ceil((double) getValue(provider) / limit));
     }
 
     public Pair<Integer, Integer> lastPageAction() {
-        int limit = findCurrentLimit();
-        int dataSize = provider != null ? provider.getSize(tTypedTable.getSearchPhase()) : 0;
+        limit = findCurrentLimit();
+        int dataSize = getValue(provider);
 
         int lastPage = (int) Math.ceil((double) dataSize / limit);
 
         offset = (lastPage - 1) * limit;
-
-        tTypedTable.addData(limit, offset, tTypedTable.getSortColumn(), tTypedTable.getSearchPhase());
-
+        localAddData();
         return new Pair<>(lastPage, lastPage);
     }
 
     public Pair<Integer, Integer> firstPageAction() {
-        int limit = findCurrentLimit();
+        limit = findCurrentLimit();
 
         offset = 0;
 
-        tTypedTable.addData(limit, offset, tTypedTable.getSortColumn(), tTypedTable.getSearchPhase());
+        localAddData();
 
-        return new Pair<>(1, (int) Math.ceil((double) (provider != null ? provider.getSize(tTypedTable.getSearchPhase()) : 0) / limit));
+        return new Pair<>(1, (int) Math.ceil((double) getValue(provider) / limit));
+    }
+
+    private void localAddData() {
+        tTypedTable.addData(limit, offset);
+    }
+
+    private int getValue(DefaultDataPrivder<?> privder){
+        if(privder == null)
+            return 0;
+        return provider.getSize(Optional.ofNullable(tTypedTable.getSearchPhase()));
     }
 }
