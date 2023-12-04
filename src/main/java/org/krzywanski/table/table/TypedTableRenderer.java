@@ -33,6 +33,8 @@ public class TypedTableRenderer extends DefaultTableCellRenderer {
             if (value != null) value = new DecimalFormat(Objects.toString(getFormat(pdFieldPair), "#.#")).format(value);
 
         }
+        //Need to be before format by collection
+        setToolTipText(createToolTipText(value));
         if(Collection.class.isAssignableFrom(pdFieldPair.getSecond().getType())){
             value = formatCollection((Collection<?>) value);
         }
@@ -40,7 +42,6 @@ public class TypedTableRenderer extends DefaultTableCellRenderer {
         if (format != null)
             value = format.format(value);
 
-        setToolTipText(value == null ? "" : value.toString());
         return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
     }
 
@@ -53,8 +54,24 @@ public class TypedTableRenderer extends DefaultTableCellRenderer {
         );
     }
 
+    private String createToolTipText(Object tooltip) {
+        StringBuilder tooltipText = new StringBuilder("<html>");
+        if(tooltip == null) return "";
+
+
+        if(tooltip instanceof Collection){
+            tooltipText.append("<ul>");
+            for(Object o : (Collection<?>) tooltip){
+                tooltipText.append("<li>").append(o).append("</li>");
+            }
+            tooltipText.append("</ul>");
+        }else{
+            tooltipText.append(tooltip);
+        }
+        return tooltipText.toString();
+    }
     private String formatCollection(Collection<?> collection){
-        return "<html>" + collection.stream().map(Object::toString).reduce((s, s2) -> s + "<br> " + s2).orElse("");
+        return collection.stream().map(Object::toString).reduce((s, s2) -> s + "; " + s2).orElse("");
     }
     private String getFormat(Pair<PropertyDescriptor, Field> pdFieldPair) {
 
