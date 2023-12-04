@@ -36,9 +36,7 @@ public class ColumnCreator {
         Map<String, Integer> columns = new HashMap<>();
         Map<String, Integer> tempColumns = null;
         if (TableWidthProvider.getInstance() != null) {
-            if (TableWidthProvider.getInstance() != null) {
-                tempColumns = TableWidthProvider.getInstance().getTable(classType.getCanonicalName(), id);
-            }
+            tempColumns = TableWidthProvider.getInstance().getTable(classType.getCanonicalName(), id);
         }
 
         //To avoid multiple write TableWidthProvider.getInstance().getTable()... which is trying to ask db/read file from disk

@@ -22,8 +22,7 @@ public class DefaultTableWidthProvider implements TableWidthTool {
     public LinkedHashMap<String, Integer> getTable(String className, long id) {
 
         try {
-            InputStream f = null;
-            f = Files.newInputStream(saveDirectory.resolve(className.replaceAll("[-+.^:,]", "") + id +".properties"), StandardOpenOption.CREATE);
+            InputStream f = Files.newInputStream(saveDirectory.resolve(className.replaceAll("[-+.^:,]", "") + id +".properties"), StandardOpenOption.CREATE);
             ObjectInputStream oi = new ObjectInputStream(f);
             return (LinkedHashMap<String, Integer>) oi.readObject();
         } catch (IOException | ClassNotFoundException e) {

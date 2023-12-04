@@ -33,7 +33,7 @@ public class Main {
 
         if(sortColumn!= null && sortColumn.getColumnName().equals("columnB")){
 
-            if(sortColumn.getSortOrder() == SortOrder.ASCENDING)
+            if(SortOrder.ASCENDING.equals(sortColumn.getSortOrder()))
                 return Main.getData().stream().filter(testModel -> testModel.getColumnA().toLowerCase().contains(searchString.orElse(""))).sorted((o1, o2) -> o1.getColumnB().compareTo(o2.getColumnB())).skip(offest).limit(limit).collect(Collectors.toList());
             else
                 return Main.getData().stream().filter(testModel -> testModel.getColumnA().toLowerCase().contains(searchString.orElse(""))).sorted((o1, o2) -> o2.getColumnB().compareTo(o1.getColumnB())).skip(offest).limit(limit).collect(Collectors.toList());
@@ -52,7 +52,7 @@ public class Main {
         for(int i = 0 ; i<101;i++){
             TestModel TestModel2 = new TestModel();
             TestModel2.setColumnA("TEST VALUE" + i);
-            TestModel2.setColumnB(new Double(i+"."+i));
+            TestModel2.setColumnB(Double.parseDouble(i+"."+i));
             list.add(TestModel2);
         }
         return  list;
