@@ -24,16 +24,16 @@ public class Main {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("JTable Example");
         frame.setLayout(new MigLayout());
-        frame.add(TypedTablePanel.getTableWithProvider(new DefaultDataPrivder<>(20,Main::getData, Main::getSize), TestModel.class), "grow,push");
+        frame.add(TypedTablePanel.getTableWithProvider(new DefaultDataPrivder<>(20, Main::getData, Main::getSize), TestModel.class), "grow,push");
         frame.setVisible(true);
         frame.pack();
     }
 
     public static List<TestModel> getData(int limit, int offest, SortColumn sortColumn, Optional<String> searchString) {
 
-        if(sortColumn!= null && sortColumn.getColumnName().equals("columnB")){
+        if (sortColumn != null && sortColumn.getColumnName().equals("columnB")) {
 
-            if(SortOrder.ASCENDING.equals(sortColumn.getSortOrder()))
+            if (SortOrder.ASCENDING.equals(sortColumn.getSortOrder()))
                 return Main.getData().stream().filter(testModel -> testModel.getColumnA().toLowerCase().contains(searchString.orElse(""))).sorted((o1, o2) -> o1.getColumnB().compareTo(o2.getColumnB())).skip(offest).limit(limit).collect(Collectors.toList());
             else
                 return Main.getData().stream().filter(testModel -> testModel.getColumnA().toLowerCase().contains(searchString.orElse(""))).sorted((o1, o2) -> o2.getColumnB().compareTo(o1.getColumnB())).skip(offest).limit(limit).collect(Collectors.toList());
@@ -46,15 +46,15 @@ public class Main {
         return (int) Main.getData().stream().filter(testModel -> testModel.getColumnA().toLowerCase().contains(searchString.orElse(""))).count();
     }
 
-    static List<TestModel> getData(){
+    static List<TestModel> getData() {
         List<TestModel> list = new ArrayList<>();
 
-        for(int i = 0 ; i<101;i++){
+        for (int i = 0; i < 101; i++) {
             TestModel TestModel2 = new TestModel();
             TestModel2.setColumnA("TEST VALUE" + i);
-            TestModel2.setColumnB(Double.parseDouble(i+"."+i));
+            TestModel2.setColumnB(Double.parseDouble(i + "." + i));
             list.add(TestModel2);
         }
-        return  list;
+        return list;
     }
 }
