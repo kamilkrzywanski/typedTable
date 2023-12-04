@@ -10,6 +10,7 @@ import java.lang.reflect.Field;
 import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
 
@@ -32,11 +33,14 @@ public class TypedTableRenderer extends DefaultTableCellRenderer {
             if (value != null) value = new DecimalFormat(Objects.toString(getFormat(pdFieldPair), "#.#")).format(value);
 
         }
+        if(Collection.class.isAssignableFrom(pdFieldPair.getSecond().getType())){
+            value = formatCollection((Collection<?>) value);
+        }
         Format format = ((TypedTable<?>) table).getFormatMap().get(pdFieldPair.getSecond().getType());
         if (format != null)
             value = format.format(value);
 
-
+        setToolTipText(value == null ? "" : value.toString());
         return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
     }
 
@@ -49,6 +53,9 @@ public class TypedTableRenderer extends DefaultTableCellRenderer {
         );
     }
 
+    private String formatCollection(Collection<?> collection){
+        return "<html>" + collection.stream().map(Object::toString).reduce((s, s2) -> s + "<br> " + s2).orElse("");
+    }
     private String getFormat(Pair<PropertyDescriptor, Field> pdFieldPair) {
 
         MyTableColumn annotation = pdFieldPair.getSecond().getAnnotation(MyTableColumn.class);
