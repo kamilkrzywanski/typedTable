@@ -82,6 +82,6 @@ public class PaginationUtils {
     private int getValue(DefaultDataPrivder<?> privder){
         if(privder == null)
             return 0;
-        return provider.getSize(Optional.ofNullable(tTypedTable.getSearchPhase()));
+        return provider.getSize(tTypedTable.getSearchPhase());
     }
 }

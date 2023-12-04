@@ -18,12 +18,12 @@ public class DefaultDataPrivder<T> implements DataProviderInterface<T>, SizeProv
     }
 
     @Override
-    public int getSize(Optional<String> searchString) {
+    public int getSize(String searchString) {
         return sizeSupplier.size(searchString);
     }
 
     @Override
-    public List<T> getData(int limit, int offest, SortColumn sortOrder, Optional<String> searchString) {
+    public List<T> getData(int limit, int offest, SortColumn sortOrder, String searchString) {
         return dataProviderInterface.getData(limit,offest,sortOrder, searchString);
     }
 }

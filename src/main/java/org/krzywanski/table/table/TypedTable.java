@@ -144,7 +144,7 @@ public class TypedTable<T> extends JTable {
      */
     protected void addData(int limit, int offset) {
 
-        currentData = provider != null ? provider.getData(limit, offset, getSortColumn(), Optional.ofNullable(getSearchPhase())) : dataList;
+        currentData = provider != null ? provider.getData(limit, offset, getSortColumn(), getSearchPhase()) : dataList;
         model.getDataVector().clear();
         currentData.forEach(t -> {
             Vector<Object> element = new Vector<>();

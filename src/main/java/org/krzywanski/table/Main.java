@@ -10,6 +10,7 @@ import org.krzywanski.table.test.TestModel;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -29,21 +30,21 @@ public class Main {
         frame.pack();
     }
 
-    public static List<TestModel> getData(int limit, int offest, SortColumn sortColumn, Optional<String> searchString) {
+    public static List<TestModel> getData(int limit, int offest, SortColumn sortColumn, String searchString) {
 
         if (sortColumn != null && sortColumn.getColumnName().equals("columnB")) {
 
             if (SortOrder.ASCENDING.equals(sortColumn.getSortOrder()))
-                return Main.getData().stream().filter(testModel -> testModel.getColumnA().toLowerCase().contains(searchString.orElse(""))).sorted((o1, o2) -> o1.getColumnB().compareTo(o2.getColumnB())).skip(offest).limit(limit).collect(Collectors.toList());
+                return Main.getData().stream().filter(testModel -> testModel.getColumnA().toLowerCase().contains(Objects.requireNonNullElse(searchString,""))).sorted((o1, o2) -> o1.getColumnB().compareTo(o2.getColumnB())).skip(offest).limit(limit).collect(Collectors.toList());
             else
-                return Main.getData().stream().filter(testModel -> testModel.getColumnA().toLowerCase().contains(searchString.orElse(""))).sorted((o1, o2) -> o2.getColumnB().compareTo(o1.getColumnB())).skip(offest).limit(limit).collect(Collectors.toList());
+                return Main.getData().stream().filter(testModel -> testModel.getColumnA().toLowerCase().contains(Objects.requireNonNullElse(searchString,""))).sorted((o1, o2) -> o2.getColumnB().compareTo(o1.getColumnB())).skip(offest).limit(limit).collect(Collectors.toList());
         }
 
-        return Main.getData().stream().filter(testModel -> testModel.getColumnA().toLowerCase().contains(searchString.orElse(""))).skip(offest).limit(limit).collect(Collectors.toList());
+        return Main.getData().stream().filter(testModel -> testModel.getColumnA().toLowerCase().contains(Objects.requireNonNullElse(searchString,""))).skip(offest).limit(limit).collect(Collectors.toList());
     }
 
-    public static int getSize(Optional<String> searchString) {
-        return (int) Main.getData().stream().filter(testModel -> testModel.getColumnA().toLowerCase().contains(searchString.orElse(""))).count();
+    public static int getSize(String searchString) {
+        return (int) Main.getData().stream().filter(testModel -> testModel.getColumnA().toLowerCase().contains(Objects.requireNonNullElse(searchString,""))).count();
     }
 
     static List<TestModel> getData() {
