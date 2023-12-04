@@ -1,10 +1,8 @@
 package org.krzywanski.table;
 
 import net.miginfocom.swing.MigLayout;
-import org.krzywanski.table.table.DefaultDataPrivder;
-import org.krzywanski.table.table.SortColumn;
+import org.krzywanski.table.table.*;
 import org.krzywanski.table.table.SortOrder;
-import org.krzywanski.table.table.TypedTablePanel;
 import org.krzywanski.table.test.TestModel;
 
 import javax.swing.*;
@@ -30,7 +28,7 @@ public class Main {
         frame.pack();
     }
 
-    public static List<TestModel> getData(int limit, int offest, SortColumn sortColumn, String searchString) {
+    public static List<TestModel> getData(int limit, int offest, SortColumn sortColumn, String searchString, ActionType actionType) {
 
         if (sortColumn != null && sortColumn.getColumnName().equals("columnB")) {
 

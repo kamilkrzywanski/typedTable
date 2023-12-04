@@ -34,7 +34,7 @@ public class PaginationUtils {
             currentPage++;
         }
 
-        localAddData();
+        localAddData(ActionType.NEXT_PAGE);
 
         return new Pair<>(currentPage + 1, lastPage);
     }
@@ -49,7 +49,7 @@ public class PaginationUtils {
             currentPage--;
         }
 
-        localAddData();
+        localAddData(ActionType.PREV_PAGE);
 
         return new Pair<>(currentPage + 1, (int) Math.ceil((double) getValue(provider) / limit));
     }
@@ -61,7 +61,7 @@ public class PaginationUtils {
         int lastPage = (int) Math.ceil((double) dataSize / limit);
 
         offset = (lastPage - 1) * limit;
-        localAddData();
+        localAddData(ActionType.LAST_PAGE);
         return new Pair<>(lastPage, lastPage);
     }
 
@@ -70,13 +70,13 @@ public class PaginationUtils {
 
         offset = 0;
 
-        localAddData();
+        localAddData(ActionType.FIRST_PAGE);
 
         return new Pair<>(1, (int) Math.ceil((double) getValue(provider) / limit));
     }
 
-    private void localAddData() {
-        tTypedTable.addData(limit, offset);
+    private void localAddData(ActionType actionType) {
+        tTypedTable.addData(limit, offset, actionType);
     }
 
     private int getValue(DefaultDataPrivder<?> privder){

@@ -38,7 +38,7 @@ public class ExportUtils {
             headerRow.createCell(headings).setCellValue(tableColumns.get(headings).getHeaderValue().toString());//Write column name
         }
 
-        List<?> currentData = table.provider != null ? table.provider.getData(1000, 0, null, null) : table.dataList;
+        List<?> currentData = table.provider != null ? table.provider.getData(1000, 0, null, null, ActionType.EXPORT) : table.dataList;
         List<PropertyDescriptor> keyList = new ArrayList<>(table.columnCreator.getTableColumns().keySet());
         for (int rows = 0; rows < currentData.size(); rows++) { //For each table row
             for (int cols = 0; cols < keyList.size(); cols++) { //For each table column
@@ -75,7 +75,7 @@ public class ExportUtils {
 
         data.add(currentLine);
 
-        List<?> currentData = table.provider != null ? table.provider.getData(1000, 0, null, null) : table.dataList;
+        List<?> currentData = table.provider != null ? table.provider.getData(1000, 0, null, null, ActionType.EXPORT) : table.dataList;
         List<PropertyDescriptor> keyList = new ArrayList<>(table.columnCreator.getTableColumns().keySet());
         for (Object currentDatum : currentData) { //For each table row
             currentLine = new String[keyList.size()];

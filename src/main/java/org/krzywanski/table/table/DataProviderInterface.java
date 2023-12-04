@@ -5,6 +5,6 @@ import java.util.Optional;
 
 public interface DataProviderInterface<T> {
 
-    List<T> getData(int limit, int offest, SortColumn sortOrder, String searchString);
+    List<T> getData(int limit, int offest, SortColumn sortOrder, String searchString, ActionType actionType);
 
 }
