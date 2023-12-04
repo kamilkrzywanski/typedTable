@@ -4,11 +4,11 @@ import java.util.Optional;
 
 public class PaginationUtils {
 
-    DefaultDataPrivder<?> provider;
+    TableDataProvider<?> provider;
     TypedTable<?> tTypedTable;
     int offset = 0;
     int limit = 0;
-    public <T> PaginationUtils(DefaultDataPrivder<T> provider, TypedTable<T> tTypedTable) {
+    public <T> PaginationUtils(TableDataProvider<T> provider, TypedTable<T> tTypedTable) {
         this.provider = provider;
         this.tTypedTable = tTypedTable;
     }
@@ -16,7 +16,7 @@ public class PaginationUtils {
     private Integer findCurrentLimit() {
 
         if (provider != null) {
-            return provider.limit;
+            return provider.getLimit();
         }
         return tTypedTable.currentData.size();
     }
@@ -79,7 +79,7 @@ public class PaginationUtils {
         tTypedTable.addData(limit, offset, actionType);
     }
 
-    private int getValue(DefaultDataPrivder<?> privder){
+    private int getValue(TableDataProvider<?> privder){
         if(privder == null)
             return 0;
         return provider.getSize(tTypedTable.getSearchPhase());

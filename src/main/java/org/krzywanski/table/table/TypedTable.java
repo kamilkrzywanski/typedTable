@@ -57,7 +57,7 @@ public class TypedTable<T> extends JTable {
     /**
      * If dynamic provider used insead of list;
      */
-    DefaultDataPrivder<T> provider;
+    TableDataProvider<T> provider;
     /**
      * Handle for current data on list
      */
@@ -79,7 +79,7 @@ public class TypedTable<T> extends JTable {
      * @param provider - provider of data with pagination requests
      * @param id - identifier of instance of table to save widths of table if we use one entity in few places and want to each one have individual widths and columns
      */
-    public TypedTable(List<T> dataList, Class<? extends T> typeClass, DefaultDataPrivder<T> provider, long id) {
+    public TypedTable(List<T> dataList, Class<? extends T> typeClass, TableDataProvider<T> provider, long id) {
         super(new TypedTableModel(new ColumnCreator(typeClass, id)));
         this.id = id;
         columnCreator = new ColumnCreator(typeClass, id);
@@ -114,7 +114,7 @@ public class TypedTable<T> extends JTable {
      * @param typeClass - data class
      * @param provider - provider of data with pagination requests
      */
-    public TypedTable(List<T> dataList, Class<? extends T> typeClass, DefaultDataPrivder<T> provider){
+    public TypedTable(List<T> dataList, Class<? extends T> typeClass, TableDataProvider<T> provider){
         this(dataList,typeClass,provider,0);
     }
 

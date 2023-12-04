@@ -33,12 +33,12 @@ public class TypedTablePanel<T> extends JPanel {
         return new TypedTablePanel<>(dataList, typeClass, null);
     }
 
-    public static <T> TypedTablePanel<T> getTableWithProvider(DefaultDataPrivder<T> provider, Class<T> typeClass) {
+    public static <T> TypedTablePanel<T> getTableWithProvider(TableDataProvider<T> provider, Class<T> typeClass) {
         return new TypedTablePanel<>(null, typeClass, provider);
     }
 
 
-    private TypedTablePanel(List<T> dataList, Class<? extends T> typeClass, DefaultDataPrivder<T> provider) {
+    private TypedTablePanel(List<T> dataList, Class<? extends T> typeClass, TableDataProvider<T> provider) {
         super(new MigLayout());
         table = new TypedTable<>(dataList, typeClass, provider, 1);
         createButtons();
