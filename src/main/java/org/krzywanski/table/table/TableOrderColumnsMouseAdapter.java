@@ -8,6 +8,7 @@ import javax.swing.table.TableColumn;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.lang.reflect.Field;
 import java.util.*;
 
 /**
@@ -158,16 +159,30 @@ class TableOrderColumnsMouseAdapter extends MouseAdapter {
 
         int col = table.columnAtPoint(e.getPoint());
 
+        String sortString = "";
+        Field field = table.columnCreator.getFieldByName(table.getColumnModel().getColumn(col).getHeaderValue()).getSecond();
+        if (field == null) return;
+        MyTableColumn annotation = field.getAnnotation(MyTableColumn.class);
+        if (annotation == null) return;
+        if (!annotation.sortable()) return;
+
+        if (annotation.sortString() != null && !annotation.sortString().isEmpty()) {
+            sortString = annotation.sortString();
+        } else {
+            sortString = field.getName();
+        }
+
+
         Collections.list(table.getColumnModel().getColumns()).forEach(this::removeSortCharacters);
 
         if (currentSortAsc == null && currentSortDesc == null) {
-            updateColumnSymbol(col, TypedTableDefaults.CARRET_ASC_SYMBOL, SortOrder.ASCENDING);
+            updateColumnSymbol(col, TypedTableDefaults.CARRET_ASC_SYMBOL, SortOrder.ASCENDING, sortString);
         }
         if (currentSortAsc != null && currentSortAsc == table.getColumnModel().getColumn(col)) {
-            updateColumnSymbol(col, TypedTableDefaults.CARRET_DESC_SYMBOL, SortOrder.DESCENDING);
+            updateColumnSymbol(col, TypedTableDefaults.CARRET_DESC_SYMBOL, SortOrder.DESCENDING, sortString);
         }
         if (currentSortAsc != null && currentSortAsc != table.getColumnModel().getColumn(col)) {
-            updateColumnSymbol(col, TypedTableDefaults.CARRET_ASC_SYMBOL, SortOrder.ASCENDING);
+            updateColumnSymbol(col, TypedTableDefaults.CARRET_ASC_SYMBOL, SortOrder.ASCENDING, sortString);
         }
 
         if (currentSortDesc != null) {
@@ -186,9 +201,9 @@ class TableOrderColumnsMouseAdapter extends MouseAdapter {
      * @param newSymbol - new symbol of asceding, desceding
      * @param sortOrder - value from sort order enum
      */
-    private void updateColumnSymbol(int column, String newSymbol, SortOrder sortOrder) {
+    private void updateColumnSymbol(int column, String newSymbol, SortOrder sortOrder, String columnName) {
         table.getColumnModel().getColumn(column).setHeaderValue(table.getColumnModel().getColumn(column).getHeaderValue() + newSymbol);
-        table.setSortColumn(new SortColumn(table.columnCreator.getFieldByName(table.getColumnModel().getColumn(column).getHeaderValue()).getSecond().getName(), sortOrder));
+        table.setSortColumn(new SortColumn(columnName, sortOrder));
     }
 
     /**

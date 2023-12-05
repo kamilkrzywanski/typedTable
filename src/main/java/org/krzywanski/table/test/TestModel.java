@@ -6,10 +6,10 @@ import java.util.Date;
 
 public class TestModel {
 
-    @MyTableColumn(label = "XXX", width = 200)
+    @MyTableColumn(label = "XXX", width = 200, sortable = true)
     private String columnA;
 
-    @MyTableColumn(label = "Decimal column", format = "0.00$")
+    @MyTableColumn(label = "Decimal column", format = "0.00$", sortable = true)
     private Double columnB;
 
     @MyTableColumn(label = "Test label")

@@ -32,4 +32,7 @@ public @interface MyTableColumn {
      */
     String format() default "";
 
+    boolean sortable() default false;
+
+    String sortString() default "";
 }
