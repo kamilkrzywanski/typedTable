@@ -60,7 +60,8 @@ public class TypedTableRenderer extends DefaultTableCellRenderer {
 
 
         if(tooltip instanceof Collection){
-            tooltipText.append("<ul>");
+            //Margin left, otherwise it is moved to the right
+            tooltipText.append("<ul style=\"margin-left: 10px;\">");
             for(Object o : (Collection<?>) tooltip){
                 tooltipText.append("<li>").append(o).append("</li>");
             }
@@ -71,6 +72,7 @@ public class TypedTableRenderer extends DefaultTableCellRenderer {
         return tooltipText.toString();
     }
     private String formatCollection(Collection<?> collection){
+        if(collection == null || collection.isEmpty()) return "";
         return collection.stream().map(Object::toString).reduce((s, s2) -> s + "; " + s2).orElse("");
     }
     private String getFormat(Pair<PropertyDescriptor, Field> pdFieldPair) {
