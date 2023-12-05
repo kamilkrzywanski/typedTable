@@ -1,5 +1,6 @@
 package org.krzywanski.table.table;
 
+import org.krzywanski.table.annot.EnableMultiSort;
 import org.krzywanski.table.annot.MyTableColumn;
 
 import javax.swing.*;
@@ -31,7 +32,7 @@ public class TypedTable<T> extends JTable {
      */
     List<ActionListener> changePageListeners = new ArrayList<>();
 
-    SortColumn sortColumn;
+    List<SortColumn> sortColumn = new ArrayList<>();
 
     private final Map<Class<?>, Format> formatMap = new HashMap<>();
 
@@ -71,6 +72,7 @@ public class TypedTable<T> extends JTable {
     Supplier<String> searchPhaseSupplier;
 
     protected final long id;
+    private final boolean multiSortEnable;
 
     /**
      * Default constructor of table
@@ -82,6 +84,7 @@ public class TypedTable<T> extends JTable {
     public TypedTable(List<T> dataList, Class<? extends T> typeClass, TableDataProvider<T> provider, long id) {
         super(new TypedTableModel(new ColumnCreator(typeClass, id)));
         this.id = id;
+        this.multiSortEnable = typeClass.isAnnotationPresent(EnableMultiSort.class);
         columnCreator = new ColumnCreator(typeClass, id);
         this.typeClass = typeClass;
         this.dataList = dataList;
@@ -144,7 +147,7 @@ public class TypedTable<T> extends JTable {
      */
     protected void addData(int limit, int offset, ActionType actionType) {
 
-        currentData = provider != null ? provider.getData(limit, offset, getSortColumn(), getSearchPhase(), actionType) : dataList;
+        currentData = provider != null ? provider.getData(limit, offset, getSortColumns(), getSearchPhase(), actionType) : dataList;
         model.getDataVector().clear();
         currentData.forEach(t -> {
             Vector<Object> element = new Vector<>();
@@ -210,7 +213,7 @@ public class TypedTable<T> extends JTable {
         return formatMap;
     }
 
-    public SortColumn getSortColumn() {
+    public List<SortColumn> getSortColumns() {
         return sortColumn;
     }
 
@@ -218,7 +221,7 @@ public class TypedTable<T> extends JTable {
      * Set current colum to sort data
      * @param sortColumn - model of sorted column
      */
-    public void setSortColumn(SortColumn sortColumn) {
+    public void setSortColumn(List<SortColumn> sortColumn) {
         this.sortColumn = sortColumn;
     }
 
@@ -265,5 +268,9 @@ public class TypedTable<T> extends JTable {
 
     private String stringToNullable(String string){
         return string != null && string.isEmpty() ? null : string;
+    }
+
+    protected boolean isMultiSortEnable() {
+        return multiSortEnable;
     }
 }

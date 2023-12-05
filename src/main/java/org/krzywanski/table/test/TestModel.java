@@ -1,9 +1,11 @@
 package org.krzywanski.table.test;
 
+import org.krzywanski.table.annot.EnableMultiSort;
 import org.krzywanski.table.annot.MyTableColumn;
 
 import java.util.Date;
 
+@EnableMultiSort
 public class TestModel {
 
     @MyTableColumn(label = "XXX", width = 200, sortable = true)

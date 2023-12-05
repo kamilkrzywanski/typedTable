@@ -28,21 +28,21 @@ public class Main {
         frame.pack();
     }
 
-    public static List<TestModel> getData(int limit, int offest, SortColumn sortColumn, String searchString, ActionType actionType) {
+    public static List<TestModel> getData(int limit, int offest, List<SortColumn> sortColumn, String searchString, ActionType actionType) {
 
-        if (sortColumn != null && sortColumn.getColumnName().equals("columnB")) {
+        if (sortColumn != null && !sortColumn.isEmpty() && sortColumn.get(0).getColumnName().equals("columnB")) {
 
-            if (SortOrder.ASCENDING.equals(sortColumn.getSortOrder()))
-                return Main.getData().stream().filter(testModel -> testModel.getColumnA().toLowerCase().contains(Objects.requireNonNullElse(searchString,""))).sorted((o1, o2) -> o1.getColumnB().compareTo(o2.getColumnB())).skip(offest).limit(limit).collect(Collectors.toList());
+            if (SortOrder.ASCENDING.equals(sortColumn.get(0).getSortOrder()))
+                return Main.getData().stream().filter(testModel -> testModel.getColumnA().toLowerCase().contains(Objects.requireNonNullElse(searchString, ""))).sorted((o1, o2) -> o1.getColumnB().compareTo(o2.getColumnB())).skip(offest).limit(limit).collect(Collectors.toList());
             else
-                return Main.getData().stream().filter(testModel -> testModel.getColumnA().toLowerCase().contains(Objects.requireNonNullElse(searchString,""))).sorted((o1, o2) -> o2.getColumnB().compareTo(o1.getColumnB())).skip(offest).limit(limit).collect(Collectors.toList());
+                return Main.getData().stream().filter(testModel -> testModel.getColumnA().toLowerCase().contains(Objects.requireNonNullElse(searchString, ""))).sorted((o1, o2) -> o2.getColumnB().compareTo(o1.getColumnB())).skip(offest).limit(limit).collect(Collectors.toList());
         }
 
-        return Main.getData().stream().filter(testModel -> testModel.getColumnA().toLowerCase().contains(Objects.requireNonNullElse(searchString,""))).skip(offest).limit(limit).collect(Collectors.toList());
+        return Main.getData().stream().filter(testModel -> testModel.getColumnA().toLowerCase().contains(Objects.requireNonNullElse(searchString, ""))).skip(offest).limit(limit).collect(Collectors.toList());
     }
 
     public static int getSize(String searchString) {
-        return (int) Main.getData().stream().filter(testModel -> testModel.getColumnA().toLowerCase().contains(Objects.requireNonNullElse(searchString,""))).count();
+        return (int) Main.getData().stream().filter(testModel -> testModel.getColumnA().toLowerCase().contains(Objects.requireNonNullElse(searchString, ""))).count();
     }
 
     static List<TestModel> getData() {

@@ -154,13 +154,10 @@ class TableOrderColumnsMouseAdapter extends MouseAdapter {
      */
     private void updateSort(MouseEvent e) {
 
-        TableColumn currentSortAsc = findCurrentSort(TypedTableDefaults.CARRET_ASC_SYMBOL).orElse(null);
-        TableColumn currentSortDesc = findCurrentSort(TypedTableDefaults.CARRET_DESC_SYMBOL).orElse(null);
-
-        int col = table.columnAtPoint(e.getPoint());
+        int column = table.columnAtPoint(e.getPoint());
 
         String sortString = "";
-        Field field = table.columnCreator.getFieldByName(table.getColumnModel().getColumn(col).getHeaderValue()).getSecond();
+        Field field = table.columnCreator.getFieldByName(table.getColumnModel().getColumn(column).getHeaderValue()).getSecond();
         if (field == null) return;
         MyTableColumn annotation = field.getAnnotation(MyTableColumn.class);
         if (annotation == null) return;
@@ -172,26 +169,47 @@ class TableOrderColumnsMouseAdapter extends MouseAdapter {
             sortString = field.getName();
         }
 
+        if (table.isMultiSortEnable()) multiColumnSortUpdate(sortString, column);
+        else singeColumnSortUpdate(sortString, column);
+
+        table.getChangePageListeners().forEach(actionListener -> actionListener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "firstPageAction")));
+    }
+
+    private void multiColumnSortUpdate(String sortString, int column) {
+        table.getSortColumns().stream().filter(sortColumn -> sortColumn.getColumnName().equals(sortString)).findAny().ifPresentOrElse(sortColumn -> {
+            if (sortColumn.getSortOrder().equals(SortOrder.ASCENDING)) {
+                sortColumn.sortOrder = SortOrder.DESCENDING;
+                updateColumnSymbol(column, TypedTableDefaults.CARRET_DESC_SYMBOL, SortOrder.DESCENDING, sortString);
+            } else {
+                table.getSortColumns().remove(sortColumn);
+                updateColumnSymbol(column, "", SortOrder.ASCENDING, sortString);
+            }
+        }, () -> {
+            table.getSortColumns().add(new SortColumn(sortString, SortOrder.ASCENDING));
+            updateColumnSymbol(column, TypedTableDefaults.CARRET_ASC_SYMBOL, SortOrder.ASCENDING, sortString);
+        });
+    }
+
+    private void singeColumnSortUpdate(String sortString, int column){
+        TableColumn currentSortAsc = findCurrentSort(TypedTableDefaults.CARRET_ASC_SYMBOL).orElse(null);
+        TableColumn currentSortDesc = findCurrentSort(TypedTableDefaults.CARRET_DESC_SYMBOL).orElse(null);
 
         Collections.list(table.getColumnModel().getColumns()).forEach(this::removeSortCharacters);
 
         if (currentSortAsc == null && currentSortDesc == null) {
-            updateColumnSymbol(col, TypedTableDefaults.CARRET_ASC_SYMBOL, SortOrder.ASCENDING, sortString);
+            updateColumnSymbol(column, TypedTableDefaults.CARRET_ASC_SYMBOL, SortOrder.ASCENDING, sortString);
         }
-        if (currentSortAsc != null && currentSortAsc == table.getColumnModel().getColumn(col)) {
-            updateColumnSymbol(col, TypedTableDefaults.CARRET_DESC_SYMBOL, SortOrder.DESCENDING, sortString);
+        if (currentSortAsc != null && currentSortAsc == table.getColumnModel().getColumn(column)) {
+            updateColumnSymbol(column, TypedTableDefaults.CARRET_DESC_SYMBOL, SortOrder.DESCENDING, sortString);
         }
-        if (currentSortAsc != null && currentSortAsc != table.getColumnModel().getColumn(col)) {
-            updateColumnSymbol(col, TypedTableDefaults.CARRET_ASC_SYMBOL, SortOrder.ASCENDING, sortString);
+        if (currentSortAsc != null && currentSortAsc != table.getColumnModel().getColumn(column)) {
+            updateColumnSymbol(column, TypedTableDefaults.CARRET_ASC_SYMBOL, SortOrder.ASCENDING, sortString);
         }
 
         if (currentSortDesc != null) {
-            table.getColumnModel().getColumn(col).setHeaderValue(table.getColumnModel().getColumn(col).getHeaderValue().toString().replaceAll(TypedTableDefaults.CARRET_DESC_SYMBOL, ""));
-            table.setSortColumn(null);
+            table.getColumnModel().getColumn(column).setHeaderValue(table.getColumnModel().getColumn(column).getHeaderValue().toString().replaceAll(TypedTableDefaults.CARRET_DESC_SYMBOL, ""));
+            table.setSortColumn(Collections.emptyList());
         }
-        table.getChangePageListeners().forEach(actionListener -> actionListener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "firstPageAction")));
-
-
     }
 
     /**
@@ -202,8 +220,14 @@ class TableOrderColumnsMouseAdapter extends MouseAdapter {
      * @param sortOrder - value from sort order enum
      */
     private void updateColumnSymbol(int column, String newSymbol, SortOrder sortOrder, String columnName) {
-        table.getColumnModel().getColumn(column).setHeaderValue(table.getColumnModel().getColumn(column).getHeaderValue() + newSymbol);
-        table.setSortColumn(new SortColumn(columnName, sortOrder));
+        table.getColumnModel().getColumn(column).setHeaderValue(findAndReplaceSymbols(table.getColumnModel().getColumn(column).getHeaderValue()) + newSymbol);
+
+        if(!table.isMultiSortEnable())
+            table.setSortColumn(Collections.singletonList(new SortColumn(columnName, sortOrder)));
+    }
+
+    private String findAndReplaceSymbols(Object columnName){
+        return columnName.toString().replaceAll(TypedTableDefaults.CARRET_ASC_SYMBOL, "").replaceAll(TypedTableDefaults.CARRET_DESC_SYMBOL, "");
     }
 
     /**

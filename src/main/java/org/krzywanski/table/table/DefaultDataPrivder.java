@@ -23,7 +23,7 @@ public class DefaultDataPrivder<T> implements TableDataProvider<T> {
     }
 
     @Override
-    public List<T> getData(int limit, int offest, SortColumn sortOrder, String searchString, ActionType actionType) {
+    public List<T> getData(int limit, int offest, List<SortColumn> sortOrder, String searchString, ActionType actionType) {
         return dataProviderInterface.getData(limit,offest,sortOrder, searchString, actionType);
     }
 
