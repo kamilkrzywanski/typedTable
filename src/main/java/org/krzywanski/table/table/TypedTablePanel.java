@@ -19,11 +19,12 @@ import java.util.Objects;
  */
 public class TypedTablePanel<T> extends JPanel {
     PopupDialog popupDialog;
-    JButton nextPageButton;
+    JButton filterButton;
     JButton exportExcelButton;
-    JButton prevPageButton;
-    JButton lastPageButton;
     JButton firstPageButton;
+    JButton prevPageButton;
+    JButton nextPageButton;
+    JButton lastPageButton;
     JButton searchButton;
     JLabel page;
 
@@ -36,7 +37,6 @@ public class TypedTablePanel<T> extends JPanel {
     public static <T> TypedTablePanel<T> getTableWithProvider(TableDataProvider<T> provider, Class<T> typeClass) {
         return new TypedTablePanel<>(null, typeClass, provider);
     }
-
 
     private TypedTablePanel(List<T> dataList, Class<? extends T> typeClass, TableDataProvider<T> provider) {
         super(new MigLayout());
@@ -62,6 +62,7 @@ public class TypedTablePanel<T> extends JPanel {
     }
 
     void createButtons() {
+        filterButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("filter-symbol.png")));
         exportExcelButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("export_excel.png")));
         nextPageButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("next.png")));
         prevPageButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("back.png")));
@@ -70,8 +71,8 @@ public class TypedTablePanel<T> extends JPanel {
         searchButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("search.png")));
         page = new JLabel("");
         popupDialog = new PopupDialog(e -> firstPageAction());
-
-        addButton(exportExcelButton, "split, al right");
+        addButton(filterButton, "split, al right");
+        addButton(exportExcelButton, "");
         addButton(firstPageButton, "");
         addButton(prevPageButton, "");
         add(page);
@@ -79,12 +80,16 @@ public class TypedTablePanel<T> extends JPanel {
         addButton(lastPageButton, "");
         addButton(searchButton, "wrap");
 
+        filterButton.addActionListener(e -> filterAction());
+        exportExcelButton.addActionListener(e -> exportExcelAction());
         firstPageButton.addActionListener(e -> firstPageAction());
         prevPageButton.addActionListener(e -> prevPageAction());
-        lastPageButton.addActionListener(e -> lastPageAction());
         nextPageButton.addActionListener(e -> nextPageAction());
-        exportExcelButton.addActionListener(e -> exportExcelAction());
+        lastPageButton.addActionListener(e -> lastPageAction());
         searchButton.addActionListener(e -> searchAction());
+    }
+
+    private void filterAction() {
     }
 
     private void searchAction() {
