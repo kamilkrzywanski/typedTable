@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.LinkedHashMap;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
@@ -15,7 +16,7 @@ import java.util.logging.Logger;
  * you can Override it with
  */
 public class DefaultTableWidthProvider implements TableWidthTool {
-    Path saveDirectory = Paths.get(System.getenv("LOCALAPPDATA"), "typedTable");
+    Path saveDirectory = Paths.get(Objects.requireNonNullElse(System.getenv("LOCALAPPDATA"),System.getProperty("user.home")) , "typedTable");
 
     @Override
     @SuppressWarnings("unchecked")
