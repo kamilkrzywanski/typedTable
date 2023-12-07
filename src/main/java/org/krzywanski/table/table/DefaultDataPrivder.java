@@ -4,10 +4,13 @@ package org.krzywanski.table.table;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Default implementation of TableDataProvider in case when you don't want to implement your own, and you have separate requests for size and data
+ * @param <T> - type of data
+ */
 public class DefaultDataPrivder<T> implements TableDataProvider<T> {
 
     int limit;
-
     DataProviderInterface<T> dataProviderInterface;
     final SizeSupplier sizeSupplier;
 

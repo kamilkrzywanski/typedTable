@@ -129,9 +129,7 @@ public class FilterDialog extends JDialog {
     }
 
     private void addCustomFilter(TableFilter filter, IFilterComponent component) {
-        JLabel jLabel = new JLabel(getFilterLabel(filter));
-        filterPanel.add(jLabel);
-        filterPanel.add(component.getComponent(), "growx, wrap");
+        basicAdd(getFilterLabel(filter), component.getComponent());
         filterComponents.put(filter.name(), component);
     }
 
@@ -153,8 +151,7 @@ public class FilterDialog extends JDialog {
         for(Object enumValue : filter.type().getEnumConstants()){
             comboBox.addItem(enumValue);
         }
-        filterPanel.add(label);
-        filterPanel.add(comboBox, "growx, wrap");
+        basicAdd(getFilterLabel(filter), comboBox);
         return comboBox;
     }
 
@@ -176,43 +173,38 @@ public class FilterDialog extends JDialog {
     }
 
     private BooleanCombobox addBooleanFilter(TableFilter filter) {
-        JLabel label = new JLabel(getFilterLabel(filter));
         BooleanCombobox comboBox = new BooleanCombobox();
-        filterPanel.add(label);
-        filterPanel.add(comboBox, "growx, wrap");
+        basicAdd(getFilterLabel(filter), comboBox);
         return comboBox;
     }
 
     private JFormattedTextField addDecimalFilter(TableFilter filter) {
-        JLabel label = new JLabel(getFilterLabel(filter));
         JFormattedTextField textField = new JFormattedTextField(NumberFormat.getNumberInstance());
         textField.setPreferredSize(new Dimension(100, 20));
         textField.setToolTipText(resourceBundle.getString("filters.decimal.column.tooltip"));
-        filterPanel.add(label);
-        filterPanel.add(textField, "growx, wrap");
+        basicAdd(getFilterLabel(filter), textField);
         return textField;
     }
 
     private JFormattedTextField addIntegerFilter(TableFilter filter) {
-        JLabel label = new JLabel(getFilterLabel(filter));
         JFormattedTextField textField = new JFormattedTextField(NumberFormat.getIntegerInstance());
         textField.setPreferredSize(new Dimension(100, 20));
         textField.setToolTipText(resourceBundle.getString("filters.integer.column.tooltip"));
-        filterPanel.add(label);
-        filterPanel.add(textField, "growx, wrap");
+        basicAdd(getFilterLabel(filter), textField);
         return textField;
     }
 
     private JFormattedTextField addTextFilter(TableFilter filter) {
-        JLabel label = new JLabel(getFilterLabel(filter));
         JFormattedTextField textField = new JFormattedTextField();
         textField.setPreferredSize(new Dimension(100, 20));
         textField.setToolTipText(resourceBundle.getString("filters.string.column.tooltip"));
-        filterPanel.add(label);
-        filterPanel.add(textField, "growx, wrap");
+        basicAdd(getFilterLabel(filter), textField);
         return textField;
     }
-
+    private void basicAdd(String label, Component component){
+        filterPanel.add(new JLabel(label));
+        filterPanel.add(component, "growx, wrap");
+    }
     /**
      * Map of filter components
      */
@@ -220,15 +212,11 @@ public class FilterDialog extends JDialog {
 
     /**
      * Add custom filter component for current instance
-     * @param typeClass - type of column
      * @param label - label for filter
-     * @param name - name of filter
-     * @param component - component to add
+     * @param iFilterComponent - component to add with interface
      */
     void addCustomFilterComponent(String label,String filterName, IFilterComponent iFilterComponent){
-        JLabel jLabel = new JLabel(label);
-        filterPanel.add(jLabel);
-        filterPanel.add(iFilterComponent.getComponent(), "growx, wrap");
+        basicAdd(label, iFilterComponent.getComponent());
         filterComponents.put(filterName, iFilterComponent);
         pack();
     }

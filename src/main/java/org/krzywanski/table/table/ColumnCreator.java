@@ -23,9 +23,13 @@ public class ColumnCreator {
      * Returns list of table columns with properties from {@link MyTableColumn} annotation
      */
     private final Class<?> classType;
-
+    /**
+     * Fields of class
+     */
     private final Field[] fields;
-
+    /**
+     * Map of table columns with property descriptors
+     */
     Map<PropertyDescriptor, TableColumn> tableColumns = new LinkedHashMap<>();
 
     public ColumnCreator(Class<?> classType, long id) {
@@ -84,10 +88,6 @@ public class ColumnCreator {
 
         }
 
-    }
-
-    private Field findFieldForPd(PropertyDescriptor pd) {
-        return Arrays.stream(classType.getDeclaredFields()).filter(field -> field.getName().equals(pd.getName())).findFirst().get();
     }
 
     public Map<PropertyDescriptor, TableColumn> getTableColumns() {

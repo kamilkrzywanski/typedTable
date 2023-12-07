@@ -26,16 +26,26 @@ public class TypedTable<T> extends JTable {
     static {
         TableWidthProvider.setProvider(new DefaultTableWidthProvider());
     }
+
+    /**
+     * Map of extra params to send with request
+     */
     final Map<String, String> extraParams = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     /**
      * List of ilsteners to execute when requested is change page by table
      */
     List<ActionListener> changePageListeners = new ArrayList<>();
-
+    /**
+     * List of columns to sort data
+     */
     List<SortColumn> sortColumn = new ArrayList<>();
-
+    /**
+     * Map of custom formatters for columns
+     */
     private final Map<Class<?>, Format> formatMap = new HashMap<>();
-
+    /**
+     * List of data to show on table if you don't want to use provider
+     */
     List<T> dataList;
 
     /**
@@ -68,12 +78,25 @@ public class TypedTable<T> extends JTable {
      * tools for pagination
      */
     final PaginationUtils paginationUtils;
-
+    /**
+     * Supplier for search phase
+     */
     Supplier<String> searchPhaseSupplier;
 
     protected final long id;
+    /**
+     * true if multi sort is enable
+     */
     private final boolean multiSortEnable;
-
+    /**
+     * Default constructor if you want to keep the same sizes for multiple tables
+     * @param dataList - data list - list od data class
+     * @param typeClass - data class
+     * @param provider - provider of data with pagination requests
+     */
+    public TypedTable(List<T> dataList, Class<? extends T> typeClass, TableDataProvider<T> provider){
+        this(dataList,typeClass,provider,0);
+    }
     /**
      * Default constructor of table
      * @param dataList - data list - list od data class
@@ -112,15 +135,8 @@ public class TypedTable<T> extends JTable {
     }
 
     /**
-     * Default constructor if you want to keep the same sizes for multiple tables
-     * @param dataList - data list - list od data class
-     * @param typeClass - data class
-     * @param provider - provider of data with pagination requests
+     * Fixing size of columns on table create
      */
-    public TypedTable(List<T> dataList, Class<? extends T> typeClass, TableDataProvider<T> provider){
-        this(dataList,typeClass,provider,0);
-    }
-
     void fixHeadersSize() {
 
         Map<String,Integer> columns = instance.getTable(typeClass.getCanonicalName(), id);
@@ -163,6 +179,9 @@ public class TypedTable<T> extends JTable {
         revalidate();
     }
 
+    /**
+     * Actions for pagination
+     */
     public Pair<Integer, Integer> nextPageAction() {
         return paginationUtils.nextPageAction();
     }
@@ -213,6 +232,9 @@ public class TypedTable<T> extends JTable {
         return formatMap;
     }
 
+    /**
+     * @return - list of columns to sort data
+     */
     public List<SortColumn> getSortColumns() {
         return sortColumn;
     }
@@ -270,7 +292,10 @@ public class TypedTable<T> extends JTable {
         return string != null && string.isEmpty() ? null : string;
     }
 
-    protected boolean isMultiSortEnable() {
+    /**
+     * @return - true if multi sort is enable
+     */
+    public boolean isMultiSortEnable() {
         return multiSortEnable;
     }
 
@@ -280,10 +305,14 @@ public class TypedTable<T> extends JTable {
     public void removeExtraParam(String key){
         extraParams.remove(key);
     }
+
     public void clearExtraParams(){
         extraParams.clear();
     }
 
+    /**
+     * @return - list of selected items from table
+     */
     public List<T> getSelectedItems() {
         List<T> selectedItems = new ArrayList<>();
         for (int index : getSelectionModel().getSelectedIndices())

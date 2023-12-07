@@ -24,7 +24,12 @@ import java.util.stream.Stream;
  * Tool class for Excel export
  */
 public class ExportUtils {
-
+    /**
+     * Export data to excel file with Poi
+     * @param table - table with data
+     * @param path - path to file
+     * @throws IOException - exception
+     */
     public static void writeToExcell(TypedTable<?> table, Path path) throws IOException {
 
         Workbook wb = new XSSFWorkbook(); //Excell workbook
@@ -62,6 +67,9 @@ public class ExportUtils {
         exportToCSVFile(getCsvArray(table),path);
     }
 
+    /**
+    * Return list of string arrays with data from table for csv export
+     */
     private static List<String[]>  getCsvArray(TypedTable<?> table) {
 
         List<String[]> data = new ArrayList<>();
@@ -75,7 +83,7 @@ public class ExportUtils {
 
         data.add(currentLine);
 
-        List<?> currentData = table.provider != null ? table.provider.getData(1000, 0, null, null, ActionType.EXPORT, table.extraParams) : table.dataList;
+        List<?> currentData = table.provider != null ? table.provider.getData(1000, 0, table.getSortColumns(), table.getSearchPhase(), ActionType.EXPORT, table.extraParams) : table.dataList;
         List<PropertyDescriptor> keyList = new ArrayList<>(table.columnCreator.getTableColumns().keySet());
         for (Object currentDatum : currentData) { //For each table row
             currentLine = new String[keyList.size()];
@@ -92,6 +100,12 @@ public class ExportUtils {
         return data;
     }
 
+    /**
+     * Export data to csv file
+     * @param dataLines - list of string arrays with data
+     * @param path - path to file
+     * @throws IOException - exception
+     */
     private static void exportToCSVFile(List<String[]> dataLines, Path path) throws IOException {
         File csvOutputFile = new File(path.toString() + ".csv");
         try (PrintWriter pw = new PrintWriter(csvOutputFile)) {
@@ -101,12 +115,22 @@ public class ExportUtils {
         }
     }
 
+    /**
+     * Convert array of strings to csv line
+     * @param data - array of strings
+     * @return - csv line
+     */
     private static String convertToCSV(String[] data) {
         return Stream.of(data)
                 .map(ExportUtils::escapeSpecialCharacters)
                 .collect(Collectors.joining(";"));
     }
 
+    /**
+     * Escape special characters form strings
+     * @param data - string with special characters
+     * @return - escaped strins
+     */
     private static String escapeSpecialCharacters(String data) {
         String escapedData = data.replaceAll("\\R", " ");
         if (data.contains(",") || data.contains("\"") || data.contains("'")) {
