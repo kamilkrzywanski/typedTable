@@ -2,7 +2,7 @@ package org.krzywanski.table.table;
 
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 public class DefaultDataPrivder<T> implements TableDataProvider<T> {
 
@@ -11,7 +11,7 @@ public class DefaultDataPrivder<T> implements TableDataProvider<T> {
     DataProviderInterface<T> dataProviderInterface;
     final SizeSupplier sizeSupplier;
 
-    public DefaultDataPrivder(int limit, DataProviderInterface<T> dataProviderInterface , SizeSupplier sizeSupplier ){
+    public DefaultDataPrivder(int limit, DataProviderInterface<T> dataProviderInterface, SizeSupplier sizeSupplier) {
         this.limit = limit;
         this.dataProviderInterface = dataProviderInterface;
         this.sizeSupplier = sizeSupplier;
@@ -23,8 +23,8 @@ public class DefaultDataPrivder<T> implements TableDataProvider<T> {
     }
 
     @Override
-    public List<T> getData(int limit, int offest, List<SortColumn> sortOrder, String searchString, ActionType actionType) {
-        return dataProviderInterface.getData(limit,offest,sortOrder, searchString, actionType);
+    public List<T> getData(int limit, int offest, List<SortColumn> sortOrder, String searchString, ActionType actionType, Map<String, String> extraParams) {
+        return dataProviderInterface.getData(limit, offest, sortOrder, searchString, actionType, extraParams);
     }
 
     @Override

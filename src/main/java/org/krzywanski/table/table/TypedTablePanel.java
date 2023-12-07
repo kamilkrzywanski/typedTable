@@ -1,6 +1,7 @@
 package org.krzywanski.table.table;
 
 import net.miginfocom.swing.MigLayout;
+import org.krzywanski.table.annot.TableFilters;
 import org.krzywanski.table.test.TestFormatClass;
 
 import javax.swing.*;
@@ -19,15 +20,17 @@ import java.util.Objects;
  */
 public class TypedTablePanel<T> extends JPanel {
     PopupDialog popupDialog;
-    JButton nextPageButton;
+    JButton filterButton;
     JButton exportExcelButton;
-    JButton prevPageButton;
-    JButton lastPageButton;
     JButton firstPageButton;
+    JButton prevPageButton;
+    JButton nextPageButton;
+    JButton lastPageButton;
     JButton searchButton;
     JLabel page;
 
     final TypedTable<T> table;
+    final FilterDialog filterDialog;
 
     public static <T> TypedTablePanel<T> getTableWithData(List<T> dataList, Class<T> typeClass) {
         return new TypedTablePanel<>(dataList, typeClass, null);
@@ -36,7 +39,6 @@ public class TypedTablePanel<T> extends JPanel {
     public static <T> TypedTablePanel<T> getTableWithProvider(TableDataProvider<T> provider, Class<T> typeClass) {
         return new TypedTablePanel<>(null, typeClass, provider);
     }
-
 
     private TypedTablePanel(List<T> dataList, Class<? extends T> typeClass, TableDataProvider<T> provider) {
         super(new MigLayout());
@@ -53,6 +55,7 @@ public class TypedTablePanel<T> extends JPanel {
                 return null;
             }
         });
+        filterDialog = new FilterDialog((e) -> firstPageAction(), table, this);
         table.addFistPageListener(e -> firstPageAction());
         table.addSearchPhaseSupplier(() -> popupDialog.getText());
 
@@ -61,7 +64,8 @@ public class TypedTablePanel<T> extends JPanel {
         firstPageAction();
     }
 
-    void createButtons() {
+    private void createButtons() {
+        filterButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("filter-symbol.png")));
         exportExcelButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("export_excel.png")));
         nextPageButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("next.png")));
         prevPageButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("back.png")));
@@ -71,7 +75,12 @@ public class TypedTablePanel<T> extends JPanel {
         page = new JLabel("");
         popupDialog = new PopupDialog(e -> firstPageAction());
 
-        addButton(exportExcelButton, "split, al right");
+        if(table.typeClass.isAnnotationPresent(TableFilters.class)){
+            addButton(filterButton, "split, al right");
+            addButton(exportExcelButton, "");
+        }else {
+            addButton(exportExcelButton, "split, al right");
+        }
         addButton(firstPageButton, "");
         addButton(prevPageButton, "");
         add(page);
@@ -79,23 +88,28 @@ public class TypedTablePanel<T> extends JPanel {
         addButton(lastPageButton, "");
         addButton(searchButton, "wrap");
 
+        filterButton.addActionListener(e -> filterAction());
+        exportExcelButton.addActionListener(e -> exportExcelAction());
         firstPageButton.addActionListener(e -> firstPageAction());
         prevPageButton.addActionListener(e -> prevPageAction());
-        lastPageButton.addActionListener(e -> lastPageAction());
         nextPageButton.addActionListener(e -> nextPageAction());
-        exportExcelButton.addActionListener(e -> exportExcelAction());
+        lastPageButton.addActionListener(e -> lastPageAction());
         searchButton.addActionListener(e -> searchAction());
+    }
+
+    private void filterAction() {
+        filterDialog.setVisible(true);
     }
 
     private void searchAction() {
         popupDialog.setVisible(true, searchButton);
     }
 
-    void exportExcelAction() {
+    private void exportExcelAction() {
         try {
             table.exportToExcel(Objects.requireNonNull(selectFiles()).toPath());
         } catch (Exception ex) {
-         System.out.println("export failed");
+            System.out.println("export failed");
         }
     }
 
@@ -119,7 +133,7 @@ public class TypedTablePanel<T> extends JPanel {
         page.setText(pair.getFirst() + "/" + pair.getSecond());
     }
 
-    void addButton(JButton button, String constraints) {
+    private void addButton(JButton button, String constraints) {
         button.setFocusable(false);
         button.setBackground(null);
         button.setOpaque(true);
@@ -142,10 +156,21 @@ public class TypedTablePanel<T> extends JPanel {
         return null;
     }
 
+    /**
+     * Get selected item from table
+     * @return selected item
+     */
     public  T getSelectedItem(){
         return table.getSelectedItem();
     }
+
+    /**
+     * Add custom filter component to filter dialog
+     * @param label - label for component
+     * @param filterName - name of filter
+     * @param iFilterComponent - component
+     */
+    public void addCustomFilterComponent(String label,String filterName, IFilterComponent iFilterComponent){
+        filterDialog.addCustomFilterComponent(label, filterName, iFilterComponent);
+    }
 }
-
-
-

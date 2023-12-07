@@ -26,7 +26,7 @@ public class TypedTable<T> extends JTable {
     static {
         TableWidthProvider.setProvider(new DefaultTableWidthProvider());
     }
-
+    final Map<String, String> extraParams = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     /**
      * List of ilsteners to execute when requested is change page by table
      */
@@ -147,7 +147,7 @@ public class TypedTable<T> extends JTable {
      */
     protected void addData(int limit, int offset, ActionType actionType) {
 
-        currentData = provider != null ? provider.getData(limit, offset, getSortColumns(), getSearchPhase(), actionType) : dataList;
+        currentData = provider != null ? provider.getData(limit, offset, getSortColumns(), getSearchPhase(), actionType, new HashMap<>(extraParams)) : dataList;
         model.getDataVector().clear();
         currentData.forEach(t -> {
             Vector<Object> element = new Vector<>();
@@ -272,5 +272,15 @@ public class TypedTable<T> extends JTable {
 
     protected boolean isMultiSortEnable() {
         return multiSortEnable;
+    }
+
+    public void addExtraParam(String key, String value){
+        extraParams.put(key,value);
+    }
+    public void removeExtraParam(String key){
+        extraParams.remove(key);
+    }
+    public void clearExtraParams(){
+        extraParams.clear();
     }
 }
