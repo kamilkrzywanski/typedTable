@@ -100,7 +100,7 @@ public class TypedTablePanel<T> extends JPanel {
         try {
             table.exportToExcel(Objects.requireNonNull(selectFiles()).toPath());
         } catch (Exception ex) {
-         System.out.println("export failed");
+            System.out.println("export failed");
         }
     }
 
@@ -147,7 +147,7 @@ public class TypedTablePanel<T> extends JPanel {
         return null;
     }
 
-    public  T getSelectedItem(){
+    public T getSelectedItem() {
         return table.getSelectedItem();
     }
 }
