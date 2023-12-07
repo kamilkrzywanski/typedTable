@@ -164,6 +164,10 @@ public class TypedTablePanel<T> extends JPanel {
         return table.getSelectedItem();
     }
 
+    public List<T> getSelectedItems(){
+        return table.getSelectedItems();
+    }
+
     /**
      * Add custom filter component to filter dialog
      * @param label - label for component

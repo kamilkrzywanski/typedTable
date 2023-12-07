@@ -283,4 +283,11 @@ public class TypedTable<T> extends JTable {
     public void clearExtraParams(){
         extraParams.clear();
     }
+
+    public List<T> getSelectedItems() {
+        List<T> selectedItems = new ArrayList<>();
+        for (int index : getSelectionModel().getSelectedIndices())
+            selectedItems.add(currentData.get(index));
+        return selectedItems;
+    }
 }
