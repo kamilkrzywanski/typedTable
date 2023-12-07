@@ -64,7 +64,7 @@ public class TypedTablePanel<T> extends JPanel {
         firstPageAction();
     }
 
-    void createButtons() {
+    private void createButtons() {
         filterButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("filter-symbol.png")));
         exportExcelButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("export_excel.png")));
         nextPageButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("next.png")));
@@ -105,7 +105,7 @@ public class TypedTablePanel<T> extends JPanel {
         popupDialog.setVisible(true, searchButton);
     }
 
-    void exportExcelAction() {
+    private void exportExcelAction() {
         try {
             table.exportToExcel(Objects.requireNonNull(selectFiles()).toPath());
         } catch (Exception ex) {
@@ -133,7 +133,7 @@ public class TypedTablePanel<T> extends JPanel {
         page.setText(pair.getFirst() + "/" + pair.getSecond());
     }
 
-    void addButton(JButton button, String constraints) {
+    private void addButton(JButton button, String constraints) {
         button.setFocusable(false);
         button.setBackground(null);
         button.setOpaque(true);
@@ -156,6 +156,10 @@ public class TypedTablePanel<T> extends JPanel {
         return null;
     }
 
+    /**
+     * Get selected item from table
+     * @return selected item
+     */
     public  T getSelectedItem(){
         return table.getSelectedItem();
     }
