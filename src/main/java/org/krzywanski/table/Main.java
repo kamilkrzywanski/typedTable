@@ -1,15 +1,16 @@
 package org.krzywanski.table;
 
 import net.miginfocom.swing.MigLayout;
-import org.krzywanski.table.table.*;
 import org.krzywanski.table.table.SortOrder;
+import org.krzywanski.table.table.*;
 import org.krzywanski.table.test.TestModel;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -19,6 +20,18 @@ public class Main {
      * ONLY FOR TEST USING CLASS
      */
     public static void main(String[] args) {
+        FilterDialog.registerCustomFilterComponent(Boolean.class, new IFilterComponent() {
+            final JCheckBox checkBox = new JCheckBox();
+            @Override
+            public String getFilterValue() {
+                return checkBox.isSelected() ? "true" : "false";
+            }
+
+            @Override
+            public Component getComponent() {
+                return checkBox;
+            }
+        });
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("JTable Example");
@@ -28,8 +41,8 @@ public class Main {
         frame.pack();
     }
 
-    public static List<TestModel> getData(int limit, int offest, List<SortColumn> sortColumn, String searchString, ActionType actionType) {
-
+    public static List<TestModel> getData(int limit, int offest, List<SortColumn> sortColumn, String searchString, ActionType actionType, Map<String, String> extraParams) {
+        extraParams.forEach((s, s2) -> System.out.println(s + " " + s2));
         if (sortColumn != null && !sortColumn.isEmpty() && sortColumn.get(0).getColumnName().equals("columnB")) {
 
             if (SortOrder.ASCENDING.equals(sortColumn.get(0).getSortOrder()))

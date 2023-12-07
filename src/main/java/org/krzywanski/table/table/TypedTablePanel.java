@@ -1,6 +1,7 @@
 package org.krzywanski.table.table;
 
 import net.miginfocom.swing.MigLayout;
+import org.krzywanski.table.annot.TableFilters;
 import org.krzywanski.table.test.TestFormatClass;
 
 import javax.swing.*;
@@ -29,6 +30,7 @@ public class TypedTablePanel<T> extends JPanel {
     JLabel page;
 
     final TypedTable<T> table;
+    final FilterDialog filterDialog;
 
     public static <T> TypedTablePanel<T> getTableWithData(List<T> dataList, Class<T> typeClass) {
         return new TypedTablePanel<>(dataList, typeClass, null);
@@ -53,6 +55,7 @@ public class TypedTablePanel<T> extends JPanel {
                 return null;
             }
         });
+        filterDialog = new FilterDialog((e) -> firstPageAction(), table, this);
         table.addFistPageListener(e -> firstPageAction());
         table.addSearchPhaseSupplier(() -> popupDialog.getText());
 
@@ -71,8 +74,13 @@ public class TypedTablePanel<T> extends JPanel {
         searchButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("search.png")));
         page = new JLabel("");
         popupDialog = new PopupDialog(e -> firstPageAction());
-        addButton(filterButton, "split, al right");
-        addButton(exportExcelButton, "");
+
+        if(table.typeClass.isAnnotationPresent(TableFilters.class)){
+            addButton(filterButton, "split, al right");
+            addButton(exportExcelButton, "");
+        }else {
+            addButton(exportExcelButton, "split, al right");
+        }
         addButton(firstPageButton, "");
         addButton(prevPageButton, "");
         add(page);
@@ -90,6 +98,7 @@ public class TypedTablePanel<T> extends JPanel {
     }
 
     private void filterAction() {
+        filterDialog.setVisible(true);
     }
 
     private void searchAction() {
@@ -147,10 +156,17 @@ public class TypedTablePanel<T> extends JPanel {
         return null;
     }
 
-    public T getSelectedItem() {
+    public  T getSelectedItem(){
         return table.getSelectedItem();
     }
+
+    /**
+     * Add custom filter component to filter dialog
+     * @param label - label for component
+     * @param filterName - name of filter
+     * @param iFilterComponent - component
+     */
+    public void addCustomFilterComponent(String label,String filterName, IFilterComponent iFilterComponent){
+        filterDialog.addCustomFilterComponent(label, filterName, iFilterComponent);
+    }
 }
-
-
-
