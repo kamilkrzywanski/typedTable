@@ -1,6 +1,11 @@
 Simple tool to map Entity to jtable in java 
-@Author Kamil Krzywanski
-
+@Author Kamil Krzywanski <br>
+-You can hide columns <br>
+-Add filters, custom filters <br>
+-Export to excel, csv <br>
+-Define sortables columns <br>
+-Simlplify add custom formatters <br>
+-Autosave of columns visibility and width <br>
 
 It's olny idea at the moment but by annotations you can create simple table
 like there with export to CSV, EXCEL, Sort mechanism: 
@@ -12,7 +17,5 @@ Effect of this opperation will be: <br>
 ![img_4.png](img_4.png)
 Custom formatter for objects example:
 ![img.png](img.png)
-You can hide columns:
-![img_9.png](img.png)
-Effect: 
-![img_1.png](img_1.png)
+
+
