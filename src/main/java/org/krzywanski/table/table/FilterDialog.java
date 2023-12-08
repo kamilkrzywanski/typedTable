@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 public class FilterDialog extends JDialog {
-    ResourceBundle resourceBundle = ResourceBundle.getBundle("Bundle", Locale.getDefault());
+    ResourceBundle resourceBundle = ResourceBundle.getBundle("TableBundle", Locale.getDefault());
     public static final Map<Class<?>, IFilterComponent> customFilterComponents = new HashMap<>();
     final ActionListener firstPageAction;
     final Class<?> typeClass;

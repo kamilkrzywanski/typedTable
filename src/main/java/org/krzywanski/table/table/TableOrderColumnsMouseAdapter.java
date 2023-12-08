@@ -16,7 +16,7 @@ import java.util.*;
  * and once mouse is released new defintions of columns are saved
  */
 class TableOrderColumnsMouseAdapter extends MouseAdapter {
-    ResourceBundle resourceBundle = ResourceBundle.getBundle("Bundle", Locale.getDefault());
+    ResourceBundle resourceBundle = ResourceBundle.getBundle("TableBundle", Locale.getDefault());
     final TypedTable<?> table;
 
     final TableWidthTool instance;

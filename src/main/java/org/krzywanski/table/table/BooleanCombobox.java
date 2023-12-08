@@ -9,8 +9,8 @@ import java.util.ResourceBundle;
  */
 public class BooleanCombobox extends JComboBox<String> {
 
-    public static final String YES_STRING = ResourceBundle.getBundle("Bundle", Locale.getDefault()).getString("yes.string");
-    public static final String NO_STRING = ResourceBundle.getBundle("Bundle", Locale.getDefault()).getString("no.string");
+    public static final String YES_STRING = ResourceBundle.getBundle("TableBundle", Locale.getDefault()).getString("yes.string");
+    public static final String NO_STRING = ResourceBundle.getBundle("TableBundle", Locale.getDefault()).getString("no.string");
 
     public BooleanCombobox() {
         super(new String[]{null, YES_STRING, NO_STRING});

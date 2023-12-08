@@ -11,7 +11,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class PopupDialog extends JDialog {
-    ResourceBundle resourceBundle = ResourceBundle.getBundle("Bundle", Locale.getDefault());
+    ResourceBundle resourceBundle = ResourceBundle.getBundle("TableBundle", Locale.getDefault());
     JTextField textField = new JFormattedTextField();
     JButton searchButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("search.png")));
     final ActionListener firstPageAction;
