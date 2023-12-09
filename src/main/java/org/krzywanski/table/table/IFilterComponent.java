@@ -12,4 +12,9 @@ public interface IFilterComponent {
      * @return - component to display
      */
     Component getComponent();
+
+    /**
+     * Clear filter
+     */
+    void clear();
 }

@@ -60,6 +60,9 @@ public class FilterDialog extends JDialog {
     void clearAction(ActionEvent e){
         filterComponents.keySet().forEach(table::removeExtraParam);
         filterComponents.values().forEach(component -> {
+            if(component instanceof IFilterComponent){
+                ((IFilterComponent) component).clear();
+            }
             if (component instanceof JFormattedTextField) {
                 ((JFormattedTextField) component).setValue(null);
             }

@@ -31,6 +31,11 @@ public class Main {
             public Component getComponent() {
                 return checkBox;
             }
+
+            @Override
+            public void clear() {
+                checkBox.setSelected(false);
+            }
         });
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
