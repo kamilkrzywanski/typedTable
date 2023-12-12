@@ -27,6 +27,8 @@ public class TypedTable<T> extends JTable {
         TableWidthProvider.setProvider(new DefaultTableWidthProvider());
     }
 
+    List<GenericSelectionListener<T>> listeners = new ArrayList<>();
+
     /**
      * Map of extra params to send with request
      */
@@ -132,6 +134,7 @@ public class TypedTable<T> extends JTable {
         fixHeadersSize();
 
         tableHeader.addMouseListener(new TableOrderColumnsMouseAdapter(this, instance));
+        setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     }
 
     /**
@@ -177,6 +180,8 @@ public class TypedTable<T> extends JTable {
             model.addRow(element);
         });
         revalidate();
+        if(!currentData.isEmpty())
+            listeners.forEach(genericSelectionListener -> genericSelectionListener.getSelectedItem(getItemAt(0)));
     }
 
     /**
@@ -205,8 +210,12 @@ public class TypedTable<T> extends JTable {
     }
 
     public T getSelectedItem() {
-        if (getSelectedRow() != -1) return currentData.get(getSelectedRow());
+        if (getSelectedRow() != -1) return getItemAt(getSelectedRow());
         return null;
+    }
+
+    public T getItemAt(int index){
+        return currentData.get(index);
     }
 
     @Override
@@ -321,12 +330,10 @@ public class TypedTable<T> extends JTable {
     }
 
     public void addGenericSelectionListener(GenericSelectionListener<T> listener){
+        listeners.add(listener);
         getSelectionModel().addListSelectionListener(e -> {
             if(e.getValueIsAdjusting()){
                 listener.getSelectedItem(getSelectedItem());
-            }
-            else{
-                listener.getSelectedItem(null);
             }
         });
     }
