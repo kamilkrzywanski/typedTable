@@ -41,7 +41,9 @@ public class Main {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("JTable Example");
         frame.setLayout(new MigLayout());
-        frame.add(TypedTablePanel.getTableWithProvider(new DefaultDataPrivder<>(20, Main::getData, Main::getSize), TestModel.class), "grow,push");
+        TypedTablePanel<TestModel> panel = TypedTablePanel.getTableWithProvider(new DefaultDataPrivder<>(20, Main::getData, Main::getSize), TestModel.class);
+        panel.addGenericSelectionListener(element -> System.out.println(element.getColumnA()));
+        frame.add(panel, "grow,push");
         frame.setVisible(true);
         frame.pack();
     }

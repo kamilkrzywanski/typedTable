@@ -319,4 +319,15 @@ public class TypedTable<T> extends JTable {
             selectedItems.add(currentData.get(index));
         return selectedItems;
     }
+
+    public void addGenericSelectionListener(GenericSelectionListener<T> listener){
+        getSelectionModel().addListSelectionListener(e -> {
+            if(e.getValueIsAdjusting()){
+                listener.getSelectedItem(getSelectedItem());
+            }
+            else{
+                listener.getSelectedItem(null);
+            }
+        });
+    }
 }

@@ -58,7 +58,6 @@ public class TypedTablePanel<T> extends JPanel {
         filterDialog = new FilterDialog((e) -> firstPageAction(), table, this);
         table.addFistPageListener(e -> firstPageAction());
         table.addSearchPhaseSupplier(() -> popupDialog.getText());
-
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, "grow,push,wrap");
         firstPageAction();
@@ -176,5 +175,8 @@ public class TypedTablePanel<T> extends JPanel {
      */
     public void addCustomFilterComponent(String label,String filterName, IFilterComponent iFilterComponent){
         filterDialog.addCustomFilterComponent(label, filterName, iFilterComponent);
+    }
+    public void addGenericSelectionListener(GenericSelectionListener<T> listener){
+        table.addGenericSelectionListener(listener);
     }
 }
