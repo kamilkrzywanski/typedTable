@@ -12,6 +12,7 @@ import java.text.Format;
 import java.text.ParsePosition;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
 
 /**
  * Container for table and pagination buttons
@@ -74,10 +75,10 @@ public class TypedTablePanel<T> extends JPanel {
         page = new JLabel("");
         popupDialog = new PopupDialog(e -> firstPageAction());
 
-        if(table.typeClass.isAnnotationPresent(TableFilters.class)){
+        if (table.typeClass.isAnnotationPresent(TableFilters.class)) {
             addButton(filterButton, "split, al right");
             addButton(exportExcelButton, "");
-        }else {
+        } else {
             addButton(exportExcelButton, "split, al right");
         }
         addButton(firstPageButton, "");
@@ -157,26 +158,33 @@ public class TypedTablePanel<T> extends JPanel {
 
     /**
      * Get selected item from table
+     *
      * @return selected item
      */
-    public  T getSelectedItem(){
+    public T getSelectedItem() {
         return table.getSelectedItem();
     }
 
-    public List<T> getSelectedItems(){
+    public List<T> getSelectedItems() {
         return table.getSelectedItems();
     }
 
     /**
      * Add custom filter component to filter dialog
-     * @param label - label for component
-     * @param filterName - name of filter
+     *
+     * @param label            - label for component
+     * @param filterName       - name of filter
      * @param iFilterComponent - component
      */
-    public void addCustomFilterComponent(String label,String filterName, IFilterComponent iFilterComponent){
+    public void addCustomFilterComponent(String label, String filterName, IFilterComponent iFilterComponent) {
         filterDialog.addCustomFilterComponent(label, filterName, iFilterComponent);
     }
-    public void addGenericSelectionListener(GenericSelectionListener<T> listener){
+
+    public void addGenericSelectionListener(GenericSelectionListener<T> listener) {
         table.addGenericSelectionListener(listener);
+    }
+
+    public <E> E getSelectedValueOrDefault(Function<T, E> mapper, E defaultValue) {
+        return table.getSelectedValueOrDefault(mapper, defaultValue);
     }
 }

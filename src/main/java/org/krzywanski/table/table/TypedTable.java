@@ -14,6 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.text.Format;
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -336,5 +337,13 @@ public class TypedTable<T> extends JTable {
                 listener.getSelectedItem(getSelectedItem());
             }
         });
+    }
+
+    public <E> E getSelectedValueOrDefault(Function<T, E> mapper, E defaultValue){
+        T selectedItem = getSelectedItem();
+        if(selectedItem == null || mapper == null){
+            return defaultValue;
+        }
+        return mapper.apply(selectedItem);
     }
 }
