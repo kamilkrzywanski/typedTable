@@ -91,21 +91,25 @@ public class TypedTable<T> extends JTable {
      * true if multi sort is enable
      */
     private final boolean multiSortEnable;
+
     /**
      * Default constructor if you want to keep the same sizes for multiple tables
-     * @param dataList - data list - list od data class
+     *
+     * @param dataList  - data list - list od data class
      * @param typeClass - data class
-     * @param provider - provider of data with pagination requests
+     * @param provider  - provider of data with pagination requests
      */
-    public TypedTable(List<T> dataList, Class<? extends T> typeClass, TableDataProvider<T> provider){
-        this(dataList,typeClass,provider,0);
+    public TypedTable(List<T> dataList, Class<? extends T> typeClass, TableDataProvider<T> provider) {
+        this(dataList, typeClass, provider, 0);
     }
+
     /**
      * Default constructor of table
-     * @param dataList - data list - list od data class
+     *
+     * @param dataList  - data list - list od data class
      * @param typeClass - data class
-     * @param provider - provider of data with pagination requests
-     * @param id - identifier of instance of table to save widths of table if we use one entity in few places and want to each one have individual widths and columns
+     * @param provider  - provider of data with pagination requests
+     * @param id        - identifier of instance of table to save widths of table if we use one entity in few places and want to each one have individual widths and columns
      */
     public TypedTable(List<T> dataList, Class<? extends T> typeClass, TableDataProvider<T> provider, long id) {
         super(new TypedTableModel(new ColumnCreator(typeClass, id)));
@@ -131,9 +135,11 @@ public class TypedTable<T> extends JTable {
             }
 
         });
-
+        getColumnModel().
+                getColumns().
+                asIterator().
+                forEachRemaining(tableColumn -> tableColumn.addPropertyChangeListener(new ChangeHeaderNamePropertyChangeListener(columnCreator)));
         fixHeadersSize();
-
         tableHeader.addMouseListener(new TableOrderColumnsMouseAdapter(this, instance));
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     }
@@ -143,7 +149,7 @@ public class TypedTable<T> extends JTable {
      */
     void fixHeadersSize() {
 
-        Map<String,Integer> columns = instance.getTable(typeClass.getCanonicalName(), id);
+        Map<String, Integer> columns = instance.getTable(typeClass.getCanonicalName(), id);
         columnCreator.getTableColumns().forEach((field, tableColumn) -> {
             if (instance != null && columns != null) {
 
@@ -181,7 +187,7 @@ public class TypedTable<T> extends JTable {
             model.addRow(element);
         });
         revalidate();
-        if(!currentData.isEmpty())
+        if (!currentData.isEmpty())
             listeners.forEach(genericSelectionListener -> genericSelectionListener.getSelectedItem(getItemAt(0)));
     }
 
@@ -215,7 +221,7 @@ public class TypedTable<T> extends JTable {
         return null;
     }
 
-    public T getItemAt(int index){
+    public T getItemAt(int index) {
         return currentData.get(index);
     }
 
@@ -231,8 +237,9 @@ public class TypedTable<T> extends JTable {
 
     /**
      * Adds custom formatter for selected class
+     *
      * @param classFormat - class to format
-     * @param format - format
+     * @param format      - format
      */
     public void addCustomFormatter(Class<?> classFormat, Format format) {
         formatMap.put(classFormat, format);
@@ -251,6 +258,7 @@ public class TypedTable<T> extends JTable {
 
     /**
      * Set current colum to sort data
+     *
      * @param sortColumn - model of sorted column
      */
     public void setSortColumn(List<SortColumn> sortColumn) {
@@ -275,14 +283,17 @@ public class TypedTable<T> extends JTable {
 
     /**
      * method to export table to Excel
+     *
      * @param path - path to save Excel file
      * @throws IOException - in case of problem with save
      */
     public void exportToExcel(Path path) throws IOException {
         ExportUtils.writeToExcell(this, path);
     }
+
     /**
      * method to export table to CSV
+     *
      * @param path - path to save Excel file
      * @throws IOException - in case of problem with save
      */
@@ -290,15 +301,15 @@ public class TypedTable<T> extends JTable {
         ExportUtils.writeToCsv(this, path);
     }
 
-    public void addSearchPhaseSupplier(Supplier<String> searchPhaseSupplier){
+    public void addSearchPhaseSupplier(Supplier<String> searchPhaseSupplier) {
         this.searchPhaseSupplier = searchPhaseSupplier;
     }
 
-    public String getSearchPhase(){
+    public String getSearchPhase() {
         return searchPhaseSupplier != null ? stringToNullable(searchPhaseSupplier.get()) : null;
     }
 
-    private String stringToNullable(String string){
+    private String stringToNullable(String string) {
         return string != null && string.isEmpty() ? null : string;
     }
 
@@ -309,14 +320,15 @@ public class TypedTable<T> extends JTable {
         return multiSortEnable;
     }
 
-    public void addExtraParam(String key, String value){
-        extraParams.put(key,value);
+    public void addExtraParam(String key, String value) {
+        extraParams.put(key, value);
     }
-    public void removeExtraParam(String key){
+
+    public void removeExtraParam(String key) {
         extraParams.remove(key);
     }
 
-    public void clearExtraParams(){
+    public void clearExtraParams() {
         extraParams.clear();
     }
 
@@ -330,18 +342,18 @@ public class TypedTable<T> extends JTable {
         return selectedItems;
     }
 
-    public void addGenericSelectionListener(GenericSelectionListener<T> listener){
+    public void addGenericSelectionListener(GenericSelectionListener<T> listener) {
         listeners.add(listener);
         getSelectionModel().addListSelectionListener(e -> {
-            if(e.getValueIsAdjusting()){
+            if (e.getValueIsAdjusting()) {
                 listener.getSelectedItem(getSelectedItem());
             }
         });
     }
 
-    public <E> E getSelectedValueOrDefault(Function<T, E> mapper, E defaultValue){
+    public <E> E getSelectedValueOrDefault(Function<T, E> mapper, E defaultValue) {
         T selectedItem = getSelectedItem();
-        if(selectedItem == null || mapper == null){
+        if (selectedItem == null || mapper == null) {
             return defaultValue;
         }
         return mapper.apply(selectedItem);

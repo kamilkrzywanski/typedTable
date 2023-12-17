@@ -15,11 +15,6 @@ import java.util.*;
  * from {@link TableWidthProvider}
  */
 public class ColumnCreator {
-
-    /**
-     * Returns list of table columns with properties from {@link MyTableColumn} annotation
-     */
-    private final Class<?> classType;
     /**
      * Fields of class
      */
@@ -31,7 +26,6 @@ public class ColumnCreator {
 
     public ColumnCreator(Class<?> classType, long id) {
 
-        this.classType = classType;
         fields = Arrays.asList(classType.getDeclaredFields());
 
         LinkedHashMap<String, Integer> columns = new LinkedHashMap<>();

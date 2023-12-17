@@ -30,7 +30,7 @@ public class TypedTablePanel<T> extends JPanel {
     JButton searchButton;
     JLabel page;
 
-    final TypedTable<T> table;
+    public final TypedTable<T> table;
     final FilterDialog filterDialog;
 
     public static <T> TypedTablePanel<T> getTableWithData(List<T> dataList, Class<T> typeClass) {
