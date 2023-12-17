@@ -43,7 +43,6 @@ public class Main {
         frame.setLayout(new MigLayout());
         TypedTablePanel<TestModel> panel = TypedTablePanel.getTableWithProvider(new DefaultDataPrivder<>(20, Main::getData, Main::getSize), TestModel.class);
         panel.addGenericSelectionListener(element -> System.out.println(element.getColumnA()));
-        panel.table.getColumnModel().getColumn(2).setHeaderValue("DIPA");
         frame.add(panel, "grow,push");
         frame.setVisible(true);
         frame.pack();
