@@ -8,10 +8,7 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Finds properties of table by reflection
@@ -26,7 +23,7 @@ public class ColumnCreator {
     /**
      * Fields of class
      */
-    private final Field[] fields;
+    private final List<Field> fields;
     /**
      * Map of table columns with property descriptors
      */
@@ -35,33 +32,36 @@ public class ColumnCreator {
     public ColumnCreator(Class<?> classType, long id) {
 
         this.classType = classType;
-        fields = classType.getDeclaredFields();
+        fields = Arrays.asList(classType.getDeclaredFields());
 
-        Map<String, Integer> columns = new HashMap<>();
-        Map<String, Integer> tempColumns = null;
+        LinkedHashMap<String, Integer> columns = new LinkedHashMap<>();
+        LinkedHashMap<String, Integer> tempColumns = null;
         if (TableWidthProvider.getInstance() != null) {
             tempColumns = TableWidthProvider.getInstance().getTable(classType.getCanonicalName(), id);
         }
-
         //To avoid multiple write TableWidthProvider.getInstance().getTable()... which is trying to ask db/read file from disk
         if (tempColumns != null)
             columns = tempColumns;
 
         int iterator = 0;
 
-        BeanInfo beanInfo = null;
+        BeanInfo beanInfo;
         try {
             beanInfo = Introspector.getBeanInfo(classType);
         } catch (IntrospectionException e) {
             throw new RuntimeException(e);
         }
-        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+        List<PropertyDescriptor> propertyDescriptors = Arrays.asList(beanInfo.getPropertyDescriptors());
+        if (!columns.isEmpty()) {
+            List<String> columnsNamesOrdered = new ArrayList<>(columns.keySet());
+            fields.sort(Comparator.comparing(item -> columnsNamesOrdered.indexOf(item.getName())));
+        }
 
         for (Field field : fields) {
-            PropertyDescriptor pd = Arrays.stream(propertyDescriptors).
+            PropertyDescriptor pd = propertyDescriptors.stream().
                     filter(propertyDescriptor -> propertyDescriptor.getName().equals(field.getName())).
                     findFirst().orElse(null);
-            if(pd == null) continue;
+            if (pd == null) continue;
 
             MyTableColumn annotation = field.getAnnotation(MyTableColumn.class);
             String tableLabel;
@@ -99,7 +99,7 @@ public class ColumnCreator {
                 replaceAll(TypedTableDefaults.CARRET_DESC_SYMBOL, "");
 
         PropertyDescriptor pd = tableColumns.entrySet().stream().filter(fieldTableColumnEntry -> fieldTableColumnEntry.getValue().getHeaderValue().equals(fixedName)).findFirst().get().getKey();
-        Field field = Arrays.stream(fields).filter(field1 -> field1.getName().equals(pd.getName())).findFirst().get();
+        Field field = fields.stream().filter(field1 -> field1.getName().equals(pd.getName())).findFirst().get();
 
         return new Pair<>(pd, field);
     }

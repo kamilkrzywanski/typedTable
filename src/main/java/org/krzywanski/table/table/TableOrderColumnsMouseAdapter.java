@@ -8,6 +8,7 @@ import javax.swing.table.TableColumn;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.util.*;
 
@@ -27,11 +28,11 @@ class TableOrderColumnsMouseAdapter extends MouseAdapter {
     }
 
     public void mouseReleased(MouseEvent arg0) {
-
         LinkedHashMap<String, Integer> columns = new LinkedHashMap<>();
         for (int i = 0; i < table.getTableHeader().getColumnModel().getColumnCount(); i++) {
             TableColumn column = table.getTableHeader().getColumnModel().getColumn(i);
-            columns.put((String) column.getHeaderValue(), column.getWidth());
+            Pair<PropertyDescriptor, Field> columnPd =  table.columnCreator.getFieldByName(column.getHeaderValue());
+            columns.put(columnPd.getSecond().getName(), column.getWidth());
         }
 
         if (instance != null) instance.updateColumns(table.typeClass.getName(), columns, table.id);
