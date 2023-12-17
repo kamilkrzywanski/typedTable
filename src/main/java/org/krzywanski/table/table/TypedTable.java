@@ -153,7 +153,7 @@ public class TypedTable<T> extends JTable {
         columnCreator.getTableColumns().forEach((field, tableColumn) -> {
             if (instance != null && columns != null) {
 
-                int width = Optional.ofNullable(columns.get(tableColumn.getHeaderValue().toString())).orElse(MyTableColumn.defaultWidth);
+                int width = Optional.ofNullable(columns.get(columnCreator.getFieldByName(tableColumn.getHeaderValue()).getSecond().getName())).orElse(MyTableColumn.defaultWidth);
 
                 if (width == 0) {
                     getColumn(tableColumn.getHeaderValue()).setMinWidth(0);
