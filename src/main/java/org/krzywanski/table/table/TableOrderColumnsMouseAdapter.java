@@ -242,10 +242,6 @@ class TableOrderColumnsMouseAdapter extends MouseAdapter {
             table.dataList.sort(Comparator.comparing(entity -> {
                 try {
                     Object fieldValue = sortByField.getReadMethod().invoke(entity);
-
-                    // This check still passes if the type of fieldValue implements Comparable<U>,
-                    // where U is an unrelated type from the type of fieldValue, but this is the
-                    // best we can do here, since we don't know the type of field at compile time
                     if (!(fieldValue instanceof Comparable<?>) && fieldValue != null) {
                         throw new IllegalArgumentException("Field is not comparable!");
                     }
