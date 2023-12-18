@@ -2,6 +2,7 @@ package org.krzywanski.table.table;
 
 import org.krzywanski.table.annot.EnableMultiSort;
 import org.krzywanski.table.annot.MyTableColumn;
+import org.krzywanski.table.annot.ReflectionSort;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableColumnModel;
@@ -9,6 +10,10 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import java.awt.event.ActionListener;
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
@@ -175,6 +180,10 @@ public class TypedTable<T> extends JTable {
 
         currentData = provider != null ? provider.getData(limit, offset, getSortColumns(), getSearchPhase(), actionType, new HashMap<>(extraParams)) : dataList;
         model.getDataVector().clear();
+
+        if(!getSortColumns().isEmpty() && getSortColumns().get(0) != null && typeClass.isAnnotationPresent(ReflectionSort.class))
+            sortData(currentData, getSortColumns().get(0).getColumnName(), getSortColumns().get(0).getSortOrder());
+
         currentData.forEach(t -> {
             Vector<Object> element = new Vector<>();
             columnCreator.getTableColumns().forEach((field, tableColumn) -> {
@@ -191,6 +200,30 @@ public class TypedTable<T> extends JTable {
             listeners.forEach(genericSelectionListener -> genericSelectionListener.getSelectedItem(getItemAt(0)));
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private void sortData(List<T> data, String columnName, SortOrder sortOrder){
+        try {
+            BeanInfo beanInfo = Introspector.getBeanInfo(typeClass);
+            final PropertyDescriptor sortByField = Arrays.stream(beanInfo.getPropertyDescriptors()).filter(propertyDescriptor -> propertyDescriptor.getName().equals(columnName)).findFirst().orElseThrow(() -> new RuntimeException("No such field"));
+            data.sort(Comparator.comparing(entity -> {
+                try {
+                    Object fieldValue = sortByField.getReadMethod().invoke(entity);
+                    if (!(fieldValue instanceof Comparable<?>) && fieldValue != null) {
+                        throw new IllegalArgumentException("Field is not comparable!");
+                    }
+                    return (Comparable)fieldValue;
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    throw new RuntimeException(e);
+                }
+            }));
+        } catch (IntrospectionException e) {
+            throw new RuntimeException(e);
+        }
+
+        if(sortOrder.equals(SortOrder.DESCENDING))
+            Collections.reverse(data);
+
+    }
     /**
      * Actions for pagination
      */

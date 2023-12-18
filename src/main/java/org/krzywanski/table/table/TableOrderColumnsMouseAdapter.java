@@ -2,19 +2,14 @@ package org.krzywanski.table.table;
 
 import net.miginfocom.swing.MigLayout;
 import org.krzywanski.table.annot.MyTableColumn;
-import org.krzywanski.table.annot.ReflectionSort;
 
 import javax.swing.*;
 import javax.swing.table.TableColumn;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
@@ -231,34 +226,9 @@ class TableOrderColumnsMouseAdapter extends MouseAdapter {
         if(!table.isMultiSortEnable())
             table.setSortColumn(Collections.singletonList(new SortColumn(columnName, sortOrder)));
 
-        if(table.typeClass.isAnnotationPresent(ReflectionSort.class) && table.dataList != null)
-            sortData(columnName, sortOrder);
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    private void sortData(String columnName, SortOrder sortOrder){
-        try {
-            BeanInfo beanInfo = Introspector.getBeanInfo(table.typeClass);
-            final PropertyDescriptor sortByField = Arrays.stream(beanInfo.getPropertyDescriptors()).filter(propertyDescriptor -> propertyDescriptor.getName().equals(columnName)).findFirst().orElseThrow(() -> new RuntimeException("No such field"));
-            table.dataList.sort(Comparator.comparing(entity -> {
-                try {
-                    Object fieldValue = sortByField.getReadMethod().invoke(entity);
-                    if (!(fieldValue instanceof Comparable<?>) && fieldValue != null) {
-                        throw new IllegalArgumentException("Field is not comparable!");
-                    }
-                    return (Comparable)fieldValue;
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    throw new RuntimeException(e);
-                }
-            }));
-        } catch (IntrospectionException e) {
-            throw new RuntimeException(e);
-        }
 
-        if(sortOrder.equals(SortOrder.DESCENDING))
-            Collections.reverse(table.dataList);
-
-    }
 
     private String findAndReplaceSymbols(Object columnName){
         return columnName.toString().replaceAll(TypedTableDefaults.CARRET_ASC_SYMBOL, "").replaceAll(TypedTableDefaults.CARRET_DESC_SYMBOL, "");
