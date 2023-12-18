@@ -11,6 +11,7 @@ import java.util.Map;
 public class DefaultDataPrivder<T> implements TableDataProvider<T> {
 
     int limit;
+    int limitCache;
     DataProviderInterface<T> dataProviderInterface;
     final SizeSupplier sizeSupplier;
 

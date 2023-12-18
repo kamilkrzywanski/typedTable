@@ -235,6 +235,7 @@ class TableOrderColumnsMouseAdapter extends MouseAdapter {
             sortData(columnName, sortOrder);
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private void sortData(String columnName, SortOrder sortOrder){
         try {
             BeanInfo beanInfo = Introspector.getBeanInfo(table.typeClass);

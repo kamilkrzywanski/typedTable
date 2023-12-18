@@ -8,5 +8,6 @@ public enum ActionType {
     NEXT_PAGE,
     PREV_PAGE,
     LAST_PAGE,
-    EXPORT
+    EXPORT,
+    REFLECTION_SORT
 }

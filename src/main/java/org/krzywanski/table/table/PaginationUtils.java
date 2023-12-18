@@ -1,6 +1,6 @@
 package org.krzywanski.table.table;
 
-import java.util.Optional;
+import org.krzywanski.table.annot.ReflectionSort;
 
 public class PaginationUtils {
 
@@ -72,10 +72,13 @@ public class PaginationUtils {
 
         localAddData(ActionType.FIRST_PAGE);
 
-        return new Pair<>(1, (int) Math.ceil((double) getValue(provider) / limit));
+        int localLimit = (int) Math.ceil((double) getValue(provider) / limit);
+        localLimit = Math.max(1, localLimit);
+        return new Pair<>(1, localLimit);
     }
 
     private void localAddData(ActionType actionType) {
+        limit = computeLimit(limit, provider);
         tTypedTable.addData(limit, offset, actionType);
     }
 
@@ -83,5 +86,27 @@ public class PaginationUtils {
         if(privder == null)
             return 0;
         return provider.getSize(tTypedTable.getSearchPhase());
+    }
+
+    /**
+     * Compute limit if you use reflection sort
+     * @param limit - limit
+     * @param provider - provider
+     * @return - computed limit
+     */
+    private int computeLimit(int limit, TableDataProvider<?> provider){
+        if(tTypedTable.typeClass.isAnnotationPresent(ReflectionSort.class)){
+            if(tTypedTable.getSortColumns().isEmpty())
+                if(provider != null)
+                    return provider.getLimit();
+                else
+                    return tTypedTable.currentData.size();
+            else
+            if(provider != null)
+                return provider.reflectionSortLimit();
+            else
+                return tTypedTable.currentData.size();
+        }
+        return limit;
     }
 }
