@@ -90,10 +90,7 @@ public class ColumnCreator {
     }
 
     public Pair<PropertyDescriptor, Field> getFieldByName(Object name) {
-        String fixedName = name.toString().replaceAll(TypedTableDefaults.CARRET_ASC_SYMBOL, "").
-                replaceAll(TypedTableDefaults.CARRET_DESC_SYMBOL, "");
-
-        PropertyDescriptor pd = tableColumns.entrySet().stream().filter(fieldTableColumnEntry -> fieldTableColumnEntry.getValue().getHeaderValue().equals(fixedName)).findFirst().get().getKey();
+        PropertyDescriptor pd = tableColumns.entrySet().stream().filter(fieldTableColumnEntry -> fieldTableColumnEntry.getValue().getHeaderValue().equals(name)).findFirst().get().getKey();
         Field field = fields.stream().filter(field1 -> field1.getName().equals(pd.getName())).findFirst().get();
 
         return new Pair<>(pd, field);
