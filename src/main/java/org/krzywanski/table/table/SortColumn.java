@@ -1,5 +1,7 @@
 package org.krzywanski.table.table;
 
+import javax.swing.*;
+
 public class SortColumn {
 
     public SortColumn(String columnName, SortOrder sortOrder) {

@@ -10,10 +10,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import java.awt.event.ActionListener;
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
@@ -117,7 +113,7 @@ public class TypedTable<T> extends JTable {
      * @param id        - identifier of instance of table to save widths of table if we use one entity in few places and want to each one have individual widths and columns
      */
     public TypedTable(List<T> dataList, Class<? extends T> typeClass, TableDataProvider<T> provider, long id) {
-        super(new TypedTableModel(new ColumnCreator(typeClass, id)));
+        super(new DefaultTableModel());
         this.id = id;
         this.multiSortEnable = typeClass.isAnnotationPresent(EnableMultiSort.class);
         columnCreator = new ColumnCreator(typeClass, id);
@@ -202,23 +198,23 @@ public class TypedTable<T> extends JTable {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     private void sortData(List<T> data, String columnName, SortOrder sortOrder){
-        try {
-            BeanInfo beanInfo = Introspector.getBeanInfo(typeClass);
-            final PropertyDescriptor sortByField = Arrays.stream(beanInfo.getPropertyDescriptors()).filter(propertyDescriptor -> propertyDescriptor.getName().equals(columnName)).findFirst().orElseThrow(() -> new RuntimeException("No such field"));
-            data.sort(Comparator.comparing(entity -> {
-                try {
-                    Object fieldValue = sortByField.getReadMethod().invoke(entity);
-                    if (!(fieldValue instanceof Comparable<?>) && fieldValue != null) {
-                        throw new IllegalArgumentException("Field is not comparable!");
-                    }
-                    return (Comparable)fieldValue;
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    throw new RuntimeException(e);
-                }
-            }));
-        } catch (IntrospectionException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            BeanInfo beanInfo = Introspector.getBeanInfo(typeClass);
+//            final PropertyDescriptor sortByField = Arrays.stream(beanInfo.getPropertyDescriptors()).filter(propertyDescriptor -> propertyDescriptor.getName().equals(columnName)).findFirst().orElseThrow(() -> new RuntimeException("No such field"));
+//            data.sort(Comparator.comparing(entity -> {
+//                try {
+//                    Object fieldValue = sortByField.getReadMethod().invoke(entity);
+//                    if (!(fieldValue instanceof Comparable<?>) && fieldValue != null) {
+//                        throw new IllegalArgumentException("Field is not comparable!");
+//                    }
+//                    return (Comparable)fieldValue;
+//                } catch (IllegalAccessException | InvocationTargetException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            }));
+//        } catch (IntrospectionException e) {
+//            throw new RuntimeException(e);
+//        }
 
         if(sortOrder.equals(SortOrder.DESCENDING))
             Collections.reverse(data);
