@@ -1,6 +1,5 @@
 package org.krzywanski.table.test;
 
-import org.krzywanski.table.annot.EnableMultiSort;
 import org.krzywanski.table.annot.MyTableColumn;
 import org.krzywanski.table.annot.ReflectionSort;
 import org.krzywanski.table.annot.TableFilter;
@@ -8,7 +7,6 @@ import org.krzywanski.table.table.Alignment;
 
 import java.util.Date;
 
-@EnableMultiSort
 @ReflectionSort
 @TableFilter(type = String.class, name = "columnA")
 @TableFilter(type = Double.class, name = "columnB", label = "Decimal column")
