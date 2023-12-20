@@ -40,7 +40,7 @@ class TableOrderColumnsMouseAdapter extends MouseAdapter {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) updateSort(e);
+        if (e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON1) updateSort(e);
         if (e.getButton() == MouseEvent.BUTTON3) showColumnsOptions(e);
     }
 
