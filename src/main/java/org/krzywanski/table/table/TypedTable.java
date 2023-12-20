@@ -117,7 +117,7 @@ public class TypedTable<T> extends JTable {
      * @param id        - identifier of instance of table to save widths of table if we use one entity in few places and want to each one have individual widths and columns
      */
     public TypedTable(List<T> dataList, Class<? extends T> typeClass, TableDataProvider<T> provider, long id) {
-        super(new DefaultTableModel());
+        super(new TypedTableModel(new ColumnCreator(typeClass, id)));
         this.id = id;
         this.multiSortEnable = typeClass.isAnnotationPresent(EnableMultiSort.class);
         columnCreator = new ColumnCreator(typeClass, id);
@@ -147,6 +147,11 @@ public class TypedTable<T> extends JTable {
         fixHeadersSize();
         tableHeader.addMouseListener(new TableOrderColumnsMouseAdapter(this, instance));
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    }
+
+    @Override
+    public Class<?> getColumnClass(int column) {
+        return super.getColumnClass(column);
     }
 
     /**
