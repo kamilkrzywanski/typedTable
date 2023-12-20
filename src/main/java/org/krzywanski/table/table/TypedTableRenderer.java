@@ -42,6 +42,7 @@ public class TypedTableRenderer extends DefaultTableCellRenderer {
         if (format != null)
             value = format.format(value);
 
+        setHorizontalAlignment(getColumnAlignment(pdFieldPair));
         return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
     }
 
@@ -83,6 +84,31 @@ public class TypedTableRenderer extends DefaultTableCellRenderer {
             if (!annotation.format().isEmpty()) format = annotation.format();
         }
         return format;
+    }
+
+    /**
+     * Get column alignment
+     * @param pdFieldPair pair of property descriptor and field
+     * @return alignment
+     */
+    private int getColumnAlignment(Pair<PropertyDescriptor, Field> pdFieldPair) {
+
+        MyTableColumn annotation = pdFieldPair.getSecond().getAnnotation(MyTableColumn.class);
+        int alignment = SwingConstants.LEFT;
+        if (annotation != null) {
+            switch (annotation.alignment()) {
+                case LEFT:
+                    alignment = SwingConstants.LEFT;
+                    break;
+                case RIGHT:
+                    alignment = SwingConstants.RIGHT;
+                    break;
+                case CENTER:
+                    alignment = SwingConstants.CENTER;
+                    break;
+            }
+        }
+        return alignment;
     }
 
 }

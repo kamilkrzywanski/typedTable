@@ -1,6 +1,8 @@
 package org.krzywanski.table.annot;
 
 
+import org.krzywanski.table.table.Alignment;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -35,4 +37,10 @@ public @interface MyTableColumn {
     boolean sortable() default false;
 
     String sortString() default "";
+
+    /**
+     * alignment for table cell
+     * @return alignment
+     */
+    Alignment alignment() default Alignment.LEFT;
 }

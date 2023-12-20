@@ -4,6 +4,7 @@ import org.krzywanski.table.annot.EnableMultiSort;
 import org.krzywanski.table.annot.MyTableColumn;
 import org.krzywanski.table.annot.ReflectionSort;
 import org.krzywanski.table.annot.TableFilter;
+import org.krzywanski.table.table.Alignment;
 
 import java.util.Date;
 
@@ -24,7 +25,7 @@ public class TestModel {
     @MyTableColumn(label = "Test label")
     private String columnC;
 
-    @MyTableColumn(label = "DataLable", format = "YYYY")
+    @MyTableColumn(label = "DataLable", format = "YYYY", alignment = Alignment.CENTER)
     private Date date = new Date();
 
     @MyTableColumn(label = "Test enum")
