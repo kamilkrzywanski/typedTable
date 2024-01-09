@@ -1,12 +1,15 @@
 package org.krzywanski.table.table;
 
+import org.krzywanski.table.annot.CustomRenderer;
 import org.krzywanski.table.annot.MyTableColumn;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -24,6 +27,12 @@ public class TypedTableRenderer extends DefaultTableCellRenderer {
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 
         Pair<PropertyDescriptor, Field> pdFieldPair = getColumnField(column, table);
+
+        TableCellRenderer customRenderer = getCustomRenderer(pdFieldPair);
+        if(customRenderer != null){
+            return customRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        }
+
         if (Date.class.equals(pdFieldPair.getSecond().getType())) {
             if (value != null)
                 value = new SimpleDateFormat(Objects.toString(getFormat(pdFieldPair), "MM/dd/yy")).format(value);
@@ -109,6 +118,19 @@ public class TypedTableRenderer extends DefaultTableCellRenderer {
             }
         }
         return alignment;
+    }
+
+    private TableCellRenderer getCustomRenderer(Pair<PropertyDescriptor, Field> pdFieldPair) {
+        CustomRenderer annotation = pdFieldPair.getSecond().getAnnotation(CustomRenderer.class);
+        if (annotation != null) {
+            try {
+                return annotation.renderer().getDeclaredConstructor().newInstance();
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                     NoSuchMethodException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return null;
     }
 
 }

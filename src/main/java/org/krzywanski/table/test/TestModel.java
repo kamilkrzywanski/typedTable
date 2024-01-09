@@ -1,5 +1,6 @@
 package org.krzywanski.table.test;
 
+import org.krzywanski.table.annot.CustomRenderer;
 import org.krzywanski.table.annot.MyTableColumn;
 import org.krzywanski.table.annot.ReflectionSort;
 import org.krzywanski.table.annot.TableFilter;
@@ -32,6 +33,17 @@ public class TestModel {
     @MyTableColumn(label = "customFormatter")
     TestFormatClass testFormatClass = new TestFormatClass();
 
+    @CustomRenderer(renderer = BooleanIconRenderer.class)
+    @MyTableColumn(label = "Boolean value")
+    private Boolean booleanValue = true;
+
+    public Boolean getBooleanValue() {
+        return booleanValue;
+    }
+
+    public void setBooleanValue(Boolean booleanValue) {
+        this.booleanValue = booleanValue;
+    }
     public String getColumnA() {
         return columnA;
     }
