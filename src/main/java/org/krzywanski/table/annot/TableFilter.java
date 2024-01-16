@@ -3,7 +3,7 @@ package org.krzywanski.table.annot;
 import java.lang.annotation.Repeatable;
 
 /**
- * Filter dla tabelki
+ * Filters for table
  */
 @Repeatable(TableFilters.class)
 public @interface TableFilter {
