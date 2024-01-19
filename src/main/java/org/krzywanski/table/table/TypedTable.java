@@ -205,11 +205,12 @@ public class TypedTable<T> extends JTable {
             listeners.forEach(genericSelectionListener -> genericSelectionListener.getSelectedItem(getItemAt(0)));
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({"rawtypes"})
     private void sortData(List<T> data, String columnName, SortOrder sortOrder){
         try {
             BeanInfo beanInfo = Introspector.getBeanInfo(typeClass);
             final PropertyDescriptor sortByField = Arrays.stream(beanInfo.getPropertyDescriptors()).filter(propertyDescriptor -> propertyDescriptor.getName().equals(columnName)).findFirst().orElseThrow(() -> new RuntimeException("No such field"));
+            Comparator<? super Comparable> oreder = Comparator.nullsLast(Comparator.naturalOrder());
             data.sort(Comparator.comparing(entity -> {
                 try {
                     Object fieldValue = sortByField.getReadMethod().invoke(entity);
@@ -220,7 +221,7 @@ public class TypedTable<T> extends JTable {
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     throw new RuntimeException(e);
                 }
-            }));
+            }, oreder));
         } catch (IntrospectionException e) {
             throw new RuntimeException(e);
         }
