@@ -1,6 +1,7 @@
 package org.krzywanski.table;
 
 import net.miginfocom.swing.MigLayout;
+import org.krzywanski.table.panel.TypedPanel;
 import org.krzywanski.table.table.*;
 import org.krzywanski.table.test.TestModel;
 
@@ -45,9 +46,11 @@ public class Main {
 
         panel.addGenericSelectionListener(element -> System.out.println(element.getColumnA()));
         frame.add(panel, "grow,push");
-        frame.add(panel2, "grow,push");
+//        frame.add(panel2, "grow,push");
+        frame.add(new TypedPanel<>(Main.getData().get(0)));
         frame.setVisible(true);
         frame.pack();
+
     }
 
     public static List<TestModel> getAllData() {

@@ -22,7 +22,7 @@ public class TestModel {
     private Double columnB;
 
     @MyTableColumn(label = "Test label")
-    private String columnC;
+    private Integer columnC;
 
     @MyTableColumn(label = "DataLable", format = "YYYY", alignment = Alignment.CENTER)
     private Date date = new Date();
@@ -60,11 +60,11 @@ public class TestModel {
         this.columnB = columnB;
     }
 
-    public String getColumnC() {
+    public Integer getColumnC() {
         return columnC;
     }
 
-    public void setColumnC(String columnC) {
+    public void setColumnC(Integer columnC) {
         this.columnC = columnC;
     }
 
