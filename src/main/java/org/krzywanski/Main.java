@@ -4,6 +4,7 @@ import net.miginfocom.swing.MigLayout;
 import org.krzywanski.table.*;
 import org.krzywanski.table.components.FilterDialog;
 import org.krzywanski.table.constraints.ActionType;
+import org.krzywanski.table.panel.TypedPanel;
 import org.krzywanski.table.providers.DefaultDataPrivder;
 import org.krzywanski.table.providers.IFilterComponent;
 import org.krzywanski.test.TestModel;
