@@ -28,8 +28,8 @@ public class DefaultDataPrivder<T> implements TableDataProvider<T> {
     }
 
     @Override
-    public int getSize(String searchString) {
-        return sizeSupplier.size(searchString);
+    public int getSize(String searchString, Map<String, String> extraParams) {
+        return sizeSupplier.size(searchString, extraParams);
     }
 
     @Override

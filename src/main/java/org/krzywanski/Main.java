@@ -72,7 +72,7 @@ public class Main {
         return Main.getData().stream().filter(testModel -> testModel.getColumnA().toLowerCase().contains(Objects.requireNonNullElse(searchString, ""))).skip(offest).limit(limit).collect(Collectors.toList());
     }
 
-    public static int getSize(String searchString) {
+    public static int getSize(String searchString, Map<String, String> extraParams) {
         return (int) Main.getData().stream().filter(testModel -> testModel.getColumnA().toLowerCase().contains(Objects.requireNonNullElse(searchString, ""))).count();
     }
 
