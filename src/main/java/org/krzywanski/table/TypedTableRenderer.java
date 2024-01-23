@@ -2,6 +2,7 @@ package org.krzywanski.table;
 
 import org.krzywanski.table.annot.CustomRenderer;
 import org.krzywanski.table.annot.MyTableColumn;
+import org.krzywanski.table.utils.Pair;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;

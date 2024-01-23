@@ -1,4 +1,4 @@
-package org.krzywanski.table;
+package org.krzywanski.table.utils;
 
 /**
  * Container to ease passing around a tuple of two objects. This object provides a sensible

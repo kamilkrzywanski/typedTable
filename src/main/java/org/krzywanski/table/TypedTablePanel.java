@@ -2,6 +2,7 @@ package org.krzywanski.table;
 
 import net.miginfocom.swing.MigLayout;
 import org.krzywanski.table.annot.TableFilters;
+import org.krzywanski.table.utils.Pair;
 import org.krzywanski.test.TestFormatClass;
 
 import javax.swing.*;
