@@ -2,6 +2,9 @@ package org.krzywanski.table;
 
 
 import org.krzywanski.table.constraints.ActionType;
+import org.krzywanski.table.providers.DataProviderInterface;
+import org.krzywanski.table.providers.SizeSupplier;
+import org.krzywanski.table.providers.TableDataProvider;
 
 import java.util.List;
 import java.util.Map;

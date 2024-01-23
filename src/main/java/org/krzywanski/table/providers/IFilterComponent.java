@@ -1,4 +1,4 @@
-package org.krzywanski.table;
+package org.krzywanski.table.providers;
 
 import java.awt.*;
 

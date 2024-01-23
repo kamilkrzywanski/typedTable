@@ -4,6 +4,9 @@ import org.krzywanski.table.annot.EnableMultiSort;
 import org.krzywanski.table.annot.MyTableColumn;
 import org.krzywanski.table.annot.ReflectionSort;
 import org.krzywanski.table.constraints.ActionType;
+import org.krzywanski.table.providers.GenericSelectionListener;
+import org.krzywanski.table.providers.TableDataProvider;
+import org.krzywanski.table.providers.TableWidthTool;
 import org.krzywanski.table.utils.Pair;
 
 import javax.swing.*;

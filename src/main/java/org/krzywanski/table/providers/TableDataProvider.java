@@ -1,4 +1,4 @@
-package org.krzywanski.table;
+package org.krzywanski.table.providers;
 
 public interface TableDataProvider<T> extends DataProviderInterface<T>, SizeProviderInterface {
     int getLimit();

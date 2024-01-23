@@ -2,6 +2,7 @@ package org.krzywanski.table;
 
 import org.krzywanski.table.annot.ReflectionSort;
 import org.krzywanski.table.constraints.ActionType;
+import org.krzywanski.table.providers.TableDataProvider;
 import org.krzywanski.table.utils.Pair;
 
 public class PaginationUtils {

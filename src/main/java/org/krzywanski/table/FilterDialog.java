@@ -3,6 +3,7 @@ package org.krzywanski.table;
 import net.miginfocom.swing.MigLayout;
 import org.krzywanski.table.annot.TableFilter;
 import org.krzywanski.table.annot.TableFilters;
+import org.krzywanski.table.providers.IFilterComponent;
 
 import javax.swing.*;
 import java.awt.*;

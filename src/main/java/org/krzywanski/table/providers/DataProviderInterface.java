@@ -1,5 +1,6 @@
-package org.krzywanski.table;
+package org.krzywanski.table.providers;
 
+import org.krzywanski.table.SortColumn;
 import org.krzywanski.table.constraints.ActionType;
 
 import java.util.List;

@@ -1,5 +1,7 @@
 package org.krzywanski.table;
 
+import org.krzywanski.table.providers.TableWidthTool;
+
 public class TableWidthProvider {
 
     private static TableWidthTool tool;
