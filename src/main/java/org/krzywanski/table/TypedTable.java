@@ -3,6 +3,7 @@ package org.krzywanski.table;
 import org.krzywanski.table.annot.EnableMultiSort;
 import org.krzywanski.table.annot.MyTableColumn;
 import org.krzywanski.table.annot.ReflectionSort;
+import org.krzywanski.table.constraints.ActionType;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableColumnModel;

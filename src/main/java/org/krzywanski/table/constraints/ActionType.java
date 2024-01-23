@@ -1,4 +1,4 @@
-package org.krzywanski.table;
+package org.krzywanski.table.constraints;
 
 /**
  * Defines action type for data provider

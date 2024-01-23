@@ -1,6 +1,8 @@
 package org.krzywanski.table;
 
 
+import org.krzywanski.table.constraints.ActionType;
+
 import java.util.List;
 import java.util.Map;
 

@@ -4,7 +4,7 @@ import org.krzywanski.table.annot.MyTableColumn;
 import org.krzywanski.table.annot.ReflectionSort;
 import org.krzywanski.table.annot.CustomRenderer;
 import org.krzywanski.table.annot.TableFilter;
-import org.krzywanski.table.Alignment;
+import org.krzywanski.table.constraints.Alignment;
 
 import java.util.Date;
 

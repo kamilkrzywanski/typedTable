@@ -2,7 +2,7 @@ package org.krzywanski;
 
 import net.miginfocom.swing.MigLayout;
 import org.krzywanski.table.*;
-import org.krzywanski.table.*;
+import org.krzywanski.table.constraints.ActionType;
 import org.krzywanski.test.TestModel;
 
 import javax.swing.*;
