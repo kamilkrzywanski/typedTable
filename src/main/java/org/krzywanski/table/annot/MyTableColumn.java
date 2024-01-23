@@ -1,7 +1,7 @@
 package org.krzywanski.table.annot;
 
 
-import org.krzywanski.table.table.Alignment;
+import org.krzywanski.table.constraints.Alignment;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
