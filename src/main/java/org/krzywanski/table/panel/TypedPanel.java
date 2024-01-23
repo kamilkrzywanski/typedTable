@@ -16,7 +16,11 @@ public class TypedPanel<T> extends JPanel {
 
     private void initComponents() {
         PanelFieldCreator panelFieldCreator = new PanelFieldCreator(data.getClass());
-        panelFieldCreator.getComponents().forEach(component -> add(component, "grow, wrap"));
+        panelFieldCreator.getComponents().forEach((component1, component2) -> {
+            add(component1, component2 != null ? "grow" : "grow, span 2, wrap");
+            if(component2 != null)
+                add(component2, "grow, wrap");
+        });
     }
 
 

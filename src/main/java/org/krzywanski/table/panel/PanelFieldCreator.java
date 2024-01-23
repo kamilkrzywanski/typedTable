@@ -2,6 +2,7 @@ package org.krzywanski.table.panel;
 
 import net.miginfocom.swing.MigLayout;
 import org.krzywanski.table.panel.annot.PanelField;
+import org.krzywanski.table.table.Pair;
 
 import javax.swing.*;
 import javax.swing.text.DefaultFormatter;
@@ -12,9 +13,8 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.lang.reflect.Field;
 import java.text.NumberFormat;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class PanelFieldCreator {
@@ -24,19 +24,27 @@ public class PanelFieldCreator {
     }
 
 
-    List<Component> getComponents() {
-       return Arrays.stream(dataClass.getDeclaredFields())
+    Map<Component, Component> getComponents() {
+       final Map<Component, Component> componentMap = new HashMap<>();
+       Arrays.stream(dataClass.getDeclaredFields())
                .map(this::createPanelField)
-               .collect(Collectors.toList());
+               .forEach(componentComponentPair ->
+                       componentMap.put(componentComponentPair.getFirst(),
+                               componentComponentPair.getSecond()));
 
+               return componentMap;
     }
 
-    private Component createPanelField(Field field) {
-        Component component = createComponent(field);
-        return component;
+    private Pair<Component, Component> createPanelField(Field field) {
+        Pair<Component, Component> componentPair = createComponent(field);
+
+        if(componentPair.getFirst() == null || componentPair.getSecond() == null) {
+            System.out.println("Null label for field " + field.getName());
+        }
+        return createComponent(field);
     }
 
-    private Component createComponent(Field field) {
+    private Pair<Component, Component> createComponent(Field field) {
         if(field.getType().equals(Boolean.class)) {
             return createCheckBox(field);
         }
@@ -56,32 +64,32 @@ public class PanelFieldCreator {
             return createLongTextField(field);
         }
 
-        return new JLabel();
+        return new Pair<>(new JLabel(), new JLabel());
     }
 
 
-    private Component createLongTextField(Field field) {
+    private Pair<Component, Component> createLongTextField(Field field) {
         return createLabelAndComponent(field, createFieldWithFormatter(NumberFormat.getNumberInstance()));
     }
 
-    private Component createFloatTextField(Field field) {
+    private Pair<Component, Component> createFloatTextField(Field field) {
         return createLabelAndComponent(field, createFieldWithFormatter(NumberFormat.getNumberInstance()));
     }
 
-    private Component createDoubleTextField(Field field) {
+    private Pair<Component, Component> createDoubleTextField(Field field) {
         return createLabelAndComponent(field, createFieldWithFormatter(NumberFormat.getNumberInstance()));
     }
 
-    private Component createIntegerTextField(Field field) {
+    private Pair<Component, Component> createIntegerTextField(Field field) {
         return createLabelAndComponent(field, createFieldWithFormatter(NumberFormat.getIntegerInstance()));
     }
 
-    private Component createTextField(Field field) {
+    private Pair<Component, Component> createTextField(Field field) {
        return createLabelAndComponent(field, new JTextField());
     }
 
-    private Component createCheckBox(Field field) {
-        return new JCheckBox(findLabel(field));
+    private Pair<Component, Component> createCheckBox(Field field) {
+        return new Pair<>(new JCheckBox(findLabel(field)), null);
     }
 
     private String findLabel(Field field) {
@@ -93,12 +101,8 @@ public class PanelFieldCreator {
     }
 
 
-    Component createLabelAndComponent(Field field, Component component) {
-        JPanel panel = new JPanel();
-        panel.setLayout(new MigLayout());
-        panel.add(new JLabel(findLabel(field)));
-        panel.add(component, "grow, push");
-        return panel;
+    Pair<Component, Component> createLabelAndComponent(Field field, Component component) {
+        return new Pair<>(new JLabel(findLabel(field)), component);
     }
 
     private static JFormattedTextField createFieldWithFormatter(NumberFormat format) {
