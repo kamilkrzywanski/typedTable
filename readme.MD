@@ -18,4 +18,7 @@ Effect of this opperation will be: <br>
 Custom formatter for objects example:
 ![img.png](img.png)
 
-
+Incoming features:
+- crud operations on table
+- add select and multiselect panel(needs to make fields editable)
+-
