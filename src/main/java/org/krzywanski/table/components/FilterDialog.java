@@ -1,6 +1,8 @@
-package org.krzywanski.table;
+package org.krzywanski.table.components;
 
 import net.miginfocom.swing.MigLayout;
+import org.krzywanski.table.TypedTable;
+import org.krzywanski.table.TypedTablePanel;
 import org.krzywanski.table.annot.TableFilter;
 import org.krzywanski.table.annot.TableFilters;
 import org.krzywanski.table.providers.IFilterComponent;
@@ -33,7 +35,7 @@ public class FilterDialog extends JDialog {
         getRootPane().registerKeyboardAction(this::okAction, KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ENTER, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
         this.firstPageAction = firstPageAction;
         this.table = typedTable;
-        this.typeClass = typedTable.typeClass;
+        this.typeClass = typedTable.getTypeClass();
         this.parentPanel = parentPanel;
         setLayout(new MigLayout());
         collectAndAddFilters();
@@ -108,7 +110,7 @@ public class FilterDialog extends JDialog {
     @Override
     public void setVisible(boolean b) {
         if (b) {
-            setLocationRelativeTo(parentPanel.filterButton);
+            setLocationRelativeTo(parentPanel);
         }
         super.setVisible(b);
     }
@@ -219,7 +221,7 @@ public class FilterDialog extends JDialog {
      * @param label - label for filter
      * @param iFilterComponent - component to add with interface
      */
-    void addCustomFilterComponent(String label,String filterName, IFilterComponent iFilterComponent){
+    public void addCustomFilterComponent(String label,String filterName, IFilterComponent iFilterComponent){
         basicAdd(label, iFilterComponent.getComponent());
         filterComponents.put(filterName, iFilterComponent);
         pack();

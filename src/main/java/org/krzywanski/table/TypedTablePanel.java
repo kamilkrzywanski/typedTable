@@ -2,6 +2,8 @@ package org.krzywanski.table;
 
 import net.miginfocom.swing.MigLayout;
 import org.krzywanski.table.annot.TableFilters;
+import org.krzywanski.table.components.FilterDialog;
+import org.krzywanski.table.components.PopupDialog;
 import org.krzywanski.table.providers.GenericSelectionListener;
 import org.krzywanski.table.providers.IFilterComponent;
 import org.krzywanski.table.providers.TableDataProvider;

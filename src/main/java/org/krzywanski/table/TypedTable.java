@@ -4,9 +4,7 @@ import org.krzywanski.table.annot.EnableMultiSort;
 import org.krzywanski.table.annot.MyTableColumn;
 import org.krzywanski.table.annot.ReflectionSort;
 import org.krzywanski.table.constraints.ActionType;
-import org.krzywanski.table.providers.GenericSelectionListener;
-import org.krzywanski.table.providers.TableDataProvider;
-import org.krzywanski.table.providers.TableWidthTool;
+import org.krzywanski.table.providers.*;
 import org.krzywanski.table.utils.Pair;
 
 import javax.swing.*;
@@ -73,7 +71,7 @@ public class TypedTable<T> extends JTable {
     /**
      * Entity for create table
      */
-    Class<? extends T> typeClass;
+    final Class<? extends T> typeClass;
     /**
      * Provide a custom sizes of columns when user change
      */
@@ -401,5 +399,9 @@ public class TypedTable<T> extends JTable {
             return defaultValue;
         }
         return mapper.apply(selectedItem);
+    }
+
+    public Class<? extends T> getTypeClass() {
+        return typeClass;
     }
 }

@@ -1,6 +1,4 @@
-package org.krzywanski.table;
-
-import org.krzywanski.table.providers.TableWidthTool;
+package org.krzywanski.table.providers;
 
 import java.io.*;
 import java.nio.file.Files;

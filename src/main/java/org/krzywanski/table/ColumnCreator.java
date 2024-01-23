@@ -1,6 +1,7 @@
 package org.krzywanski.table;
 
 import org.krzywanski.table.annot.MyTableColumn;
+import org.krzywanski.table.providers.TableWidthProvider;
 import org.krzywanski.table.utils.Pair;
 
 import javax.swing.table.TableColumn;

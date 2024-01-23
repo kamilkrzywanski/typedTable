@@ -1,4 +1,4 @@
-package org.krzywanski.table;
+package org.krzywanski.table.components;
 
 import javax.swing.*;
 import java.util.Locale;
