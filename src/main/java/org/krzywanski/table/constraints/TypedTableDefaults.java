@@ -1,4 +1,4 @@
-package org.krzywanski.table;
+package org.krzywanski.table.constraints;
 
 /**
  * Deafults for typed table
@@ -6,8 +6,8 @@ package org.krzywanski.table;
  */
 public class TypedTableDefaults {
 
-    protected static String CARRET_ASC_SYMBOL = " ▲";
-    protected static String CARRET_DESC_SYMBOL = " ▼";
+    public static String CARRET_ASC_SYMBOL = " ▲";
+    public static String CARRET_DESC_SYMBOL = " ▼";
 
     public static void setCarretAscSymbol(String carretAscSymbol) {
         CARRET_ASC_SYMBOL = carretAscSymbol;

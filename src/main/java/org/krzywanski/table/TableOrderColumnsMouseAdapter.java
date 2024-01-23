@@ -2,6 +2,7 @@ package org.krzywanski.table;
 
 import net.miginfocom.swing.MigLayout;
 import org.krzywanski.table.annot.MyTableColumn;
+import org.krzywanski.table.constraints.TypedTableDefaults;
 import org.krzywanski.table.providers.TableWidthTool;
 import org.krzywanski.table.utils.Pair;
 
