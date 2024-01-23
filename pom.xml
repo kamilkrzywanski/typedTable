@@ -35,7 +35,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>org.krzywanski.table.Main</mainClass>
+                            <mainClass>org.krzywanski.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
