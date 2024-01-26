@@ -36,4 +36,8 @@ public class ListDataProvider<T> implements TableDataProvider<T> {
         return -1;
     }
 
+    @Override
+    public boolean isPaginable() {
+        return false;
+    }
 }

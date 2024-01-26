@@ -404,4 +404,8 @@ public class TypedTable<T> extends JTable {
     public Class<? extends T> getTypeClass() {
         return typeClass;
     }
+
+    public boolean isPaginationEnabled(){
+        return dataList == null  && provider != null && provider.isPaginable();
+    }
 }

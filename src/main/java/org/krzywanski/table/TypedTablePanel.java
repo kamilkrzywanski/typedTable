@@ -91,11 +91,16 @@ public class TypedTablePanel<T> extends JPanel {
         } else {
             addButton(exportExcelButton, "split, al right");
         }
-        addButton(firstPageButton, "");
-        addButton(prevPageButton, "");
+
+        if(table.isPaginationEnabled()) {
+            addButton(firstPageButton, "");
+            addButton(prevPageButton, "");
+        }
         add(page);
-        addButton(nextPageButton, "");
-        addButton(lastPageButton, "");
+        if(table.isPaginationEnabled()) {
+            addButton(nextPageButton, "");
+            addButton(lastPageButton, "");
+        }
         addButton(searchButton, "wrap");
 
         filterButton.addActionListener(e -> filterAction());
