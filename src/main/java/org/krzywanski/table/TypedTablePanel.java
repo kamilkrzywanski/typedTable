@@ -70,7 +70,7 @@ public class TypedTablePanel<T> extends JPanel {
         firstPageAction();
     }
 
-    private void createButtons() {
+    void initButtons(){
         filterButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("filter-symbol.png")));
         exportExcelButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("export_excel.png")));
         nextPageButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("next.png")));
@@ -80,6 +80,10 @@ public class TypedTablePanel<T> extends JPanel {
         searchButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("search.png")));
         page = new JLabel("");
         popupDialog = new PopupDialog(e -> firstPageAction());
+    }
+
+    private void createButtons() {
+        initButtons();
 
         if (table.typeClass.isAnnotationPresent(TableFilters.class)) {
             addButton(filterButton, "split, al right");
