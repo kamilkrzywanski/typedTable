@@ -65,6 +65,7 @@ public class TypedTablePanel<T> extends JPanel {
         filterDialog = new FilterDialog((e) -> firstPageAction(), table, this);
         table.addFistPageListener(e -> firstPageAction());
         table.addSearchPhaseSupplier(() -> popupDialog.getText());
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, "grow,push,wrap");
         firstPageAction();

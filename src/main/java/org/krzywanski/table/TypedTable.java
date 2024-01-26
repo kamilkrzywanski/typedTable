@@ -129,7 +129,6 @@ public class TypedTable<T> extends JTable {
         this.provider = provider;
         this.currentData = dataList;
         this.paginationUtils = new PaginationUtils(provider, this);
-
         this.setColumnModel(new DefaultTableColumnModel());
 
         model = (DefaultTableModel) this.getModel();
@@ -149,7 +148,6 @@ public class TypedTable<T> extends JTable {
                 forEachRemaining(tableColumn -> tableColumn.addPropertyChangeListener(new ChangeHeaderNamePropertyChangeListener(columnCreator)));
         fixHeadersSize();
         tableHeader.addMouseListener(new TableOrderColumnsMouseAdapter(this, instance));
-        setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     }
 
     @Override
