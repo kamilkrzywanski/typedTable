@@ -129,7 +129,6 @@ public class TypedTable<T> extends JTable {
         this.provider = provider;
         this.currentData = dataList;
         this.paginationUtils = new PaginationUtils(provider, this);
-
         this.setColumnModel(new DefaultTableColumnModel());
 
         model = (DefaultTableModel) this.getModel();
@@ -149,7 +148,6 @@ public class TypedTable<T> extends JTable {
                 forEachRemaining(tableColumn -> tableColumn.addPropertyChangeListener(new ChangeHeaderNamePropertyChangeListener(columnCreator)));
         fixHeadersSize();
         tableHeader.addMouseListener(new TableOrderColumnsMouseAdapter(this, instance));
-        setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     }
 
     @Override
@@ -236,19 +234,19 @@ public class TypedTable<T> extends JTable {
     /**
      * Actions for pagination
      */
-    public Pair<Integer, Integer> nextPageAction() {
+    public Page nextPageAction() {
         return paginationUtils.nextPageAction();
     }
 
-    public Pair<Integer, Integer> lastPageAction() {
+    public Page lastPageAction() {
         return paginationUtils.lastPageAction();
     }
 
-    public Pair<Integer, Integer> prevPageAction() {
+    public Page prevPageAction() {
         return paginationUtils.prevPageAction();
     }
 
-    public Pair<Integer, Integer> firstPageAction() {
+    public Page firstPageAction() {
         return paginationUtils.firstPageAction();
     }
 
@@ -403,5 +401,9 @@ public class TypedTable<T> extends JTable {
 
     public Class<? extends T> getTypeClass() {
         return typeClass;
+    }
+
+    public boolean isPaginationEnabled(){
+        return dataList == null  && provider != null && provider.isPaginable();
     }
 }

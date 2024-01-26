@@ -5,6 +5,9 @@ import org.krzywanski.table.constraints.ActionType;
 import org.krzywanski.table.providers.TableDataProvider;
 import org.krzywanski.table.utils.Pair;
 
+import java.util.ArrayList;
+import java.util.Objects;
+
 public class PaginationUtils {
 
     TableDataProvider<?> provider;
@@ -24,7 +27,7 @@ public class PaginationUtils {
         return tTypedTable.currentData.size();
     }
 
-    public Pair<Integer, Integer> nextPageAction() {
+    public Page nextPageAction() {
         limit = findCurrentLimit();
         int dataSize = getValue(provider);
 
@@ -39,10 +42,10 @@ public class PaginationUtils {
 
         localAddData(ActionType.NEXT_PAGE);
 
-        return new Pair<>(currentPage + 1, lastPage);
+        return new Page(currentPage + 1, lastPage, dataSize);
     }
 
-    public Pair<Integer, Integer> prevPageAction() {
+    public Page prevPageAction() {
         limit = findCurrentLimit();
 
         int currentPage = offset / limit;
@@ -53,11 +56,11 @@ public class PaginationUtils {
         }
 
         localAddData(ActionType.PREV_PAGE);
-
-        return new Pair<>(currentPage + 1, (int) Math.ceil((double) getValue(provider) / limit));
+        int dataSize = getValue(provider);
+        return new Page(currentPage + 1, (int) Math.ceil((double) dataSize / limit), dataSize);
     }
 
-    public Pair<Integer, Integer> lastPageAction() {
+    public Page lastPageAction() {
         limit = findCurrentLimit();
         int dataSize = getValue(provider);
 
@@ -65,19 +68,21 @@ public class PaginationUtils {
 
         offset = (lastPage - 1) * limit;
         localAddData(ActionType.LAST_PAGE);
-        return new Pair<>(lastPage, lastPage);
+        return new Page(lastPage, lastPage, dataSize);
     }
 
-    public Pair<Integer, Integer> firstPageAction() {
+    public Page firstPageAction() {
         limit = findCurrentLimit();
 
         offset = 0;
 
         localAddData(ActionType.FIRST_PAGE);
 
-        int localLimit = (int) Math.ceil((double) getValue(provider) / limit);
+        int dataSize = getValue(provider);
+
+        int localLimit = (int) Math.ceil((double) dataSize / limit);
         localLimit = Math.max(1, localLimit);
-        return new Pair<>(1, localLimit);
+        return new Page(1, localLimit, dataSize);
     }
 
     private void localAddData(ActionType actionType) {
@@ -87,7 +92,7 @@ public class PaginationUtils {
 
     private int getValue(TableDataProvider<?> privder){
         if(privder == null)
-            return 0;
+            return Objects.requireNonNullElse(tTypedTable.dataList, new ArrayList<>()).size();
         return provider.getSize(tTypedTable.getSearchPhase(), tTypedTable.extraParams);
     }
 

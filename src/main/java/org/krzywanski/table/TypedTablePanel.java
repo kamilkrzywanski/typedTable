@@ -34,7 +34,7 @@ public class TypedTablePanel<T> extends JPanel {
     JButton nextPageButton;
     JButton lastPageButton;
     JButton searchButton;
-    JLabel page;
+    JLabel pageLabel;
 
     public final TypedTable<T> table;
     final FilterDialog filterDialog;
@@ -65,12 +65,13 @@ public class TypedTablePanel<T> extends JPanel {
         filterDialog = new FilterDialog((e) -> firstPageAction(), table, this);
         table.addFistPageListener(e -> firstPageAction());
         table.addSearchPhaseSupplier(() -> popupDialog.getText());
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, "grow,push,wrap");
         firstPageAction();
     }
 
-    private void createButtons() {
+    void initButtons(){
         filterButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("filter-symbol.png")));
         exportExcelButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("export_excel.png")));
         nextPageButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("next.png")));
@@ -78,8 +79,12 @@ public class TypedTablePanel<T> extends JPanel {
         lastPageButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("fast-forward-button.png")));
         firstPageButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("fast-backward.png")));
         searchButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("search.png")));
-        page = new JLabel("");
+        pageLabel = new JLabel("");
         popupDialog = new PopupDialog(e -> firstPageAction());
+    }
+
+    private void createButtons() {
+        initButtons();
 
         if (table.typeClass.isAnnotationPresent(TableFilters.class)) {
             addButton(filterButton, "split, al right");
@@ -87,11 +92,16 @@ public class TypedTablePanel<T> extends JPanel {
         } else {
             addButton(exportExcelButton, "split, al right");
         }
-        addButton(firstPageButton, "");
-        addButton(prevPageButton, "");
-        add(page);
-        addButton(nextPageButton, "");
-        addButton(lastPageButton, "");
+
+        if(table.isPaginationEnabled()) {
+            addButton(firstPageButton, "");
+            addButton(prevPageButton, "");
+        }
+        add(pageLabel);
+        if(table.isPaginationEnabled()) {
+            addButton(nextPageButton, "");
+            addButton(lastPageButton, "");
+        }
         addButton(searchButton, "wrap");
 
         filterButton.addActionListener(e -> filterAction());
@@ -120,23 +130,27 @@ public class TypedTablePanel<T> extends JPanel {
     }
 
     private void nextPageAction() {
-        Pair<Integer, Integer> pair = table.nextPageAction();
-        page.setText(pair.getFirst() + "/" + pair.getSecond());
+        setLabelText(table.nextPageAction());
     }
 
     private void lastPageAction() {
-        Pair<Integer, Integer> pair = table.lastPageAction();
-        page.setText(pair.getFirst() + "/" + pair.getSecond());
+        setLabelText(table.lastPageAction());
     }
 
     private void prevPageAction() {
-        Pair<Integer, Integer> pair = table.prevPageAction();
-        page.setText(pair.getFirst() + "/" + pair.getSecond());
+        setLabelText(table.prevPageAction());
     }
 
     private void firstPageAction() {
-        Pair<Integer, Integer> pair = table.firstPageAction();
-        page.setText(pair.getFirst() + "/" + pair.getSecond());
+        setLabelText(table.firstPageAction());
+    }
+
+    private void setLabelText(Page page) {
+
+        if(table.isPaginationEnabled())
+            this.pageLabel.setText(page.getCurrentPage() + "/" + page.getTotalPages() + " (" + page.getTotalElements() + ")" );
+        else
+            this.pageLabel.setText("(" + page.getTotalElements() + ")" );
     }
 
     private void addButton(JButton button, String constraints) {

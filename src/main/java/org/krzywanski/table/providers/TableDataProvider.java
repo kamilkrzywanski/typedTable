@@ -6,4 +6,8 @@ public interface TableDataProvider<T> extends DataProviderInterface<T>, SizeProv
     default int reflectionSortLimit(){
         return -1;
     }
+
+    default boolean isPaginable(){
+        return true;
+    }
 }
