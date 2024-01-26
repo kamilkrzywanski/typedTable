@@ -7,7 +7,7 @@ import org.krzywanski.table.components.PopupDialog;
 import org.krzywanski.table.providers.GenericSelectionListener;
 import org.krzywanski.table.providers.IFilterComponent;
 import org.krzywanski.table.providers.TableDataProvider;
-import org.krzywanski.table.utils.Pair;
+import org.krzywanski.table.utils.Page;
 import org.krzywanski.test.TestFormatClass;
 
 import javax.swing.*;

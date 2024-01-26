@@ -1,4 +1,4 @@
-package org.krzywanski.table;
+package org.krzywanski.table.utils;
 
 public class Page {
     public Page(int currentPage, int totalPages, int totalElements) {
