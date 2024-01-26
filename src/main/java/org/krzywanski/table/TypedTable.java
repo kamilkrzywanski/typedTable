@@ -236,19 +236,19 @@ public class TypedTable<T> extends JTable {
     /**
      * Actions for pagination
      */
-    public Pair<Integer, Integer> nextPageAction() {
+    public Page nextPageAction() {
         return paginationUtils.nextPageAction();
     }
 
-    public Pair<Integer, Integer> lastPageAction() {
+    public Page lastPageAction() {
         return paginationUtils.lastPageAction();
     }
 
-    public Pair<Integer, Integer> prevPageAction() {
+    public Page prevPageAction() {
         return paginationUtils.prevPageAction();
     }
 
-    public Pair<Integer, Integer> firstPageAction() {
+    public Page firstPageAction() {
         return paginationUtils.firstPageAction();
     }
 

@@ -34,7 +34,7 @@ public class TypedTablePanel<T> extends JPanel {
     JButton nextPageButton;
     JButton lastPageButton;
     JButton searchButton;
-    JLabel page;
+    JLabel pageLabel;
 
     public final TypedTable<T> table;
     final FilterDialog filterDialog;
@@ -78,7 +78,7 @@ public class TypedTablePanel<T> extends JPanel {
         lastPageButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("fast-forward-button.png")));
         firstPageButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("fast-backward.png")));
         searchButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("search.png")));
-        page = new JLabel("");
+        pageLabel = new JLabel("");
         popupDialog = new PopupDialog(e -> firstPageAction());
     }
 
@@ -96,7 +96,7 @@ public class TypedTablePanel<T> extends JPanel {
             addButton(firstPageButton, "");
             addButton(prevPageButton, "");
         }
-        add(page);
+        add(pageLabel);
         if(table.isPaginationEnabled()) {
             addButton(nextPageButton, "");
             addButton(lastPageButton, "");
@@ -129,23 +129,27 @@ public class TypedTablePanel<T> extends JPanel {
     }
 
     private void nextPageAction() {
-        Pair<Integer, Integer> pair = table.nextPageAction();
-        page.setText(pair.getFirst() + "/" + pair.getSecond());
+        setLabelText(table.nextPageAction());
     }
 
     private void lastPageAction() {
-        Pair<Integer, Integer> pair = table.lastPageAction();
-        page.setText(pair.getFirst() + "/" + pair.getSecond());
+        setLabelText(table.lastPageAction());
     }
 
     private void prevPageAction() {
-        Pair<Integer, Integer> pair = table.prevPageAction();
-        page.setText(pair.getFirst() + "/" + pair.getSecond());
+        setLabelText(table.prevPageAction());
     }
 
     private void firstPageAction() {
-        Pair<Integer, Integer> pair = table.firstPageAction();
-        page.setText(pair.getFirst() + "/" + pair.getSecond());
+        setLabelText(table.firstPageAction());
+    }
+
+    private void setLabelText(Page page) {
+
+        if(table.isPaginationEnabled())
+            this.pageLabel.setText(page.getCurrentPage() + "/" + page.getTotalPages() + " (" + page.getTotalElements() + ")" );
+        else
+            this.pageLabel.setText("(" + page.getTotalElements() + ")" );
     }
 
     private void addButton(JButton button, String constraints) {
