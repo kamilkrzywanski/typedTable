@@ -47,6 +47,7 @@ public class Main {
         TypedTablePanel<TestModel> panel = TypedTablePanel.getTableWithProvider(new DefaultDataPrivder<>(20, Main::getData, Main::getSize), TestModel.class);
         TypedTablePanel<TestModel> panel2 = TypedTablePanel.getTableWithData( Main.getAllData(), TestModel.class, 3);
 
+        panel.addComuptedColumn("columnCXXXX", value -> value.getColumnA() + " " + value.getColumnB());
         panel.addGenericSelectionListener(element -> System.out.println(element.getColumnA()));
         frame.add(panel, "grow,push");
         frame.add(panel2, "grow,push");

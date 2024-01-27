@@ -34,8 +34,8 @@ class TableOrderColumnsMouseAdapter extends MouseAdapter {
         LinkedHashMap<String, Integer> columns = new LinkedHashMap<>();
         for (int i = 0; i < table.getTableHeader().getColumnModel().getColumnCount(); i++) {
             TableColumn column = table.getTableHeader().getColumnModel().getColumn(i);
-            Pair<PropertyDescriptor, Field> columnPd =  table.columnCreator.getFieldByName(column.getHeaderValue());
-            columns.put(columnPd.getSecond().getName(), column.getWidth());
+            Field columnPd =  table.columnCreator.getFieldByName(column.getHeaderValue());
+            columns.put(columnPd.getName(), column.getWidth());
         }
 
         if (instance != null) instance.updateColumns(table.typeClass.getName(), columns, table.id);
@@ -161,7 +161,7 @@ class TableOrderColumnsMouseAdapter extends MouseAdapter {
         int column = table.columnAtPoint(e.getPoint());
 
         String sortString = "";
-        Field field = table.columnCreator.getFieldByName(table.getColumnModel().getColumn(column).getHeaderValue()).getSecond();
+        Field field = table.columnCreator.getFieldByName(table.getColumnModel().getColumn(column).getHeaderValue());
         if (field == null) return;
         MyTableColumn annotation = field.getAnnotation(MyTableColumn.class);
         if (annotation == null) return;

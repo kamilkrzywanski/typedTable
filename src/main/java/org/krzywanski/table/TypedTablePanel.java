@@ -19,6 +19,7 @@ import java.text.ParsePosition;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Container for table and pagination buttons
@@ -214,5 +215,9 @@ public class TypedTablePanel<T> extends JPanel {
 
     public <E> E getSelectedValueOrDefault(Function<T, E> mapper, E defaultValue) {
         return table.getSelectedValueOrDefault(mapper, defaultValue);
+    }
+
+    public void addComuptedColumn(String columnC, Function<T, Object> o) {
+        table.addComputedColumn(columnC, o);
     }
 }

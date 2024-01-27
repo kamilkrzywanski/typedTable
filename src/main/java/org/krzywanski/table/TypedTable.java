@@ -150,7 +150,7 @@ public class TypedTable<T> extends JTable {
         columnCreator.getTableColumns().forEach((field, tableColumn) -> {
             if (instance != null && columns != null) {
 
-                int width = Optional.ofNullable(columns.get(columnCreator.getFieldByName(tableColumn.getHeaderValue()).getSecond().getName())).orElse(MyTableColumn.defaultWidth);
+                int width = Optional.ofNullable(columns.get(columnCreator.getFieldByName(tableColumn.getHeaderValue()).getName())).orElse(MyTableColumn.defaultWidth);
 
                 if (width == 0) {
                     getColumn(tableColumn.getHeaderValue()).setMinWidth(0);
@@ -178,9 +178,9 @@ public class TypedTable<T> extends JTable {
 
         currentData.forEach(t -> {
             Vector<Object> element = new Vector<>();
-            columnCreator.getTableColumns().forEach((field, tableColumn) -> {
+            columnCreator.getPropertyDescriptors().forEach(propertyDescriptor -> {
                 try {
-                    element.add(field.getReadMethod().invoke(t));
+                    element.add(propertyDescriptor.getReadMethod().invoke(t));
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     throw new RuntimeException(e);
                 }
@@ -387,5 +387,14 @@ public class TypedTable<T> extends JTable {
 
     public boolean isPaginationEnabled(){
         return dataList == null  && provider != null && provider.isPaginable();
+    }
+
+    public void addComputedColumn(String columnC, Function<T, Object> o) {
+//        try {
+//            columnCreator.tableColumns.put(new PropertyDescriptor(columnC, Objects.class, "set"+ columnC, "get"+ columnC), new TableColumn(columnCreator.tableColumns.size(), 100));
+//        }catch (IntrospectionException e){
+//            throw new RuntimeException(e);
+//        }
+//        SwingUtilities.invokeLater(() -> model.addColumn(columnC));
     }
 }
