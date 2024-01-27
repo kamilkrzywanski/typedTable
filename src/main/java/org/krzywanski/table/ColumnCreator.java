@@ -98,4 +98,11 @@ public class ColumnCreator {
         return new Pair<>(pd, field);
     }
 
+    public Vector<String> getColumnsNames() {
+        Vector<String> columnsNames = new Vector<>();
+        for (TableColumn tableColumn : tableColumns.values()) {
+            columnsNames.add(tableColumn.getHeaderValue().toString());
+        }
+        return columnsNames;
+    }
 }

@@ -39,17 +39,25 @@ public class TypedTablePanel<T> extends JPanel {
     public final TypedTable<T> table;
     final FilterDialog filterDialog;
 
+    public static <T> TypedTablePanel<T> getTableWithData(List<T> dataList, Class<T> typeClass, int id) {
+        return new TypedTablePanel<>(dataList, typeClass, null, id);
+    }
+
+    public static <T> TypedTablePanel<T> getTableWithProvider(TableDataProvider<T> provider, Class<T> typeClass, int id) {
+        return new TypedTablePanel<>(null, typeClass, provider, id);
+    }
+
     public static <T> TypedTablePanel<T> getTableWithData(List<T> dataList, Class<T> typeClass) {
-        return new TypedTablePanel<>(dataList, typeClass, null);
+        return new TypedTablePanel<>(dataList, typeClass, null, 1);
     }
 
     public static <T> TypedTablePanel<T> getTableWithProvider(TableDataProvider<T> provider, Class<T> typeClass) {
-        return new TypedTablePanel<>(null, typeClass, provider);
+        return new TypedTablePanel<>(null, typeClass, provider, 1);
     }
 
-    private TypedTablePanel(List<T> dataList, Class<? extends T> typeClass, TableDataProvider<T> provider) {
+    private TypedTablePanel(List<T> dataList, Class<? extends T> typeClass, TableDataProvider<T> provider, int id) {
         super(new MigLayout());
-        table = new TypedTable<>(dataList, typeClass, provider, 1);
+        table = new TypedTable<>(dataList, typeClass, provider, id);
         createButtons();
         table.addCustomFormatter(TestFormatClass.class, new Format() {
             @Override

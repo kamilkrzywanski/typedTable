@@ -8,10 +8,7 @@ import org.krzywanski.table.providers.*;
 import org.krzywanski.table.utils.Page;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableColumnModel;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
+import javax.swing.table.*;
 import java.awt.event.ActionListener;
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -66,7 +63,7 @@ public class TypedTable<T> extends JTable {
     /**
      * Handle for model
      */
-    DefaultTableModel model;
+    TypedTableModel model;
 
     /**
      * Entity for create table
@@ -129,19 +126,7 @@ public class TypedTable<T> extends JTable {
         this.provider = provider;
         this.currentData = dataList;
         this.paginationUtils = new PaginationUtils(provider, this);
-        this.setColumnModel(new DefaultTableColumnModel());
-
-        model = (DefaultTableModel) this.getModel();
-        columnCreator.getTableColumns().forEach((field, tableColumn) -> {
-            model.addColumn(tableColumn.getHeaderValue());
-
-            if (tableColumn.getWidth() == 0) {
-                getColumn(tableColumn.getHeaderValue()).setMinWidth(0);
-                getColumn(tableColumn.getHeaderValue()).setMaxWidth(0);
-                getColumn(tableColumn.getHeaderValue()).setWidth(0);
-            }
-
-        });
+        model = (TypedTableModel) this.getModel();
         getColumnModel().
                 getColumns().
                 asIterator().
@@ -265,10 +250,6 @@ public class TypedTable<T> extends JTable {
         return currentData.get(index);
     }
 
-    @Override
-    public TableCellEditor getDefaultEditor(Class<?> columnClass) {
-        return super.getDefaultEditor(columnClass);
-    }
 
     @Override
     public TableCellRenderer getDefaultRenderer(Class<?> columnClass) {

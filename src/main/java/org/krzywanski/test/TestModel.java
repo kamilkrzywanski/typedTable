@@ -33,7 +33,7 @@ public class TestModel {
     @MyTableColumn(label = "customFormatter")
     TestFormatClass testFormatClass = new TestFormatClass();
 
-    @CustomRenderer(renderer = BooleanIconRenderer.class)
+//    @CustomRenderer(renderer = BooleanIconRenderer.class)
     @MyTableColumn(label = "Boolean value")
     private Boolean booleanValue = true;
 

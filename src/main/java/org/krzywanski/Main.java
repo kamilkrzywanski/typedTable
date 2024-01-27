@@ -45,7 +45,7 @@ public class Main {
         frame.setTitle("JTable Example");
         frame.setLayout(new MigLayout());
         TypedTablePanel<TestModel> panel = TypedTablePanel.getTableWithProvider(new DefaultDataPrivder<>(20, Main::getData, Main::getSize), TestModel.class);
-        TypedTablePanel<TestModel> panel2 = TypedTablePanel.getTableWithData( Main.getAllData(), TestModel.class);
+        TypedTablePanel<TestModel> panel2 = TypedTablePanel.getTableWithData( Main.getAllData(), TestModel.class, 3);
 
         panel.addGenericSelectionListener(element -> System.out.println(element.getColumnA()));
         frame.add(panel, "grow,push");
