@@ -149,19 +149,19 @@ public class TypedTable<T> extends JTable {
     void fixHeadersSize() {
 
         Map<String, Integer> columns = instance.getTable(typeClass.getCanonicalName(), id);
-        columnCreator.getTableColumns().forEach((field, tableColumn) -> {
+        columnCreator.getTableColumns().forEach(field -> {
             if (instance != null && columns != null) {
 
-                int width = Optional.ofNullable(columns.get(columnCreator.getFieldByName(tableColumn.getHeaderValue()).getName())).orElse(MyTableColumn.defaultWidth);
+                int width = Optional.ofNullable(columns.get(columnCreator.getFieldByName(field.getTableColumn().getHeaderValue()).getName())).orElse(MyTableColumn.defaultWidth);
 
                 if (width == 0) {
-                    getColumn(tableColumn.getHeaderValue()).setMinWidth(0);
-                    getColumn(tableColumn.getHeaderValue()).setMaxWidth(0);
-                    getColumn(tableColumn.getHeaderValue()).setWidth(0);
+                    getColumn(field.getTableColumn().getHeaderValue()).setMinWidth(0);
+                    getColumn(field.getTableColumn().getHeaderValue()).setMaxWidth(0);
+                    getColumn(field.getTableColumn().getHeaderValue()).setWidth(0);
                 } else
-                    this.getColumnModel().getColumn(this.getColumnModel().getColumnIndex(tableColumn.getHeaderValue())).setPreferredWidth(width);
+                    this.getColumnModel().getColumn(this.getColumnModel().getColumnIndex(field.getTableColumn().getHeaderValue())).setPreferredWidth(width);
             } else {
-                this.getColumnModel().getColumn(this.getColumnModel().getColumnIndex(tableColumn.getHeaderValue())).setPreferredWidth(tableColumn.getPreferredWidth());
+                this.getColumnModel().getColumn(this.getColumnModel().getColumnIndex(field.getTableColumn().getHeaderValue())).setPreferredWidth(field.getTableColumn().getPreferredWidth());
             }
 
         });
@@ -180,7 +180,7 @@ public class TypedTable<T> extends JTable {
 
         currentData.forEach(t -> {
             Vector<Object> element = new Vector<>();
-            columnCreator.getFieldMocks().forEach(fieldMock -> {
+            columnCreator.getTableColumns().forEach(fieldMock -> {
                 try {
                     element.add(fieldMock.invoke(t));
                 } catch (IllegalAccessException | InvocationTargetException e) {
@@ -392,8 +392,8 @@ public class TypedTable<T> extends JTable {
     }
 
     public <C> void addComputedColumn(String columnC, Class<C> resultClass, Function<T, C> o) {
-        TableColumn tableColumn = new TableColumn(columnCreator.getFieldMocks().size(), 100);
-        columnCreator.getTableColumns().put(new FieldMock(columnC, resultClass, o), tableColumn);
+        TableColumn tableColumn = new TableColumn(columnCreator.getTableColumns().size(), 100);
+        columnCreator.getTableColumns().add(new FieldMock(columnC, resultClass, o, tableColumn));
         tableColumn.setHeaderValue(columnC);
         try {
             SwingUtilities.invokeAndWait(() -> {

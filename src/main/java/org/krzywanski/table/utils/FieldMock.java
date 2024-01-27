@@ -1,5 +1,6 @@
 package org.krzywanski.table.utils;
 
+import javax.swing.table.TableColumn;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
@@ -18,20 +19,24 @@ public class FieldMock {
 
     final PropertyDescriptor propertyDescriptor;
 
+    final TableColumn tableColumn;
+
     @SuppressWarnings("unchecked")
-    public <T, C> FieldMock(String columnName, Class<?> type, Function<T, C> functionToCompute) {
+    public <T, C> FieldMock(String columnName, Class<?> type, Function<T, C> functionToCompute, TableColumn tableColumn) {
         this.columnName = columnName;
         this.field = null;
         this.type = type;
         this.functionToCompute = (Function<Object, Object>) functionToCompute;
         this.propertyDescriptor = null;
+        this.tableColumn = tableColumn;
     }
 
-    public FieldMock(String columnName, Field field) {
+    public FieldMock(String columnName, Field field, TableColumn tableColumn) {
         this.columnName = columnName;
         this.field = field;
         this.type = field.getType();
         this.functionToCompute = null;
+        this.tableColumn = tableColumn;
 
         try {
             this.propertyDescriptor = new PropertyDescriptor(field.getName(), field.getDeclaringClass());
@@ -72,5 +77,9 @@ public class FieldMock {
            return propertyDescriptor.getReadMethod().invoke(o);
         else
           return functionToCompute.apply(o);
+    }
+
+    public TableColumn getTableColumn() {
+        return tableColumn;
     }
 }

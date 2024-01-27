@@ -11,7 +11,7 @@ public class TypedTableModel extends DefaultTableModel {
 
     @Override
     public Class<?> getColumnClass(int columnIndex) {
-        return columnCreator.getFieldMocks().get(columnIndex).getType();
+        return columnCreator.getTableColumns().get(columnIndex).getType();
     }
 
     public ColumnCreator getColumnCreator() {

@@ -3,7 +3,6 @@ package org.krzywanski.table;
 import org.krzywanski.table.annot.MyTableColumn;
 import org.krzywanski.table.providers.TableWidthProvider;
 import org.krzywanski.table.utils.FieldMock;
-import org.krzywanski.table.utils.ListSupportLinkedHashMap;
 
 import javax.swing.table.TableColumn;
 import java.beans.BeanInfo;
@@ -21,12 +20,11 @@ public class ColumnCreator {
     /**
      * Map of table columns with property descriptors
      */
-    List<FieldMock> fieldMocks = new LinkedList<>();
-    final Map<FieldMock, TableColumn> tableColumns = new ListSupportLinkedHashMap<>(fieldMocks);
+    final List<FieldMock> tableColumns = new LinkedList<>();
 
     public ColumnCreator(Class<?> classType, long id) {
 
-        List<FieldMock> fields = Arrays.stream(classType.getDeclaredFields()).map(field -> new FieldMock(field.getName(), field)).collect(Collectors.toList());
+        List<FieldMock> fields = Arrays.stream(classType.getDeclaredFields()).map(field -> new FieldMock(field.getName(), field, null)).collect(Collectors.toList());
 
         LinkedHashMap<String, Integer> columns = new LinkedHashMap<>();
         LinkedHashMap<String, Integer> tempColumns = null;
@@ -75,7 +73,7 @@ public class ColumnCreator {
                     tableColumn.setWidth(0);
                 }
 
-                tableColumns.put(field, tableColumn);
+                tableColumns.add(new FieldMock(field.getName(), field.getField(), tableColumn));
 
                 iterator++;
             }
@@ -85,23 +83,19 @@ public class ColumnCreator {
 
     }
 
-    public Map<FieldMock, TableColumn> getTableColumns() {
+    public List<FieldMock> getTableColumns() {
         return tableColumns;
     }
 
     public FieldMock getFieldByName(Object name) {
-        return tableColumns.entrySet().stream().filter(fieldTableColumnEntry -> fieldTableColumnEntry.getValue().getHeaderValue().equals(name)).findFirst().get().getKey();
+        return tableColumns.stream().filter(fieldTableColumnEntry -> fieldTableColumnEntry.getTableColumn().getHeaderValue().equals(name)).findFirst().get();
     }
 
     public Vector<String> getColumnsNames() {
         Vector<String> columnsNames = new Vector<>();
-        for (TableColumn tableColumn : tableColumns.values()) {
-            columnsNames.add(tableColumn.getHeaderValue().toString());
+        for (FieldMock fieldMock : tableColumns) {
+            columnsNames.add(fieldMock.getTableColumn().getHeaderValue().toString());
         }
         return columnsNames;
-    }
-
-    public List<FieldMock> getFieldMocks() {
-        return fieldMocks;
     }
 }

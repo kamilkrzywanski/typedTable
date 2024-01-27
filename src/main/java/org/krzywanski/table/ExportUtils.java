@@ -8,7 +8,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.krzywanski.table.constraints.ActionType;
 import org.krzywanski.table.utils.FieldMock;
 
-import javax.swing.table.TableColumn;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -39,13 +38,13 @@ public class ExportUtils {
 
         Row headerRow = sheet.createRow(0); //Create row at line 0
 
-        List<TableColumn> tableColumns = new ArrayList<>(table.columnCreator.getTableColumns().values());
+        List<FieldMock> tableColumns = new ArrayList<>(table.columnCreator.getTableColumns());
         for (int headings = 0; headings < tableColumns.size(); headings++) { //For each column
-            headerRow.createCell(headings).setCellValue(tableColumns.get(headings).getHeaderValue().toString());//Write column name
+            headerRow.createCell(headings).setCellValue(tableColumns.get(headings).getTableColumn().getHeaderValue().toString());//Write column name
         }
 
         List<T> currentData = table.provider != null ? table.provider.getData(1000, 0, table.getSortColumns(), null, ActionType.EXPORT, table.extraParams ) : table.dataList;
-        List<FieldMock> keyList = table.columnCreator.getFieldMocks();
+        List<FieldMock> keyList = table.columnCreator.getTableColumns();
         for (int rows = 0; rows < currentData.size(); rows++) { //For each table row
             for (int cols = 0; cols < keyList.size(); cols++) { //For each table column
                 try {
@@ -75,17 +74,17 @@ public class ExportUtils {
 
         List<String[]> data = new ArrayList<>();
 
-        List<TableColumn> tableColumns = new ArrayList<>(table.columnCreator.getTableColumns().values());
+        List<FieldMock> tableColumns = table.columnCreator.getTableColumns();
 
         String[] currentLine = new String[tableColumns.size()];
         for (int headings = 0; headings < tableColumns.size(); headings++) { //For each column
-            currentLine[headings] = tableColumns.get(headings).getHeaderValue().toString();
+            currentLine[headings] = tableColumns.get(headings).getTableColumn().getHeaderValue().toString();
         }
 
         data.add(currentLine);
 
         List<?> currentData = table.provider != null ? table.provider.getData(1000, 0, table.getSortColumns(), table.getSearchPhase(), ActionType.EXPORT, table.extraParams) : table.dataList;
-        List<FieldMock> keyList = table.columnCreator.getFieldMocks();
+        List<FieldMock> keyList = table.columnCreator.getTableColumns();
         for (Object currentDatum : currentData) { //For each table row
             currentLine = new String[keyList.size()];
             for (int cols = 0; cols < keyList.size(); cols++) { //For each table column

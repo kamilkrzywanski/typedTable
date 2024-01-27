@@ -20,11 +20,10 @@ public class ChangeHeaderNamePropertyChangeListener implements PropertyChangeLis
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals(TableColumn.HEADER_VALUE_PROPERTY)) {
             columnCreator.tableColumns.
-                    entrySet().
                     stream().
-                    filter(entry -> entry.getValue().getHeaderValue().equals(evt.getOldValue())).
+                    filter(entry -> entry.getTableColumn().getHeaderValue().equals(evt.getOldValue())).
                     findFirst().
-                    ifPresent(propertyDescriptorTableColumnEntry -> propertyDescriptorTableColumnEntry.getValue().setHeaderValue(evt.getNewValue()));
+                    ifPresent(propertyDescriptorTableColumnEntry -> propertyDescriptorTableColumnEntry.getTableColumn().setHeaderValue(evt.getNewValue()));
         }
     }
 }
