@@ -17,7 +17,7 @@ public class ChangeHeaderNamePropertyChangeListener implements PropertyChangeLis
     }
 
     @Override
-    public void propertyChange(PropertyChangeEvent evt) {
+    public synchronized void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals(TableColumn.HEADER_VALUE_PROPERTY)) {
             columnCreator.tableColumns.
                     entrySet().

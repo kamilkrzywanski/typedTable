@@ -6,6 +6,7 @@ import org.krzywanski.table.annot.ReflectionSort;
 import org.krzywanski.table.constraints.ActionType;
 import org.krzywanski.table.providers.*;
 import org.krzywanski.table.renderer.TypedTableRenderer;
+import org.krzywanski.table.utils.FieldMock;
 import org.krzywanski.table.utils.Page;
 
 import javax.swing.*;
@@ -60,7 +61,7 @@ public class TypedTable<T> extends JTable {
     /**
      * Tool for create columns label
      */
-    ColumnCreator columnCreator;
+    final ColumnCreator columnCreator;
     /**
      * Handle for model
      */
@@ -121,7 +122,7 @@ public class TypedTable<T> extends JTable {
         super(new TypedTableModel(new ColumnCreator(typeClass, id)));
         this.id = id;
         this.multiSortEnable = typeClass.isAnnotationPresent(EnableMultiSort.class);
-        columnCreator = new ColumnCreator(typeClass, id);
+        columnCreator = ((TypedTableModel) getModel()).getColumnCreator();
         this.typeClass = typeClass;
         this.dataList = dataList;
         this.provider = provider;
@@ -178,9 +179,9 @@ public class TypedTable<T> extends JTable {
 
         currentData.forEach(t -> {
             Vector<Object> element = new Vector<>();
-            columnCreator.getPropertyDescriptors().forEach(propertyDescriptor -> {
+            columnCreator.getTableColumns().keySet().forEach(fieldMock -> {
                 try {
-                    element.add(propertyDescriptor.getReadMethod().invoke(t));
+                    element.add(fieldMock.invoke(t));
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     throw new RuntimeException(e);
                 }
@@ -389,12 +390,22 @@ public class TypedTable<T> extends JTable {
         return dataList == null  && provider != null && provider.isPaginable();
     }
 
-    public void addComputedColumn(String columnC, Function<T, Object> o) {
-//        try {
-//            columnCreator.tableColumns.put(new PropertyDescriptor(columnC, Objects.class, "set"+ columnC, "get"+ columnC), new TableColumn(columnCreator.tableColumns.size(), 100));
-//        }catch (IntrospectionException e){
-//            throw new RuntimeException(e);
-//        }
-//        SwingUtilities.invokeLater(() -> model.addColumn(columnC));
+    public synchronized <C> void addComputedColumn(String columnC, Class<C> resultClass, Function<T, C> o) {
+        TableColumn tableColumn = new TableColumn(columnCreator.getTableColumns().size(), 100);
+        columnCreator.getTableColumns().put(new FieldMock<>(columnC, typeClass, o), tableColumn);
+        tableColumn.addPropertyChangeListener(new ChangeHeaderNamePropertyChangeListener(columnCreator));
+        tableColumn.setHeaderValue(columnC);
+        System.out.println("Adding column");
+        installPropertyChangeListener();
+        SwingUtilities.invokeLater(() -> addColumn(columnC));
+
+
+    }
+
+    private void installPropertyChangeListener() {
+        getColumnModel().
+                getColumns().
+                asIterator().
+                forEachRemaining(tableColumn -> tableColumn.addPropertyChangeListener(new ChangeHeaderNamePropertyChangeListener(columnCreator)));
     }
 }

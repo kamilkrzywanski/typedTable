@@ -6,6 +6,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.krzywanski.table.constraints.ActionType;
+import org.krzywanski.table.utils.FieldMock;
 
 import javax.swing.table.TableColumn;
 import java.beans.PropertyDescriptor;
@@ -17,7 +18,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -45,11 +48,11 @@ public class ExportUtils {
         }
 
         List<?> currentData = table.provider != null ? table.provider.getData(1000, 0, table.getSortColumns(), null, ActionType.EXPORT, table.extraParams ) : table.dataList;
-        List<PropertyDescriptor> keyList = table.columnCreator.getPropertyDescriptors();
+        List<FieldMock> keyList = new LinkedList<>(table.columnCreator.getTableColumns().keySet());
         for (int rows = 0; rows < currentData.size(); rows++) { //For each table row
             for (int cols = 0; cols < keyList.size(); cols++) { //For each table column
                 try {
-                    Object o = keyList.get(cols).getReadMethod().invoke(currentData.get(rows));
+                    Object o = keyList.get(cols).getPropertyDescriptor().getReadMethod().invoke(currentData.get(rows));
                     row.createCell(cols).setCellValue(o != null ? o.toString() : ""); //Write value
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     throw new RuntimeException(e);
@@ -85,12 +88,12 @@ public class ExportUtils {
         data.add(currentLine);
 
         List<?> currentData = table.provider != null ? table.provider.getData(1000, 0, table.getSortColumns(), table.getSearchPhase(), ActionType.EXPORT, table.extraParams) : table.dataList;
-        List<PropertyDescriptor> keyList = table.columnCreator.getPropertyDescriptors();
+        List<FieldMock> keyList = new LinkedList<>(table.columnCreator.getTableColumns().keySet());
         for (Object currentDatum : currentData) { //For each table row
             currentLine = new String[keyList.size()];
             for (int cols = 0; cols < keyList.size(); cols++) { //For each table column
                 try {
-                    Object o = keyList.get(cols).getReadMethod().invoke(currentDatum);
+                    Object o = keyList.get(cols).getPropertyDescriptor().getReadMethod().invoke(currentDatum);
                     currentLine[cols] = o != null ? o.toString() : ""; //Write value
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     throw new RuntimeException(e);

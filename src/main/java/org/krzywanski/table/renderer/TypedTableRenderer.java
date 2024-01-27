@@ -4,7 +4,7 @@ import org.krzywanski.table.ColumnCreator;
 import org.krzywanski.table.TypedTable;
 import org.krzywanski.table.annot.CustomRenderer;
 import org.krzywanski.table.annot.MyTableColumn;
-import org.krzywanski.table.utils.Pair;
+import org.krzywanski.table.utils.FieldMock;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -29,7 +29,7 @@ public class TypedTableRenderer extends DefaultTableCellRenderer {
 
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 
-       Field pdFieldPair = getColumnField(column, table);
+        FieldMock pdFieldPair = getColumnField(column, table);
 
         TableCellRenderer customRenderer = getCustomRenderer(pdFieldPair);
         if(customRenderer != null){
@@ -63,7 +63,7 @@ public class TypedTableRenderer extends DefaultTableCellRenderer {
         return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
     }
 
-    Field getColumnField(int columnIndex, JTable table) {
+    FieldMock getColumnField(int columnIndex, JTable table) {
         return columnCreator.getFieldByName(
                 table.getTableHeader().
                         getColumnModel().
@@ -93,7 +93,7 @@ public class TypedTableRenderer extends DefaultTableCellRenderer {
         if(collection == null || collection.isEmpty()) return "";
         return collection.stream().map(Object::toString).reduce((s, s2) -> s + "; " + s2).orElse("");
     }
-    private String getFormat(Field pdFieldPair) {
+    private String getFormat(FieldMock<?, ?> pdFieldPair) {
 
         MyTableColumn annotation = pdFieldPair.getAnnotation(MyTableColumn.class);
         String format = null;
@@ -108,7 +108,7 @@ public class TypedTableRenderer extends DefaultTableCellRenderer {
      * @param pdFieldPair pair of property descriptor and field
      * @return alignment
      */
-    private int getColumnAlignment(Field pdFieldPair) {
+    private int getColumnAlignment(FieldMock<?, ?> pdFieldPair) {
 
         MyTableColumn annotation = pdFieldPair.getAnnotation(MyTableColumn.class);
         int alignment = SwingConstants.LEFT;
@@ -128,7 +128,7 @@ public class TypedTableRenderer extends DefaultTableCellRenderer {
         return alignment;
     }
 
-    private TableCellRenderer getCustomRenderer(Field pdFieldPair) {
+    private TableCellRenderer getCustomRenderer(FieldMock<?, ?> pdFieldPair) {
         CustomRenderer annotation = pdFieldPair.getAnnotation(CustomRenderer.class);
         if (annotation != null) {
             try {

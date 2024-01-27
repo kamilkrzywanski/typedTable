@@ -150,7 +150,7 @@ public class TypedTablePanel<T> extends JPanel {
         setLabelText(table.prevPageAction());
     }
 
-    private void firstPageAction() {
+    public void firstPageAction() {
         setLabelText(table.firstPageAction());
     }
 
@@ -217,7 +217,8 @@ public class TypedTablePanel<T> extends JPanel {
         return table.getSelectedValueOrDefault(mapper, defaultValue);
     }
 
-    public void addComuptedColumn(String columnC, Function<T, Object> o) {
-        table.addComputedColumn(columnC, o);
+    public <C> void addComuptedColumn(String columnC,Class<C> resultClass,  Function<T, C> o) {
+        table.addComputedColumn(columnC, resultClass, o);
+        firstPageAction();
     }
 }

@@ -2,7 +2,7 @@ package org.krzywanski.table;
 
 import org.krzywanski.table.annot.MyTableColumn;
 import org.krzywanski.table.providers.TableWidthProvider;
-import org.krzywanski.table.utils.Pair;
+import org.krzywanski.table.utils.FieldMock;
 
 import javax.swing.table.TableColumn;
 import java.beans.BeanInfo;
@@ -19,17 +19,13 @@ import java.util.stream.Collectors;
  */
 public class ColumnCreator {
     /**
-     * Fields of class
-     */
-    private final List<Field> fields;
-    /**
      * Map of table columns with property descriptors
      */
-    Map<Field, TableColumn> tableColumns = new LinkedHashMap<>();
+    Map<FieldMock, TableColumn> tableColumns = Collections.synchronizedMap(new LinkedHashMap<>());
 
     public ColumnCreator(Class<?> classType, long id) {
 
-        fields = Arrays.asList(classType.getDeclaredFields());
+        List<FieldMock> fields = Collections.synchronizedList(Arrays.stream(classType.getDeclaredFields()).map(field -> new FieldMock<>(field.getName(), field)).collect(Collectors.toList()));
 
         LinkedHashMap<String, Integer> columns = new LinkedHashMap<>();
         LinkedHashMap<String, Integer> tempColumns = null;
@@ -52,10 +48,10 @@ public class ColumnCreator {
         List<PropertyDescriptor> propertyDescriptors = Arrays.asList(beanInfo.getPropertyDescriptors());
         if (!columns.isEmpty()) {
             List<String> columnsNamesOrdered = new ArrayList<>(columns.keySet());
-            fields.sort(Comparator.comparing(item -> columnsNamesOrdered.indexOf(item.getName())));
+            fields.sort(Comparator.comparing(item -> columnsNamesOrdered.indexOf(item.getField().getName())));
         }
 
-        for (Field field : fields) {
+        for (FieldMock<?, ?> field : fields) {
             PropertyDescriptor pd = propertyDescriptors.stream().
                     filter(propertyDescriptor -> propertyDescriptor.getName().equals(field.getName())).
                     findFirst().orElse(null);
@@ -88,20 +84,15 @@ public class ColumnCreator {
 
     }
 
-    public Map<Field, TableColumn> getTableColumns() {
+    public Map<FieldMock, TableColumn> getTableColumns() {
         return tableColumns;
     }
 
-    public List<PropertyDescriptor> getPropertyDescriptors() {
-        return tableColumns.keySet().stream().map(field -> {
-            try {
-                return new PropertyDescriptor(field.getName(), field.getDeclaringClass());
-            } catch (IntrospectionException e) {
-                throw new RuntimeException(e);
-            }
-        }).collect(Collectors.toList());
-    }
-    public Field getFieldByName(Object name) {
+    public synchronized FieldMock getFieldByName(Object name) {
+        System.out.println("name: " + name);
+
+        tableColumns.forEach((key, value) -> System.out.print(value.getHeaderValue()));
+
         return tableColumns.entrySet().stream().filter(fieldTableColumnEntry -> fieldTableColumnEntry.getValue().getHeaderValue().equals(name)).findFirst().get().getKey();
     }
 
