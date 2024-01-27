@@ -9,7 +9,6 @@ import org.krzywanski.table.constraints.ActionType;
 import org.krzywanski.table.utils.FieldMock;
 
 import javax.swing.table.TableColumn;
-import java.beans.PropertyDescriptor;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -18,9 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -34,7 +31,7 @@ public class ExportUtils {
      * @param path - path to file
      * @throws IOException - exception
      */
-    public static void writeToExcell(TypedTable<?> table, Path path) throws IOException {
+    public static <T> void writeToExcell(TypedTable<T> table, Path path) throws IOException {
 
         Workbook wb = new XSSFWorkbook(); //Excell workbook
         Sheet sheet = wb.createSheet(); //WorkSheet
@@ -47,12 +44,12 @@ public class ExportUtils {
             headerRow.createCell(headings).setCellValue(tableColumns.get(headings).getHeaderValue().toString());//Write column name
         }
 
-        List<?> currentData = table.provider != null ? table.provider.getData(1000, 0, table.getSortColumns(), null, ActionType.EXPORT, table.extraParams ) : table.dataList;
-        List<FieldMock> keyList = new LinkedList<>(table.columnCreator.getTableColumns().keySet());
+        List<T> currentData = table.provider != null ? table.provider.getData(1000, 0, table.getSortColumns(), null, ActionType.EXPORT, table.extraParams ) : table.dataList;
+        List<FieldMock> keyList = table.columnCreator.getFieldMocks();
         for (int rows = 0; rows < currentData.size(); rows++) { //For each table row
             for (int cols = 0; cols < keyList.size(); cols++) { //For each table column
                 try {
-                    Object o = keyList.get(cols).getPropertyDescriptor().getReadMethod().invoke(currentData.get(rows));
+                    Object o = keyList.get(cols).invoke(currentData.get(rows));
                     row.createCell(cols).setCellValue(o != null ? o.toString() : ""); //Write value
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     throw new RuntimeException(e);
@@ -88,7 +85,7 @@ public class ExportUtils {
         data.add(currentLine);
 
         List<?> currentData = table.provider != null ? table.provider.getData(1000, 0, table.getSortColumns(), table.getSearchPhase(), ActionType.EXPORT, table.extraParams) : table.dataList;
-        List<FieldMock> keyList = new LinkedList<>(table.columnCreator.getTableColumns().keySet());
+        List<FieldMock> keyList = table.columnCreator.getFieldMocks();
         for (Object currentDatum : currentData) { //For each table row
             currentLine = new String[keyList.size()];
             for (int cols = 0; cols < keyList.size(); cols++) { //For each table column

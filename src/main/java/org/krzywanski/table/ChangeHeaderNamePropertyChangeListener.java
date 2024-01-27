@@ -17,16 +17,14 @@ public class ChangeHeaderNamePropertyChangeListener implements PropertyChangeLis
     }
 
     @Override
-    public synchronized void propertyChange(PropertyChangeEvent evt) {
+    public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals(TableColumn.HEADER_VALUE_PROPERTY)) {
             columnCreator.tableColumns.
                     entrySet().
                     stream().
                     filter(entry -> entry.getValue().getHeaderValue().equals(evt.getOldValue())).
                     findFirst().
-                    ifPresent(propertyDescriptorTableColumnEntry -> {
-                        propertyDescriptorTableColumnEntry.getValue().setHeaderValue(evt.getNewValue());
-            });
+                    ifPresent(propertyDescriptorTableColumnEntry -> propertyDescriptorTableColumnEntry.getValue().setHeaderValue(evt.getNewValue()));
         }
     }
 }

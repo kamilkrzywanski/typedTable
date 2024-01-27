@@ -1,9 +1,6 @@
 package org.krzywanski.table;
 
 import javax.swing.table.DefaultTableModel;
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
-import java.util.LinkedList;
 
 public class TypedTableModel extends DefaultTableModel {
     ColumnCreator columnCreator;
@@ -14,8 +11,7 @@ public class TypedTableModel extends DefaultTableModel {
 
     @Override
     public Class<?> getColumnClass(int columnIndex) {
-        System.out.println(columnCreator.getTableColumns().size());
-        return new LinkedList<>(columnCreator.getTableColumns().keySet()).get(columnIndex).getType();
+        return columnCreator.getFieldMocks().get(columnIndex).getType();
     }
 
     public ColumnCreator getColumnCreator() {

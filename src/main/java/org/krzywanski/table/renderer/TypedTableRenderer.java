@@ -10,8 +10,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
 import java.text.Format;
@@ -93,7 +91,7 @@ public class TypedTableRenderer extends DefaultTableCellRenderer {
         if(collection == null || collection.isEmpty()) return "";
         return collection.stream().map(Object::toString).reduce((s, s2) -> s + "; " + s2).orElse("");
     }
-    private String getFormat(FieldMock<?, ?> pdFieldPair) {
+    private String getFormat(FieldMock pdFieldPair) {
 
         MyTableColumn annotation = pdFieldPair.getAnnotation(MyTableColumn.class);
         String format = null;
@@ -108,7 +106,7 @@ public class TypedTableRenderer extends DefaultTableCellRenderer {
      * @param pdFieldPair pair of property descriptor and field
      * @return alignment
      */
-    private int getColumnAlignment(FieldMock<?, ?> pdFieldPair) {
+    private int getColumnAlignment(FieldMock pdFieldPair) {
 
         MyTableColumn annotation = pdFieldPair.getAnnotation(MyTableColumn.class);
         int alignment = SwingConstants.LEFT;
@@ -128,7 +126,7 @@ public class TypedTableRenderer extends DefaultTableCellRenderer {
         return alignment;
     }
 
-    private TableCellRenderer getCustomRenderer(FieldMock<?, ?> pdFieldPair) {
+    private TableCellRenderer getCustomRenderer(FieldMock pdFieldPair) {
         CustomRenderer annotation = pdFieldPair.getAnnotation(CustomRenderer.class);
         if (annotation != null) {
             try {

@@ -11,8 +11,6 @@ import javax.swing.table.TableColumn;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
 import java.util.*;
 
 /**
@@ -161,7 +159,7 @@ class TableOrderColumnsMouseAdapter extends MouseAdapter {
         int column = table.columnAtPoint(e.getPoint());
 
         String sortString = "";
-        FieldMock<?, ?> field = table.columnCreator.getFieldByName(table.getColumnModel().getColumn(column).getHeaderValue());
+        FieldMock field = table.columnCreator.getFieldByName(table.getColumnModel().getColumn(column).getHeaderValue());
         if (field == null) return;
         MyTableColumn annotation = field.getAnnotation(MyTableColumn.class);
         if (annotation == null) return;

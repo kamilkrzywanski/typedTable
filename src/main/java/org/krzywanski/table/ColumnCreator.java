@@ -3,13 +3,13 @@ package org.krzywanski.table;
 import org.krzywanski.table.annot.MyTableColumn;
 import org.krzywanski.table.providers.TableWidthProvider;
 import org.krzywanski.table.utils.FieldMock;
+import org.krzywanski.table.utils.ListSupportLinkedHashMap;
 
 import javax.swing.table.TableColumn;
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -21,11 +21,12 @@ public class ColumnCreator {
     /**
      * Map of table columns with property descriptors
      */
-    Map<FieldMock, TableColumn> tableColumns = Collections.synchronizedMap(new LinkedHashMap<>());
+    List<FieldMock> fieldMocks = new LinkedList<>();
+    final Map<FieldMock, TableColumn> tableColumns = new ListSupportLinkedHashMap<>(fieldMocks);
 
     public ColumnCreator(Class<?> classType, long id) {
 
-        List<FieldMock> fields = Collections.synchronizedList(Arrays.stream(classType.getDeclaredFields()).map(field -> new FieldMock<>(field.getName(), field)).collect(Collectors.toList()));
+        List<FieldMock> fields = Arrays.stream(classType.getDeclaredFields()).map(field -> new FieldMock(field.getName(), field)).collect(Collectors.toList());
 
         LinkedHashMap<String, Integer> columns = new LinkedHashMap<>();
         LinkedHashMap<String, Integer> tempColumns = null;
@@ -51,7 +52,7 @@ public class ColumnCreator {
             fields.sort(Comparator.comparing(item -> columnsNamesOrdered.indexOf(item.getField().getName())));
         }
 
-        for (FieldMock<?, ?> field : fields) {
+        for (FieldMock field : fields) {
             PropertyDescriptor pd = propertyDescriptors.stream().
                     filter(propertyDescriptor -> propertyDescriptor.getName().equals(field.getName())).
                     findFirst().orElse(null);
@@ -88,11 +89,7 @@ public class ColumnCreator {
         return tableColumns;
     }
 
-    public synchronized FieldMock getFieldByName(Object name) {
-        System.out.println("name: " + name);
-
-        tableColumns.forEach((key, value) -> System.out.print(value.getHeaderValue()));
-
+    public FieldMock getFieldByName(Object name) {
         return tableColumns.entrySet().stream().filter(fieldTableColumnEntry -> fieldTableColumnEntry.getValue().getHeaderValue().equals(name)).findFirst().get().getKey();
     }
 
@@ -102,5 +99,9 @@ public class ColumnCreator {
             columnsNames.add(tableColumn.getHeaderValue().toString());
         }
         return columnsNames;
+    }
+
+    public List<FieldMock> getFieldMocks() {
+        return fieldMocks;
     }
 }

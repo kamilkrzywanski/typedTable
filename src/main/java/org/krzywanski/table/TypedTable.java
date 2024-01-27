@@ -10,7 +10,8 @@ import org.krzywanski.table.utils.FieldMock;
 import org.krzywanski.table.utils.Page;
 
 import javax.swing.*;
-import javax.swing.table.*;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import java.awt.event.ActionListener;
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -179,7 +180,7 @@ public class TypedTable<T> extends JTable {
 
         currentData.forEach(t -> {
             Vector<Object> element = new Vector<>();
-            columnCreator.getTableColumns().keySet().forEach(fieldMock -> {
+            columnCreator.getFieldMocks().forEach(fieldMock -> {
                 try {
                     element.add(fieldMock.invoke(t));
                 } catch (IllegalAccessException | InvocationTargetException e) {
@@ -390,15 +391,18 @@ public class TypedTable<T> extends JTable {
         return dataList == null  && provider != null && provider.isPaginable();
     }
 
-    public synchronized <C> void addComputedColumn(String columnC, Class<C> resultClass, Function<T, C> o) {
-        TableColumn tableColumn = new TableColumn(columnCreator.getTableColumns().size(), 100);
-        columnCreator.getTableColumns().put(new FieldMock<>(columnC, typeClass, o), tableColumn);
-        tableColumn.addPropertyChangeListener(new ChangeHeaderNamePropertyChangeListener(columnCreator));
+    public <C> void addComputedColumn(String columnC, Class<C> resultClass, Function<T, C> o) {
+        TableColumn tableColumn = new TableColumn(columnCreator.getFieldMocks().size(), 100);
+        columnCreator.getTableColumns().put(new FieldMock(columnC, resultClass, o), tableColumn);
         tableColumn.setHeaderValue(columnC);
-        System.out.println("Adding column");
-        installPropertyChangeListener();
-        SwingUtilities.invokeLater(() -> addColumn(columnC));
-
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                model.addColumn(columnC);
+                installPropertyChangeListener();
+            });
+        } catch (InterruptedException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 

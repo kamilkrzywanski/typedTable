@@ -5,24 +5,25 @@ import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Objects;
 import java.util.function.Function;
 
 /**
  * Object to keep information about field, property descriptor and column name
  */
-public class FieldMock<T, C> {
+public class FieldMock {
     final String columnName;
     final Field field;
     final Class<?> type;
-    final Function<T, C> functionToCompute;
+    final Function<Object, Object> functionToCompute;
 
     final PropertyDescriptor propertyDescriptor;
-    public FieldMock(String columnName, Class<?> type, Function<T, C> functionToCompute) {
+
+    @SuppressWarnings("unchecked")
+    public <T, C> FieldMock(String columnName, Class<?> type, Function<T, C> functionToCompute) {
         this.columnName = columnName;
         this.field = null;
         this.type = type;
-        this.functionToCompute = functionToCompute;
+        this.functionToCompute = (Function<Object, Object>) functionToCompute;
         this.propertyDescriptor = null;
     }
 
@@ -39,9 +40,6 @@ public class FieldMock<T, C> {
         }
 
     }
-    public String getColumnName() {
-        return columnName;
-    }
 
     public Field getField() {
         return field;
@@ -51,11 +49,6 @@ public class FieldMock<T, C> {
         return type;
     }
 
-    public Function<T, C> getFunctionToCompute() {
-        return functionToCompute;
-    }
-
-    //Get annotation from field or property descriptor
     public <X extends Annotation> X getAnnotation(Class<X> annotationClass) {
         if (field != null) {
             return field.getAnnotation(annotationClass);
@@ -70,15 +63,11 @@ public class FieldMock<T, C> {
 
     }
 
-    public Class<?> getDeclaringClass() {
-        return type;
-    }
-
     public PropertyDescriptor getPropertyDescriptor() {
         return propertyDescriptor;
     }
 
-    public Object invoke(T o) throws InvocationTargetException, IllegalAccessException {
+    public Object invoke(Object o) throws InvocationTargetException, IllegalAccessException {
         if(propertyDescriptor != null)
            return propertyDescriptor.getReadMethod().invoke(o);
         else
