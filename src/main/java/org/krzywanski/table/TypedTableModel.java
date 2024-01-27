@@ -6,6 +6,7 @@ import java.beans.PropertyDescriptor;
 public class TypedTableModel extends DefaultTableModel {
     ColumnCreator columnCreator;
     TypedTableModel(ColumnCreator columnCreator){
+        super(columnCreator.getColumnsNames(), 0);
         this.columnCreator = columnCreator;
     }
 

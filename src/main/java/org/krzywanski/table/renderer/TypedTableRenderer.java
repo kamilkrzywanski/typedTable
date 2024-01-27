@@ -1,5 +1,7 @@
-package org.krzywanski.table;
+package org.krzywanski.table.renderer;
 
+import org.krzywanski.table.ColumnCreator;
+import org.krzywanski.table.TypedTable;
 import org.krzywanski.table.annot.CustomRenderer;
 import org.krzywanski.table.annot.MyTableColumn;
 import org.krzywanski.table.utils.Pair;
@@ -21,7 +23,7 @@ import java.util.Objects;
 public class TypedTableRenderer extends DefaultTableCellRenderer {
     ColumnCreator columnCreator;
 
-    TypedTableRenderer(ColumnCreator columnCreator) {
+    public TypedTableRenderer(ColumnCreator columnCreator) {
         this.columnCreator = columnCreator;
     }
 
@@ -48,6 +50,11 @@ public class TypedTableRenderer extends DefaultTableCellRenderer {
         if(Collection.class.isAssignableFrom(pdFieldPair.getSecond().getType())){
             value = formatCollection((Collection<?>) value);
         }
+
+        if(Boolean.class.isAssignableFrom(pdFieldPair.getSecond().getType())){
+            return new DefaultBooleanRenderer().getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        }
+
         Format format = ((TypedTable<?>) table).getFormatMap().get(pdFieldPair.getSecond().getType());
         if (format != null)
             value = format.format(value);
