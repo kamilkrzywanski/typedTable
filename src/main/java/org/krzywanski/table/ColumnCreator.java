@@ -11,6 +11,7 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Finds properties of table by reflection
@@ -24,7 +25,7 @@ public class ColumnCreator {
     /**
      * Map of table columns with property descriptors
      */
-    Map<PropertyDescriptor, TableColumn> tableColumns = new LinkedHashMap<>();
+    Map<Field, TableColumn> tableColumns = new LinkedHashMap<>();
 
     public ColumnCreator(Class<?> classType, long id) {
 
@@ -77,7 +78,7 @@ public class ColumnCreator {
                     tableColumn.setWidth(0);
                 }
 
-                tableColumns.put(pd, tableColumn);
+                tableColumns.put(field, tableColumn);
 
                 iterator++;
             }
@@ -87,15 +88,21 @@ public class ColumnCreator {
 
     }
 
-    public Map<PropertyDescriptor, TableColumn> getTableColumns() {
+    public Map<Field, TableColumn> getTableColumns() {
         return tableColumns;
     }
 
-    public Pair<PropertyDescriptor, Field> getFieldByName(Object name) {
-        PropertyDescriptor pd = tableColumns.entrySet().stream().filter(fieldTableColumnEntry -> fieldTableColumnEntry.getValue().getHeaderValue().equals(name)).findFirst().get().getKey();
-        Field field = fields.stream().filter(field1 -> field1.getName().equals(pd.getName())).findFirst().get();
-
-        return new Pair<>(pd, field);
+    public List<PropertyDescriptor> getPropertyDescriptors() {
+        return tableColumns.keySet().stream().map(field -> {
+            try {
+                return new PropertyDescriptor(field.getName(), field.getDeclaringClass());
+            } catch (IntrospectionException e) {
+                throw new RuntimeException(e);
+            }
+        }).collect(Collectors.toList());
+    }
+    public Field getFieldByName(Object name) {
+        return tableColumns.entrySet().stream().filter(fieldTableColumnEntry -> fieldTableColumnEntry.getValue().getHeaderValue().equals(name)).findFirst().get().getKey();
     }
 
     public Vector<String> getColumnsNames() {
