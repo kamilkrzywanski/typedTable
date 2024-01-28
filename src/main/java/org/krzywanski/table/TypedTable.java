@@ -6,10 +6,12 @@ import org.krzywanski.table.annot.ReflectionSort;
 import org.krzywanski.table.constraints.ActionType;
 import org.krzywanski.table.providers.*;
 import org.krzywanski.table.renderer.TypedTableRenderer;
+import org.krzywanski.table.utils.FieldMock;
 import org.krzywanski.table.utils.Page;
 
 import javax.swing.*;
-import javax.swing.table.*;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import java.awt.event.ActionListener;
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -60,7 +62,7 @@ public class TypedTable<T> extends JTable {
     /**
      * Tool for create columns label
      */
-    ColumnCreator columnCreator;
+    final ColumnCreator columnCreator;
     /**
      * Handle for model
      */
@@ -99,6 +101,10 @@ public class TypedTable<T> extends JTable {
     private final boolean multiSortEnable;
 
     /**
+     * Property change listener for headers of table
+     */
+    final ChangeHeaderNamePropertyChangeListener listener;
+    /**
      * Default constructor if you want to keep the same sizes for multiple tables
      *
      * @param dataList  - data list - list od data class
@@ -121,17 +127,15 @@ public class TypedTable<T> extends JTable {
         super(new TypedTableModel(new ColumnCreator(typeClass, id)));
         this.id = id;
         this.multiSortEnable = typeClass.isAnnotationPresent(EnableMultiSort.class);
-        columnCreator = new ColumnCreator(typeClass, id);
+        columnCreator = ((TypedTableModel) getModel()).getColumnCreator();
+        this.listener = new ChangeHeaderNamePropertyChangeListener(columnCreator);
         this.typeClass = typeClass;
         this.dataList = dataList;
         this.provider = provider;
         this.currentData = dataList;
         this.paginationUtils = new PaginationUtils(provider, this);
         model = (TypedTableModel) this.getModel();
-        getColumnModel().
-                getColumns().
-                asIterator().
-                forEachRemaining(tableColumn -> tableColumn.addPropertyChangeListener(new ChangeHeaderNamePropertyChangeListener(columnCreator)));
+        installPropertyChangeListener();
         fixHeadersSize();
         tableHeader.addMouseListener(new TableOrderColumnsMouseAdapter(this, instance));
     }
@@ -147,19 +151,19 @@ public class TypedTable<T> extends JTable {
     void fixHeadersSize() {
 
         Map<String, Integer> columns = instance.getTable(typeClass.getCanonicalName(), id);
-        columnCreator.getTableColumns().forEach((field, tableColumn) -> {
+        columnCreator.getTableColumns().forEach(field -> {
             if (instance != null && columns != null) {
 
-                int width = Optional.ofNullable(columns.get(columnCreator.getFieldByName(tableColumn.getHeaderValue()).getName())).orElse(MyTableColumn.defaultWidth);
+                int width = Optional.ofNullable(columns.get(columnCreator.getFieldByName(field.getTableColumn().getHeaderValue()).getName())).orElse(MyTableColumn.defaultWidth);
 
                 if (width == 0) {
-                    getColumn(tableColumn.getHeaderValue()).setMinWidth(0);
-                    getColumn(tableColumn.getHeaderValue()).setMaxWidth(0);
-                    getColumn(tableColumn.getHeaderValue()).setWidth(0);
+                    getColumn(field.getTableColumn().getHeaderValue()).setMinWidth(0);
+                    getColumn(field.getTableColumn().getHeaderValue()).setMaxWidth(0);
+                    getColumn(field.getTableColumn().getHeaderValue()).setWidth(0);
                 } else
-                    this.getColumnModel().getColumn(this.getColumnModel().getColumnIndex(tableColumn.getHeaderValue())).setPreferredWidth(width);
+                    this.getColumnModel().getColumn(this.getColumnModel().getColumnIndex(field.getTableColumn().getHeaderValue())).setPreferredWidth(width);
             } else {
-                this.getColumnModel().getColumn(this.getColumnModel().getColumnIndex(tableColumn.getHeaderValue())).setPreferredWidth(tableColumn.getPreferredWidth());
+                this.getColumnModel().getColumn(this.getColumnModel().getColumnIndex(field.getTableColumn().getHeaderValue())).setPreferredWidth(field.getTableColumn().getPreferredWidth());
             }
 
         });
@@ -178,9 +182,9 @@ public class TypedTable<T> extends JTable {
 
         currentData.forEach(t -> {
             Vector<Object> element = new Vector<>();
-            columnCreator.getPropertyDescriptors().forEach(propertyDescriptor -> {
+            columnCreator.getTableColumns().forEach(fieldMock -> {
                 try {
-                    element.add(propertyDescriptor.getReadMethod().invoke(t));
+                    element.add(fieldMock.invoke(t));
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     throw new RuntimeException(e);
                 }
@@ -389,12 +393,32 @@ public class TypedTable<T> extends JTable {
         return dataList == null  && provider != null && provider.isPaginable();
     }
 
-    public void addComputedColumn(String columnC, Function<T, Object> o) {
-//        try {
-//            columnCreator.tableColumns.put(new PropertyDescriptor(columnC, Objects.class, "set"+ columnC, "get"+ columnC), new TableColumn(columnCreator.tableColumns.size(), 100));
-//        }catch (IntrospectionException e){
-//            throw new RuntimeException(e);
-//        }
-//        SwingUtilities.invokeLater(() -> model.addColumn(columnC));
+    public <C> void addComputedColumn(String columnC, Class<C> resultClass, Function<T, C> o) {
+        TableColumn tableColumn = new TableColumn(columnCreator.getTableColumns().size(), 100);
+        columnCreator.getTableColumns().add(new FieldMock(columnC, resultClass, o, tableColumn));
+        tableColumn.setHeaderValue(columnC);
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                model.addColumn(columnC);
+                removePropertyChangeListeners();
+                installPropertyChangeListener();
+            });
+        } catch (InterruptedException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    private void installPropertyChangeListener() {
+        getColumnModel().
+                getColumns().
+                asIterator().
+                forEachRemaining(tableColumn -> tableColumn.addPropertyChangeListener(listener));
+    }
+    private void removePropertyChangeListeners() {
+        getColumnModel().
+                getColumns().
+                asIterator().
+                forEachRemaining(tableColumn -> tableColumn.removePropertyChangeListener(listener));
     }
 }

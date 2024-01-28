@@ -2,14 +2,13 @@ package org.krzywanski.table;
 
 import org.krzywanski.table.annot.MyTableColumn;
 import org.krzywanski.table.providers.TableWidthProvider;
-import org.krzywanski.table.utils.Pair;
+import org.krzywanski.table.utils.FieldMock;
 
 import javax.swing.table.TableColumn;
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -19,17 +18,13 @@ import java.util.stream.Collectors;
  */
 public class ColumnCreator {
     /**
-     * Fields of class
-     */
-    private final List<Field> fields;
-    /**
      * Map of table columns with property descriptors
      */
-    Map<Field, TableColumn> tableColumns = new LinkedHashMap<>();
+    final List<FieldMock> tableColumns = new LinkedList<>();
 
     public ColumnCreator(Class<?> classType, long id) {
 
-        fields = Arrays.asList(classType.getDeclaredFields());
+        List<FieldMock> fields = Arrays.stream(classType.getDeclaredFields()).map(field -> new FieldMock(field.getName(), field, null)).collect(Collectors.toList());
 
         LinkedHashMap<String, Integer> columns = new LinkedHashMap<>();
         LinkedHashMap<String, Integer> tempColumns = null;
@@ -52,10 +47,10 @@ public class ColumnCreator {
         List<PropertyDescriptor> propertyDescriptors = Arrays.asList(beanInfo.getPropertyDescriptors());
         if (!columns.isEmpty()) {
             List<String> columnsNamesOrdered = new ArrayList<>(columns.keySet());
-            fields.sort(Comparator.comparing(item -> columnsNamesOrdered.indexOf(item.getName())));
+            fields.sort(Comparator.comparing(item -> columnsNamesOrdered.indexOf(item.getField().getName())));
         }
 
-        for (Field field : fields) {
+        for (FieldMock field : fields) {
             PropertyDescriptor pd = propertyDescriptors.stream().
                     filter(propertyDescriptor -> propertyDescriptor.getName().equals(field.getName())).
                     findFirst().orElse(null);
@@ -78,7 +73,7 @@ public class ColumnCreator {
                     tableColumn.setWidth(0);
                 }
 
-                tableColumns.put(field, tableColumn);
+                tableColumns.add(new FieldMock(field.getName(), field.getField(), tableColumn));
 
                 iterator++;
             }
@@ -88,27 +83,18 @@ public class ColumnCreator {
 
     }
 
-    public Map<Field, TableColumn> getTableColumns() {
+    public List<FieldMock> getTableColumns() {
         return tableColumns;
     }
 
-    public List<PropertyDescriptor> getPropertyDescriptors() {
-        return tableColumns.keySet().stream().map(field -> {
-            try {
-                return new PropertyDescriptor(field.getName(), field.getDeclaringClass());
-            } catch (IntrospectionException e) {
-                throw new RuntimeException(e);
-            }
-        }).collect(Collectors.toList());
-    }
-    public Field getFieldByName(Object name) {
-        return tableColumns.entrySet().stream().filter(fieldTableColumnEntry -> fieldTableColumnEntry.getValue().getHeaderValue().equals(name)).findFirst().get().getKey();
+    public FieldMock getFieldByName(Object name) {
+        return tableColumns.stream().filter(fieldTableColumnEntry -> fieldTableColumnEntry.getTableColumn().getHeaderValue().equals(name)).findFirst().get();
     }
 
     public Vector<String> getColumnsNames() {
         Vector<String> columnsNames = new Vector<>();
-        for (TableColumn tableColumn : tableColumns.values()) {
-            columnsNames.add(tableColumn.getHeaderValue().toString());
+        for (FieldMock fieldMock : tableColumns) {
+            columnsNames.add(fieldMock.getTableColumn().getHeaderValue().toString());
         }
         return columnsNames;
     }

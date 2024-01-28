@@ -4,15 +4,13 @@ import net.miginfocom.swing.MigLayout;
 import org.krzywanski.table.annot.MyTableColumn;
 import org.krzywanski.table.constraints.TypedTableDefaults;
 import org.krzywanski.table.providers.TableWidthTool;
-import org.krzywanski.table.utils.Pair;
+import org.krzywanski.table.utils.FieldMock;
 
 import javax.swing.*;
 import javax.swing.table.TableColumn;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
 import java.util.*;
 
 /**
@@ -34,7 +32,7 @@ class TableOrderColumnsMouseAdapter extends MouseAdapter {
         LinkedHashMap<String, Integer> columns = new LinkedHashMap<>();
         for (int i = 0; i < table.getTableHeader().getColumnModel().getColumnCount(); i++) {
             TableColumn column = table.getTableHeader().getColumnModel().getColumn(i);
-            Field columnPd =  table.columnCreator.getFieldByName(column.getHeaderValue());
+            FieldMock columnPd =  table.columnCreator.getFieldByName(column.getHeaderValue());
             columns.put(columnPd.getName(), column.getWidth());
         }
 
@@ -161,7 +159,7 @@ class TableOrderColumnsMouseAdapter extends MouseAdapter {
         int column = table.columnAtPoint(e.getPoint());
 
         String sortString = "";
-        Field field = table.columnCreator.getFieldByName(table.getColumnModel().getColumn(column).getHeaderValue());
+        FieldMock field = table.columnCreator.getFieldByName(table.getColumnModel().getColumn(column).getHeaderValue());
         if (field == null) return;
         MyTableColumn annotation = field.getAnnotation(MyTableColumn.class);
         if (annotation == null) return;

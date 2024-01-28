@@ -1,8 +1,6 @@
 package org.krzywanski.table;
 
 import javax.swing.table.DefaultTableModel;
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
 
 public class TypedTableModel extends DefaultTableModel {
     ColumnCreator columnCreator;
@@ -13,7 +11,10 @@ public class TypedTableModel extends DefaultTableModel {
 
     @Override
     public Class<?> getColumnClass(int columnIndex) {
-        Field o = (Field) columnCreator.getTableColumns().keySet().toArray()[columnIndex];
-        return o.getType();
+        return columnCreator.getTableColumns().get(columnIndex).getType();
+    }
+
+    public ColumnCreator getColumnCreator() {
+        return columnCreator;
     }
 }
