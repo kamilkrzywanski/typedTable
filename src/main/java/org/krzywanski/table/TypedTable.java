@@ -101,6 +101,10 @@ public class TypedTable<T> extends JTable {
     private final boolean multiSortEnable;
 
     /**
+     * Property change listener for headers of table
+     */
+    final ChangeHeaderNamePropertyChangeListener listener;
+    /**
      * Default constructor if you want to keep the same sizes for multiple tables
      *
      * @param dataList  - data list - list od data class
@@ -124,16 +128,14 @@ public class TypedTable<T> extends JTable {
         this.id = id;
         this.multiSortEnable = typeClass.isAnnotationPresent(EnableMultiSort.class);
         columnCreator = ((TypedTableModel) getModel()).getColumnCreator();
+        this.listener = new ChangeHeaderNamePropertyChangeListener(columnCreator);
         this.typeClass = typeClass;
         this.dataList = dataList;
         this.provider = provider;
         this.currentData = dataList;
         this.paginationUtils = new PaginationUtils(provider, this);
         model = (TypedTableModel) this.getModel();
-        getColumnModel().
-                getColumns().
-                asIterator().
-                forEachRemaining(tableColumn -> tableColumn.addPropertyChangeListener(new ChangeHeaderNamePropertyChangeListener(columnCreator)));
+        installPropertyChangeListener();
         fixHeadersSize();
         tableHeader.addMouseListener(new TableOrderColumnsMouseAdapter(this, instance));
     }
@@ -398,6 +400,7 @@ public class TypedTable<T> extends JTable {
         try {
             SwingUtilities.invokeAndWait(() -> {
                 model.addColumn(columnC);
+                removePropertyChangeListeners();
                 installPropertyChangeListener();
             });
         } catch (InterruptedException | InvocationTargetException e) {
@@ -410,6 +413,12 @@ public class TypedTable<T> extends JTable {
         getColumnModel().
                 getColumns().
                 asIterator().
-                forEachRemaining(tableColumn -> tableColumn.addPropertyChangeListener(new ChangeHeaderNamePropertyChangeListener(columnCreator)));
+                forEachRemaining(tableColumn -> tableColumn.addPropertyChangeListener(listener));
+    }
+    private void removePropertyChangeListeners() {
+        getColumnModel().
+                getColumns().
+                asIterator().
+                forEachRemaining(tableColumn -> tableColumn.removePropertyChangeListener(listener));
     }
 }
