@@ -135,7 +135,7 @@ public class TypedTable<T> extends JTable {
         this.currentData = dataList;
         this.paginationUtils = new PaginationUtils(provider, this);
         model = (TypedTableModel) this.getModel();
-        installPropertyChangeListener();
+        installHeaderPropertyChangeListener();
         fixHeadersSize();
         tableHeader.addMouseListener(new TableOrderColumnsMouseAdapter(this, instance));
     }
@@ -426,8 +426,8 @@ public class TypedTable<T> extends JTable {
         try {
             SwingUtilities.invokeAndWait(() -> {
                 model.addColumn(columnName);
-                removePropertyChangeListeners();
-                installPropertyChangeListener();
+                removeHeaderPropertyChangeListeners();
+                installHeaderPropertyChangeListener();
             });
         } catch (InterruptedException | InvocationTargetException e) {
             throw new RuntimeException(e);
@@ -438,7 +438,7 @@ public class TypedTable<T> extends JTable {
     /**
      * Install default ChangeHeaderNamePropertyChangeListener for all columns
      */
-    private void installPropertyChangeListener() {
+    private void installHeaderPropertyChangeListener() {
         getColumnModel().
                 getColumns().
                 asIterator().
@@ -448,7 +448,7 @@ public class TypedTable<T> extends JTable {
     /**
      * Remove default ChangeHeaderNamePropertyChangeListener for all columns
      */
-    private void removePropertyChangeListeners() {
+    private void removeHeaderPropertyChangeListeners() {
         getColumnModel().
                 getColumns().
                 asIterator().
