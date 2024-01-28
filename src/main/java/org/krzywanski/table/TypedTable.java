@@ -246,11 +246,18 @@ public class TypedTable<T> extends JTable {
         return false;
     }
 
+    /**
+     * @return - returns item from selected row
+     */
     public T getSelectedItem() {
         if (getSelectedRow() != -1) return getItemAt(getSelectedRow());
         return null;
     }
 
+    /**
+     * @param index - index of item
+     * @return - return element at passed index if available
+     */
     public T getItemAt(int index) {
         return currentData.get(index);
     }
@@ -368,6 +375,10 @@ public class TypedTable<T> extends JTable {
         return selectedItems;
     }
 
+    /**
+     * Adds GenericSelectionListener - listener which as parameter have selected ithem from row.
+     * @param listener - listener to invoke
+     */
     public void addGenericSelectionListener(GenericSelectionListener<T> listener) {
         listeners.add(listener);
         getSelectionModel().addListSelectionListener(e -> {
@@ -377,6 +388,13 @@ public class TypedTable<T> extends JTable {
         });
     }
 
+    /**
+     * Return value from selected row or default when row not found
+     * @param mapper - mapper to map row to result
+     * @param defaultValue - default value when row not found
+     * @return - returns result of function
+     * @param <E> - return type of result
+     */
     public <E> E getSelectedValueOrDefault(Function<T, E> mapper, E defaultValue) {
         T selectedItem = getSelectedItem();
         if (selectedItem == null || mapper == null) {
@@ -385,21 +403,35 @@ public class TypedTable<T> extends JTable {
         return mapper.apply(selectedItem);
     }
 
+    /**
+     * @return - returns type class of current table
+     */
     public Class<? extends T> getTypeClass() {
         return typeClass;
     }
 
+    /**
+     * Checks do pagination is available for current table
+     * @return - true if pagination is enabled
+     */
     public boolean isPaginationEnabled(){
         return dataList == null  && provider != null && provider.isPaginable();
     }
 
-    public <C> void addComputedColumn(String columnC, Class<C> resultClass, Function<T, C> o) {
+    /**
+     * Add function to table at runtime
+     * @param columnName - name of column to add
+     * @param columnClass - class of column to add
+     * @param computingFunction - function passed to result cell
+     * @param <C> - class of result column
+     */
+    public <C> void addComputedColumn(String columnName, Class<C> columnClass, Function<T, C> computingFunction) {
         TableColumn tableColumn = new TableColumn(columnCreator.getTableColumns().size(), 100);
-        columnCreator.getTableColumns().add(new FieldMock(columnC, resultClass, o, tableColumn));
-        tableColumn.setHeaderValue(columnC);
+        columnCreator.getTableColumns().add(new FieldMock(columnName, columnClass, computingFunction, tableColumn));
+        tableColumn.setHeaderValue(columnName);
         try {
             SwingUtilities.invokeAndWait(() -> {
-                model.addColumn(columnC);
+                model.addColumn(columnName);
                 removePropertyChangeListeners();
                 installPropertyChangeListener();
             });
@@ -409,12 +441,19 @@ public class TypedTable<T> extends JTable {
 
     }
 
+    /**
+     * Install default ChangeHeaderNamePropertyChangeListener for all columns
+     */
     private void installPropertyChangeListener() {
         getColumnModel().
                 getColumns().
                 asIterator().
                 forEachRemaining(tableColumn -> tableColumn.addPropertyChangeListener(listener));
     }
+
+    /**
+     * Remove default ChangeHeaderNamePropertyChangeListener for all columns
+     */
     private void removePropertyChangeListeners() {
         getColumnModel().
                 getColumns().
