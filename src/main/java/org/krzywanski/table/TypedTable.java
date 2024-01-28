@@ -240,12 +240,6 @@ public class TypedTable<T> extends JTable {
         return paginationUtils.firstPageAction();
     }
 
-
-    @Override
-    public boolean isCellEditable(int row, int column) {
-        return false;
-    }
-
     /**
      * @return - returns item from selected row
      */

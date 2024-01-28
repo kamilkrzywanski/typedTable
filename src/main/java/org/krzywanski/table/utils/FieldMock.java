@@ -21,6 +21,8 @@ public class FieldMock {
 
     final TableColumn tableColumn;
 
+    final Boolean isEditable = true;
+
     @SuppressWarnings("unchecked")
     public <T, C> FieldMock(String columnName, Class<?> type, Function<T, C> functionToCompute, TableColumn tableColumn) {
         this.columnName = columnName;
@@ -43,7 +45,6 @@ public class FieldMock {
         } catch (IntrospectionException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     public Field getField() {
@@ -81,5 +82,9 @@ public class FieldMock {
 
     public TableColumn getTableColumn() {
         return tableColumn;
+    }
+
+    public Boolean getEditable() {
+        return isEditable;
     }
 }

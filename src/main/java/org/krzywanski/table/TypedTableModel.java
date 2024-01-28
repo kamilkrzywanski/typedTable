@@ -17,4 +17,9 @@ public class TypedTableModel extends DefaultTableModel {
     public ColumnCreator getColumnCreator() {
         return columnCreator;
     }
+
+    @Override
+    public boolean isCellEditable(int row, int column) {
+        return columnCreator.getTableColumns().get(column).getEditable();
+    }
 }
