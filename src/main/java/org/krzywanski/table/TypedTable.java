@@ -451,7 +451,7 @@ public class TypedTable<T> extends JTable {
         if(resultList.comparator() == null && !Comparable.class.isAssignableFrom(typeClass))
             throw new RuntimeException("TypeClass needs to implement Comparable interface if you use TreeSet without comparator");
 
-        TableColumn tableColumn = new TableColumn(columnCreator.getTableColumns().size(), 100);
+        TableColumn tableColumn = new TableColumn(columnCreator.getTableColumns().size());
         columnCreator.getTableColumns().add(new FieldMock(columnName, Boolean.class, t -> resultList.contains(t), tableColumn, true));
         tableColumn.setHeaderValue(columnName);
         try {
@@ -461,7 +461,7 @@ public class TypedTable<T> extends JTable {
                 installHeaderPropertyChangeListener();
 
                 getModel().addTableModelListener(e -> {
-                    if (getColumnModel().getColumnIndex(columnName) == e.getColumn() && e.getType() == TableModelEvent.UPDATE) {
+                    if (e.getType() == TableModelEvent.UPDATE && getColumnModel().getColumnIndex(columnName) == e.getColumn()) {
                         if ((Boolean) getValueAt(e.getFirstRow(), e.getColumn()))
                             resultList.add(getItemAt(e.getFirstRow()));
                         else
