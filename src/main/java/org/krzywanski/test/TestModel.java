@@ -2,7 +2,6 @@ package org.krzywanski.test;
 
 import org.krzywanski.table.annot.MyTableColumn;
 import org.krzywanski.table.annot.ReflectionSort;
-import org.krzywanski.table.annot.CustomRenderer;
 import org.krzywanski.table.annot.TableFilter;
 import org.krzywanski.table.constraints.Alignment;
 
@@ -13,7 +12,7 @@ import java.util.Date;
 @TableFilter(type = Double.class, name = "columnB", label = "Decimal column")
 @TableFilter(type = TestEnum.class, name = "testEnum", label = "Test enum")
 @TableFilter(type = Boolean.class, name = "testFormatClass", label = "Boolean value")
-public class TestModel {
+public class TestModel implements Comparable<TestModel>{
 
     @MyTableColumn(label = "XXX", width = 200, sortable = true)
     private String columnA;
@@ -92,5 +91,10 @@ public class TestModel {
 
     public void setTestEnum(TestEnum testEnum) {
         this.testEnum = testEnum;
+    }
+
+    @Override
+    public int compareTo(TestModel o) {
+        return columnB.compareTo(o.columnB);
     }
 }

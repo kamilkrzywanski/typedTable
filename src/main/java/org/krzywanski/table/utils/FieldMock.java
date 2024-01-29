@@ -21,24 +21,26 @@ public class FieldMock {
 
     final TableColumn tableColumn;
 
-    final Boolean isEditable = true;
+    final Boolean isEditable;
 
     @SuppressWarnings("unchecked")
-    public <T, C> FieldMock(String columnName, Class<?> type, Function<T, C> functionToCompute, TableColumn tableColumn) {
+    public <T, C> FieldMock(String columnName, Class<?> type, Function<T, C> functionToCompute, TableColumn tableColumn, Boolean isEditable) {
         this.columnName = columnName;
         this.field = null;
         this.type = type;
         this.functionToCompute = (Function<Object, Object>) functionToCompute;
         this.propertyDescriptor = null;
         this.tableColumn = tableColumn;
+        this.isEditable = isEditable;
     }
 
-    public FieldMock(String columnName, Field field, TableColumn tableColumn) {
+    public FieldMock(String columnName, Field field, TableColumn tableColumn, Boolean isEditable) {
         this.columnName = columnName;
         this.field = field;
         this.type = field.getType();
         this.functionToCompute = null;
         this.tableColumn = tableColumn;
+        this.isEditable = false;
 
         try {
             this.propertyDescriptor = new PropertyDescriptor(field.getName(), field.getDeclaringClass());
