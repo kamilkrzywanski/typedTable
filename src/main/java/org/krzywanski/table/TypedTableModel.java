@@ -1,7 +1,6 @@
 package org.krzywanski.table;
 
 import javax.swing.table.DefaultTableModel;
-import java.beans.PropertyDescriptor;
 
 public class TypedTableModel extends DefaultTableModel {
     ColumnCreator columnCreator;
@@ -12,6 +11,15 @@ public class TypedTableModel extends DefaultTableModel {
 
     @Override
     public Class<?> getColumnClass(int columnIndex) {
-        return ((PropertyDescriptor)columnCreator.getTableColumns().keySet().toArray()[columnIndex]).getPropertyType();
+        return columnCreator.getTableColumns().get(columnIndex).getType();
+    }
+
+    public ColumnCreator getColumnCreator() {
+        return columnCreator;
+    }
+
+    @Override
+    public boolean isCellEditable(int row, int column) {
+        return columnCreator.getTableColumns().get(column).getEditable();
     }
 }

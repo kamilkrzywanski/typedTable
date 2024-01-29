@@ -149,7 +149,7 @@ public class TypedTablePanel<T> extends JPanel {
         setLabelText(table.prevPageAction());
     }
 
-    private void firstPageAction() {
+    public void firstPageAction() {
         setLabelText(table.firstPageAction());
     }
 
@@ -193,6 +193,9 @@ public class TypedTablePanel<T> extends JPanel {
         return table.getSelectedItem();
     }
 
+    /**
+     * @return - returns list of selected indices
+     */
     public List<T> getSelectedItems() {
         return table.getSelectedItems();
     }
@@ -212,7 +215,26 @@ public class TypedTablePanel<T> extends JPanel {
         table.addGenericSelectionListener(listener);
     }
 
+    /**
+     * Return value from selected row or default when row not found
+     * @param mapper - mapper to map row to result
+     * @param defaultValue - default value when row not found
+     * @return - returns result of function
+     * @param <E> - return type of result
+     */
     public <E> E getSelectedValueOrDefault(Function<T, E> mapper, E defaultValue) {
         return table.getSelectedValueOrDefault(mapper, defaultValue);
+    }
+
+    /**
+     * Add function to table at runtime
+     * @param columnName - name of column to add
+     * @param columnClass - class of column to add
+     * @param computingFunction - function passed to result cell
+     * @param <C> - class of result column
+     */
+    public <C> void addComuptedColumn(String columnName ,Class<C> columnClass,  Function<T, C> computingFunction) {
+        table.addComputedColumn(columnName, columnClass, computingFunction);
+        firstPageAction();
     }
 }

@@ -4,14 +4,12 @@ import org.krzywanski.table.ColumnCreator;
 import org.krzywanski.table.TypedTable;
 import org.krzywanski.table.annot.CustomRenderer;
 import org.krzywanski.table.annot.MyTableColumn;
-import org.krzywanski.table.utils.Pair;
+import org.krzywanski.table.utils.FieldMock;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
 import java.text.Format;
@@ -29,33 +27,33 @@ public class TypedTableRenderer extends DefaultTableCellRenderer {
 
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 
-        Pair<PropertyDescriptor, Field> pdFieldPair = getColumnField(column, table);
+        FieldMock pdFieldPair = getColumnField(column, table);
 
         TableCellRenderer customRenderer = getCustomRenderer(pdFieldPair);
         if(customRenderer != null){
             return customRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         }
 
-        if (Date.class.equals(pdFieldPair.getSecond().getType())) {
+        if (Date.class.equals(pdFieldPair.getType())) {
             if (value != null)
                 value = new SimpleDateFormat(Objects.toString(getFormat(pdFieldPair), "MM/dd/yy")).format(value);
 
         }
-        if (Number.class.isAssignableFrom(pdFieldPair.getSecond().getType())) {
+        if (Number.class.isAssignableFrom(pdFieldPair.getType())) {
             if (value != null) value = new DecimalFormat(Objects.toString(getFormat(pdFieldPair), "#.#")).format(value);
 
         }
         //Need to be before format by collection
         setToolTipText(createToolTipText(value));
-        if(Collection.class.isAssignableFrom(pdFieldPair.getSecond().getType())){
+        if(Collection.class.isAssignableFrom(pdFieldPair.getType())){
             value = formatCollection((Collection<?>) value);
         }
 
-        if(Boolean.class.isAssignableFrom(pdFieldPair.getSecond().getType())){
+        if(Boolean.class.isAssignableFrom(pdFieldPair.getType())){
             return new DefaultBooleanRenderer().getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         }
 
-        Format format = ((TypedTable<?>) table).getFormatMap().get(pdFieldPair.getSecond().getType());
+        Format format = ((TypedTable<?>) table).getFormatMap().get(pdFieldPair.getType());
         if (format != null)
             value = format.format(value);
 
@@ -63,7 +61,7 @@ public class TypedTableRenderer extends DefaultTableCellRenderer {
         return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
     }
 
-    Pair<PropertyDescriptor, Field> getColumnField(int columnIndex, JTable table) {
+    FieldMock getColumnField(int columnIndex, JTable table) {
         return columnCreator.getFieldByName(
                 table.getTableHeader().
                         getColumnModel().
@@ -93,9 +91,9 @@ public class TypedTableRenderer extends DefaultTableCellRenderer {
         if(collection == null || collection.isEmpty()) return "";
         return collection.stream().map(Object::toString).reduce((s, s2) -> s + "; " + s2).orElse("");
     }
-    private String getFormat(Pair<PropertyDescriptor, Field> pdFieldPair) {
+    private String getFormat(FieldMock pdFieldPair) {
 
-        MyTableColumn annotation = pdFieldPair.getSecond().getAnnotation(MyTableColumn.class);
+        MyTableColumn annotation = pdFieldPair.getAnnotation(MyTableColumn.class);
         String format = null;
         if (annotation != null) {
             if (!annotation.format().isEmpty()) format = annotation.format();
@@ -108,9 +106,9 @@ public class TypedTableRenderer extends DefaultTableCellRenderer {
      * @param pdFieldPair pair of property descriptor and field
      * @return alignment
      */
-    private int getColumnAlignment(Pair<PropertyDescriptor, Field> pdFieldPair) {
+    private int getColumnAlignment(FieldMock pdFieldPair) {
 
-        MyTableColumn annotation = pdFieldPair.getSecond().getAnnotation(MyTableColumn.class);
+        MyTableColumn annotation = pdFieldPair.getAnnotation(MyTableColumn.class);
         int alignment = SwingConstants.LEFT;
         if (annotation != null) {
             switch (annotation.alignment()) {
@@ -128,8 +126,8 @@ public class TypedTableRenderer extends DefaultTableCellRenderer {
         return alignment;
     }
 
-    private TableCellRenderer getCustomRenderer(Pair<PropertyDescriptor, Field> pdFieldPair) {
-        CustomRenderer annotation = pdFieldPair.getSecond().getAnnotation(CustomRenderer.class);
+    private TableCellRenderer getCustomRenderer(FieldMock pdFieldPair) {
+        CustomRenderer annotation = pdFieldPair.getAnnotation(CustomRenderer.class);
         if (annotation != null) {
             try {
                 return annotation.renderer().getDeclaredConstructor().newInstance();

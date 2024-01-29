@@ -1,7 +1,8 @@
 package org.krzywanski;
 
 import net.miginfocom.swing.MigLayout;
-import org.krzywanski.table.*;
+import org.krzywanski.table.SortColumn;
+import org.krzywanski.table.TypedTablePanel;
 import org.krzywanski.table.components.FilterDialog;
 import org.krzywanski.table.constraints.ActionType;
 import org.krzywanski.table.providers.DefaultDataPrivder;
@@ -46,8 +47,9 @@ public class Main {
         frame.setLayout(new MigLayout());
         TypedTablePanel<TestModel> panel = TypedTablePanel.getTableWithProvider(new DefaultDataPrivder<>(20, Main::getData, Main::getSize), TestModel.class);
         TypedTablePanel<TestModel> panel2 = TypedTablePanel.getTableWithData( Main.getAllData(), TestModel.class, 3);
-
+        panel.addComuptedColumn("Computed column",String.class,  value -> value.getColumnA() + " " + value.getColumnB());
         panel.addGenericSelectionListener(element -> System.out.println(element.getColumnA()));
+
         frame.add(panel, "grow,push");
         frame.add(panel2, "grow,push");
         frame.setVisible(true);
