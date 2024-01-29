@@ -10,6 +10,7 @@ import org.krzywanski.table.utils.FieldMock;
 import org.krzywanski.table.utils.Page;
 
 import javax.swing.*;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.event.ActionListener;
@@ -427,13 +428,46 @@ public class TypedTable<T> extends JTable {
      */
     public <C> void addComputedColumn(String columnName, Class<C> columnClass, Function<T, C> computingFunction) {
         TableColumn tableColumn = new TableColumn(columnCreator.getTableColumns().size(), 100);
-        columnCreator.getTableColumns().add(new FieldMock(columnName, columnClass, computingFunction, tableColumn));
+        columnCreator.getTableColumns().add(new FieldMock(columnName, columnClass, computingFunction, tableColumn, false));
         tableColumn.setHeaderValue(columnName);
         try {
             SwingUtilities.invokeAndWait(() -> {
                 model.addColumn(columnName);
                 removeHeaderPropertyChangeListeners();
                 installHeaderPropertyChangeListener();
+            });
+        } catch (InterruptedException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * @param columnName - name of column to add
+     * @param resultList - Tree set to in case of custom method to compare objects
+     *                   TypeClass needs to implement Comparable interface if you use TreeSet without comparator
+     */
+    public void addMultiSelectColumn(String columnName, TreeSet<T> resultList) {
+
+        if(resultList.comparator() == null && !Comparable.class.isAssignableFrom(typeClass))
+            throw new RuntimeException("TypeClass needs to implement Comparable interface if you use TreeSet without comparator");
+
+        TableColumn tableColumn = new TableColumn(columnCreator.getTableColumns().size());
+        columnCreator.getTableColumns().add(new FieldMock(columnName, Boolean.class, t -> resultList.contains(t), tableColumn, true));
+        tableColumn.setHeaderValue(columnName);
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                model.addColumn(columnName);
+                removeHeaderPropertyChangeListeners();
+                installHeaderPropertyChangeListener();
+
+                getModel().addTableModelListener(e -> {
+                    if (e.getType() == TableModelEvent.UPDATE && getColumnModel().getColumnIndex(columnName) == e.getColumn()) {
+                        if ((Boolean) getValueAt(e.getFirstRow(), e.getColumn()))
+                            resultList.add(getItemAt(e.getFirstRow()));
+                        else
+                            resultList.remove(getItemAt(e.getFirstRow()));
+                    }
+                });
             });
         } catch (InterruptedException | InvocationTargetException e) {
             throw new RuntimeException(e);

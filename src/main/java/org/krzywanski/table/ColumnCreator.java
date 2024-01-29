@@ -24,7 +24,7 @@ public class ColumnCreator {
 
     public ColumnCreator(Class<?> classType, long id) {
 
-        List<FieldMock> fields = Arrays.stream(classType.getDeclaredFields()).map(field -> new FieldMock(field.getName(), field, null)).collect(Collectors.toList());
+        List<FieldMock> fields = Arrays.stream(classType.getDeclaredFields()).map(field -> new FieldMock(field.getName(), field, null, null)).collect(Collectors.toList());
 
         LinkedHashMap<String, Integer> columns = new LinkedHashMap<>();
         LinkedHashMap<String, Integer> tempColumns = null;
@@ -73,7 +73,7 @@ public class ColumnCreator {
                     tableColumn.setWidth(0);
                 }
 
-                tableColumns.add(new FieldMock(field.getName(), field.getField(), tableColumn));
+                tableColumns.add(new FieldMock(field.getName(), field.getField(), tableColumn, false));
 
                 iterator++;
             }

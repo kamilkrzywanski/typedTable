@@ -18,6 +18,7 @@ import java.text.Format;
 import java.text.ParsePosition;
 import java.util.List;
 import java.util.Objects;
+import java.util.TreeSet;
 import java.util.function.Function;
 
 /**
@@ -235,6 +236,16 @@ public class TypedTablePanel<T> extends JPanel {
      */
     public <C> void addComuptedColumn(String columnName ,Class<C> columnClass,  Function<T, C> computingFunction) {
         table.addComputedColumn(columnName, columnClass, computingFunction);
+        firstPageAction();
+    }
+
+    /**
+     @param columnName - name of column to add
+     @param resultList - Tree set to in case of custom method to compare objects
+     TypeClass needs to implement Comparable interface if you use TreeSet without comparator
+     */
+    public void addMultiSelectColumn(String columnName, TreeSet<T> resultList){
+        table.addMultiSelectColumn(columnName, resultList);
         firstPageAction();
     }
 }

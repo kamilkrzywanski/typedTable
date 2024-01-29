@@ -11,10 +11,8 @@ import org.krzywanski.test.TestModel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -49,7 +47,8 @@ public class Main {
         TypedTablePanel<TestModel> panel2 = TypedTablePanel.getTableWithData( Main.getAllData(), TestModel.class, 3);
         panel.addComuptedColumn("Computed column",String.class,  value -> value.getColumnA() + " " + value.getColumnB());
         panel.addGenericSelectionListener(element -> System.out.println(element.getColumnA()));
-
+        TreeSet<TestModel> collection = new TreeSet<>();
+        panel.addMultiSelectColumn("Multi select column", collection);
         frame.add(panel, "grow,push");
         frame.add(panel2, "grow,push");
         frame.setVisible(true);
