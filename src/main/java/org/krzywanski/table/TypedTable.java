@@ -5,13 +5,14 @@ import org.krzywanski.table.annot.MyTableColumn;
 import org.krzywanski.table.annot.ReflectionSort;
 import org.krzywanski.table.constraints.ActionType;
 import org.krzywanski.table.providers.*;
-import org.krzywanski.table.utils.Pair;
+import org.krzywanski.table.renderer.TypedTableRenderer;
+import org.krzywanski.table.utils.FieldMock;
+import org.krzywanski.table.utils.Page;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableColumnModel;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellEditor;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import java.awt.event.ActionListener;
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -62,11 +63,11 @@ public class TypedTable<T> extends JTable {
     /**
      * Tool for create columns label
      */
-    ColumnCreator columnCreator;
+    final ColumnCreator columnCreator;
     /**
      * Handle for model
      */
-    DefaultTableModel model;
+    TypedTableModel model;
 
     /**
      * Entity for create table
@@ -101,6 +102,11 @@ public class TypedTable<T> extends JTable {
     private final boolean multiSortEnable;
 
     /**
+     * Property change listener for headers of table
+     */
+    final ChangeHeaderNamePropertyChangeListener listener;
+
+    /**
      * Default constructor if you want to keep the same sizes for multiple tables
      *
      * @param dataList  - data list - list od data class
@@ -123,33 +129,17 @@ public class TypedTable<T> extends JTable {
         super(new TypedTableModel(new ColumnCreator(typeClass, id)));
         this.id = id;
         this.multiSortEnable = typeClass.isAnnotationPresent(EnableMultiSort.class);
-        columnCreator = new ColumnCreator(typeClass, id);
+        columnCreator = ((TypedTableModel) getModel()).getColumnCreator();
+        this.listener = new ChangeHeaderNamePropertyChangeListener(columnCreator);
         this.typeClass = typeClass;
         this.dataList = dataList;
         this.provider = provider;
         this.currentData = dataList;
         this.paginationUtils = new PaginationUtils(provider, this);
-
-        this.setColumnModel(new DefaultTableColumnModel());
-
-        model = (DefaultTableModel) this.getModel();
-        columnCreator.getTableColumns().forEach((field, tableColumn) -> {
-            model.addColumn(tableColumn.getHeaderValue());
-
-            if (tableColumn.getWidth() == 0) {
-                getColumn(tableColumn.getHeaderValue()).setMinWidth(0);
-                getColumn(tableColumn.getHeaderValue()).setMaxWidth(0);
-                getColumn(tableColumn.getHeaderValue()).setWidth(0);
-            }
-
-        });
-        getColumnModel().
-                getColumns().
-                asIterator().
-                forEachRemaining(tableColumn -> tableColumn.addPropertyChangeListener(new ChangeHeaderNamePropertyChangeListener(columnCreator)));
+        model = (TypedTableModel) this.getModel();
+        installHeaderPropertyChangeListener();
         fixHeadersSize();
         tableHeader.addMouseListener(new TableOrderColumnsMouseAdapter(this, instance));
-        setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     }
 
     @Override
@@ -163,19 +153,19 @@ public class TypedTable<T> extends JTable {
     void fixHeadersSize() {
 
         Map<String, Integer> columns = instance.getTable(typeClass.getCanonicalName(), id);
-        columnCreator.getTableColumns().forEach((field, tableColumn) -> {
+        columnCreator.getTableColumns().forEach(field -> {
             if (instance != null && columns != null) {
 
-                int width = Optional.ofNullable(columns.get(columnCreator.getFieldByName(tableColumn.getHeaderValue()).getSecond().getName())).orElse(MyTableColumn.defaultWidth);
+                int width = Optional.ofNullable(columns.get(columnCreator.getFieldByName(field.getTableColumn().getHeaderValue()).getName())).orElse(MyTableColumn.defaultWidth);
 
                 if (width == 0) {
-                    getColumn(tableColumn.getHeaderValue()).setMinWidth(0);
-                    getColumn(tableColumn.getHeaderValue()).setMaxWidth(0);
-                    getColumn(tableColumn.getHeaderValue()).setWidth(0);
+                    getColumn(field.getTableColumn().getHeaderValue()).setMinWidth(0);
+                    getColumn(field.getTableColumn().getHeaderValue()).setMaxWidth(0);
+                    getColumn(field.getTableColumn().getHeaderValue()).setWidth(0);
                 } else
-                    this.getColumnModel().getColumn(this.getColumnModel().getColumnIndex(tableColumn.getHeaderValue())).setPreferredWidth(width);
+                    this.getColumnModel().getColumn(this.getColumnModel().getColumnIndex(field.getTableColumn().getHeaderValue())).setPreferredWidth(width);
             } else {
-                this.getColumnModel().getColumn(this.getColumnModel().getColumnIndex(tableColumn.getHeaderValue())).setPreferredWidth(tableColumn.getPreferredWidth());
+                this.getColumnModel().getColumn(this.getColumnModel().getColumnIndex(field.getTableColumn().getHeaderValue())).setPreferredWidth(field.getTableColumn().getPreferredWidth());
             }
 
         });
@@ -189,14 +179,14 @@ public class TypedTable<T> extends JTable {
         currentData = provider != null ? provider.getData(limit, offset, getSortColumns(), getSearchPhase(), actionType, new HashMap<>(extraParams)) : dataList;
         model.getDataVector().clear();
 
-        if(!getSortColumns().isEmpty() && getSortColumns().get(0) != null && typeClass.isAnnotationPresent(ReflectionSort.class))
+        if (!getSortColumns().isEmpty() && getSortColumns().get(0) != null && typeClass.isAnnotationPresent(ReflectionSort.class))
             sortData(currentData, getSortColumns().get(0).getColumnName(), getSortColumns().get(0).getSortOrder());
 
         currentData.forEach(t -> {
             Vector<Object> element = new Vector<>();
-            columnCreator.getTableColumns().forEach((field, tableColumn) -> {
+            columnCreator.getTableColumns().forEach(fieldMock -> {
                 try {
-                    element.add(field.getReadMethod().invoke(t));
+                    element.add(fieldMock.invoke(t));
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     throw new RuntimeException(e);
                 }
@@ -209,7 +199,7 @@ public class TypedTable<T> extends JTable {
     }
 
     @SuppressWarnings({"rawtypes"})
-    private void sortData(List<T> data, String columnName, SortOrder sortOrder){
+    private void sortData(List<T> data, String columnName, SortOrder sortOrder) {
         try {
             BeanInfo beanInfo = Introspector.getBeanInfo(typeClass);
             final PropertyDescriptor sortByField = Arrays.stream(beanInfo.getPropertyDescriptors()).filter(propertyDescriptor -> propertyDescriptor.getName().equals(columnName)).findFirst().orElseThrow(() -> new RuntimeException("No such field"));
@@ -220,7 +210,7 @@ public class TypedTable<T> extends JTable {
                     if (!(fieldValue instanceof Comparable<?>) && fieldValue != null) {
                         throw new IllegalArgumentException("Field is not comparable!");
                     }
-                    return (Comparable)fieldValue;
+                    return (Comparable) fieldValue;
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     throw new RuntimeException(e);
                 }
@@ -229,48 +219,46 @@ public class TypedTable<T> extends JTable {
             throw new RuntimeException(e);
         }
 
-        if(sortOrder.equals(SortOrder.DESCENDING))
+        if (sortOrder.equals(SortOrder.DESCENDING))
             Collections.reverse(data);
 
     }
+
     /**
      * Actions for pagination
      */
-    public Pair<Integer, Integer> nextPageAction() {
+    public Page nextPageAction() {
         return paginationUtils.nextPageAction();
     }
 
-    public Pair<Integer, Integer> lastPageAction() {
+    public Page lastPageAction() {
         return paginationUtils.lastPageAction();
     }
 
-    public Pair<Integer, Integer> prevPageAction() {
+    public Page prevPageAction() {
         return paginationUtils.prevPageAction();
     }
 
-    public Pair<Integer, Integer> firstPageAction() {
+    public Page firstPageAction() {
         return paginationUtils.firstPageAction();
     }
 
-
-    @Override
-    public boolean isCellEditable(int row, int column) {
-        return false;
-    }
-
+    /**
+     * @return - returns item from selected row
+     */
     public T getSelectedItem() {
         if (getSelectedRow() != -1) return getItemAt(getSelectedRow());
         return null;
     }
 
+    /**
+     * @param index - index of item
+     * @return - return element at passed index if available
+     */
     public T getItemAt(int index) {
         return currentData.get(index);
     }
 
-    @Override
-    public TableCellEditor getDefaultEditor(Class<?> columnClass) {
-        return super.getDefaultEditor(columnClass);
-    }
 
     @Override
     public TableCellRenderer getDefaultRenderer(Class<?> columnClass) {
@@ -384,6 +372,11 @@ public class TypedTable<T> extends JTable {
         return selectedItems;
     }
 
+    /**
+     * Adds GenericSelectionListener - listener which as parameter have selected ithem from row.
+     *
+     * @param listener - listener to invoke
+     */
     public void addGenericSelectionListener(GenericSelectionListener<T> listener) {
         listeners.add(listener);
         getSelectionModel().addListSelectionListener(e -> {
@@ -393,6 +386,14 @@ public class TypedTable<T> extends JTable {
         });
     }
 
+    /**
+     * Return value from selected row or default when row not found
+     *
+     * @param mapper       - mapper to map row to result
+     * @param defaultValue - default value when row not found
+     * @param <E>          - return type of result
+     * @return - returns result of function
+     */
     public <E> E getSelectedValueOrDefault(Function<T, E> mapper, E defaultValue) {
         T selectedItem = getSelectedItem();
         if (selectedItem == null || mapper == null) {
@@ -401,7 +402,95 @@ public class TypedTable<T> extends JTable {
         return mapper.apply(selectedItem);
     }
 
+    /**
+     * @return - returns type class of current table
+     */
     public Class<? extends T> getTypeClass() {
         return typeClass;
+    }
+
+    /**
+     * Checks do pagination is available for current table
+     *
+     * @return - true if pagination is enabled
+     */
+    public boolean isPaginationEnabled() {
+        return dataList == null && provider != null && provider.isPaginable();
+    }
+
+    /**
+     * Add function to table at runtime
+     *
+     * @param columnName        - name of column to add
+     * @param columnClass       - class of column to add
+     * @param computingFunction - function passed to result cell
+     * @param <C>               - class of result column
+     */
+    public <C> void addComputedColumn(String columnName, Class<C> columnClass, Function<T, C> computingFunction) {
+        TableColumn tableColumn = new TableColumn(columnCreator.getTableColumns().size(), 100);
+        columnCreator.getTableColumns().add(new FieldMock(columnName, columnClass, computingFunction, tableColumn, false));
+        tableColumn.setHeaderValue(columnName);
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                model.addColumn(columnName);
+                removeHeaderPropertyChangeListeners();
+                installHeaderPropertyChangeListener();
+            });
+        } catch (InterruptedException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * @param columnName - name of column to add
+     * @param resultList - Tree set to in case of custom method to compare objects
+     *                   TypeClass needs to implement Comparable interface if you use TreeSet without comparator
+     */
+    public void addMultiSelectColumn(String columnName, TreeSet<T> resultList) {
+
+        if(resultList.comparator() == null && !Comparable.class.isAssignableFrom(typeClass))
+            throw new RuntimeException("TypeClass needs to implement Comparable interface if you use TreeSet without comparator");
+
+        TableColumn tableColumn = new TableColumn(columnCreator.getTableColumns().size());
+        columnCreator.getTableColumns().add(new FieldMock(columnName, Boolean.class, t -> resultList.contains(t), tableColumn, true));
+        tableColumn.setHeaderValue(columnName);
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                model.addColumn(columnName);
+                removeHeaderPropertyChangeListeners();
+                installHeaderPropertyChangeListener();
+
+                getModel().addTableModelListener(e -> {
+                    if (e.getType() == TableModelEvent.UPDATE && getColumnModel().getColumnIndex(columnName) == e.getColumn()) {
+                        if ((Boolean) getValueAt(e.getFirstRow(), e.getColumn()))
+                            resultList.add(getItemAt(e.getFirstRow()));
+                        else
+                            resultList.remove(getItemAt(e.getFirstRow()));
+                    }
+                });
+            });
+        } catch (InterruptedException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Install default ChangeHeaderNamePropertyChangeListener for all columns
+     */
+    private void installHeaderPropertyChangeListener() {
+        getColumnModel().
+                getColumns().
+                asIterator().
+                forEachRemaining(tableColumn -> tableColumn.addPropertyChangeListener(listener));
+    }
+
+    /**
+     * Remove default ChangeHeaderNamePropertyChangeListener for all columns
+     */
+    private void removeHeaderPropertyChangeListeners() {
+        getColumnModel().
+                getColumns().
+                asIterator().
+                forEachRemaining(tableColumn -> tableColumn.removePropertyChangeListener(listener));
     }
 }

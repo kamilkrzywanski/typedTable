@@ -6,6 +6,7 @@ Simple tool to map Entity to jtable in java
 -Define sortables columns <br>
 -Simlplify add custom formatters <br>
 -Autosave of columns visibility and width <br>
+-Add computed columns
 
 It's olny idea at the moment but by annotations you can create simple table
 like there with export to CSV, EXCEL, Sort mechanism: 
@@ -21,4 +22,4 @@ Custom formatter for objects example:
 Incoming features:
 - crud operations on table
 - add select and multiselect panel(needs to make fields editable)
--
+

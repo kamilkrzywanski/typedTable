@@ -7,7 +7,7 @@ import org.krzywanski.table.components.PopupDialog;
 import org.krzywanski.table.providers.GenericSelectionListener;
 import org.krzywanski.table.providers.IFilterComponent;
 import org.krzywanski.table.providers.TableDataProvider;
-import org.krzywanski.table.utils.Pair;
+import org.krzywanski.table.utils.Page;
 import org.krzywanski.test.TestFormatClass;
 
 import javax.swing.*;
@@ -18,6 +18,7 @@ import java.text.Format;
 import java.text.ParsePosition;
 import java.util.List;
 import java.util.Objects;
+import java.util.TreeSet;
 import java.util.function.Function;
 
 /**
@@ -34,22 +35,30 @@ public class TypedTablePanel<T> extends JPanel {
     JButton nextPageButton;
     JButton lastPageButton;
     JButton searchButton;
-    JLabel page;
+    JLabel pageLabel;
 
     public final TypedTable<T> table;
     final FilterDialog filterDialog;
 
+    public static <T> TypedTablePanel<T> getTableWithData(List<T> dataList, Class<T> typeClass, int id) {
+        return new TypedTablePanel<>(dataList, typeClass, null, id);
+    }
+
+    public static <T> TypedTablePanel<T> getTableWithProvider(TableDataProvider<T> provider, Class<T> typeClass, int id) {
+        return new TypedTablePanel<>(null, typeClass, provider, id);
+    }
+
     public static <T> TypedTablePanel<T> getTableWithData(List<T> dataList, Class<T> typeClass) {
-        return new TypedTablePanel<>(dataList, typeClass, null);
+        return new TypedTablePanel<>(dataList, typeClass, null, 1);
     }
 
     public static <T> TypedTablePanel<T> getTableWithProvider(TableDataProvider<T> provider, Class<T> typeClass) {
-        return new TypedTablePanel<>(null, typeClass, provider);
+        return new TypedTablePanel<>(null, typeClass, provider, 1);
     }
 
-    private TypedTablePanel(List<T> dataList, Class<? extends T> typeClass, TableDataProvider<T> provider) {
+    private TypedTablePanel(List<T> dataList, Class<? extends T> typeClass, TableDataProvider<T> provider, int id) {
         super(new MigLayout());
-        table = new TypedTable<>(dataList, typeClass, provider, 1);
+        table = new TypedTable<>(dataList, typeClass, provider, id);
         createButtons();
         table.addCustomFormatter(TestFormatClass.class, new Format() {
             @Override
@@ -65,12 +74,13 @@ public class TypedTablePanel<T> extends JPanel {
         filterDialog = new FilterDialog((e) -> firstPageAction(), table, this);
         table.addFistPageListener(e -> firstPageAction());
         table.addSearchPhaseSupplier(() -> popupDialog.getText());
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, "grow,push,wrap");
         firstPageAction();
     }
 
-    private void createButtons() {
+    void initButtons(){
         filterButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("filter-symbol.png")));
         exportExcelButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("export_excel.png")));
         nextPageButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("next.png")));
@@ -78,8 +88,12 @@ public class TypedTablePanel<T> extends JPanel {
         lastPageButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("fast-forward-button.png")));
         firstPageButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("fast-backward.png")));
         searchButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("search.png")));
-        page = new JLabel("");
+        pageLabel = new JLabel("");
         popupDialog = new PopupDialog(e -> firstPageAction());
+    }
+
+    private void createButtons() {
+        initButtons();
 
         if (table.typeClass.isAnnotationPresent(TableFilters.class)) {
             addButton(filterButton, "split, al right");
@@ -87,11 +101,16 @@ public class TypedTablePanel<T> extends JPanel {
         } else {
             addButton(exportExcelButton, "split, al right");
         }
-        addButton(firstPageButton, "");
-        addButton(prevPageButton, "");
-        add(page);
-        addButton(nextPageButton, "");
-        addButton(lastPageButton, "");
+
+        if(table.isPaginationEnabled()) {
+            addButton(firstPageButton, "");
+            addButton(prevPageButton, "");
+        }
+        add(pageLabel);
+        if(table.isPaginationEnabled()) {
+            addButton(nextPageButton, "");
+            addButton(lastPageButton, "");
+        }
         addButton(searchButton, "wrap");
 
         filterButton.addActionListener(e -> filterAction());
@@ -120,23 +139,27 @@ public class TypedTablePanel<T> extends JPanel {
     }
 
     private void nextPageAction() {
-        Pair<Integer, Integer> pair = table.nextPageAction();
-        page.setText(pair.getFirst() + "/" + pair.getSecond());
+        setLabelText(table.nextPageAction());
     }
 
     private void lastPageAction() {
-        Pair<Integer, Integer> pair = table.lastPageAction();
-        page.setText(pair.getFirst() + "/" + pair.getSecond());
+        setLabelText(table.lastPageAction());
     }
 
     private void prevPageAction() {
-        Pair<Integer, Integer> pair = table.prevPageAction();
-        page.setText(pair.getFirst() + "/" + pair.getSecond());
+        setLabelText(table.prevPageAction());
     }
 
-    private void firstPageAction() {
-        Pair<Integer, Integer> pair = table.firstPageAction();
-        page.setText(pair.getFirst() + "/" + pair.getSecond());
+    public void firstPageAction() {
+        setLabelText(table.firstPageAction());
+    }
+
+    private void setLabelText(Page page) {
+
+        if(table.isPaginationEnabled())
+            this.pageLabel.setText(page.getCurrentPage() + "/" + page.getTotalPages() + " (" + page.getTotalElements() + ")" );
+        else
+            this.pageLabel.setText("(" + page.getTotalElements() + ")" );
     }
 
     private void addButton(JButton button, String constraints) {
@@ -171,6 +194,9 @@ public class TypedTablePanel<T> extends JPanel {
         return table.getSelectedItem();
     }
 
+    /**
+     * @return - returns list of selected indices
+     */
     public List<T> getSelectedItems() {
         return table.getSelectedItems();
     }
@@ -190,7 +216,36 @@ public class TypedTablePanel<T> extends JPanel {
         table.addGenericSelectionListener(listener);
     }
 
+    /**
+     * Return value from selected row or default when row not found
+     * @param mapper - mapper to map row to result
+     * @param defaultValue - default value when row not found
+     * @return - returns result of function
+     * @param <E> - return type of result
+     */
     public <E> E getSelectedValueOrDefault(Function<T, E> mapper, E defaultValue) {
         return table.getSelectedValueOrDefault(mapper, defaultValue);
+    }
+
+    /**
+     * Add function to table at runtime
+     * @param columnName - name of column to add
+     * @param columnClass - class of column to add
+     * @param computingFunction - function passed to result cell
+     * @param <C> - class of result column
+     */
+    public <C> void addComuptedColumn(String columnName ,Class<C> columnClass,  Function<T, C> computingFunction) {
+        table.addComputedColumn(columnName, columnClass, computingFunction);
+        firstPageAction();
+    }
+
+    /**
+     @param columnName - name of column to add
+     @param resultList - Tree set to in case of custom method to compare objects
+     TypeClass needs to implement Comparable interface if you use TreeSet without comparator
+     */
+    public void addMultiSelectColumn(String columnName, TreeSet<T> resultList){
+        table.addMultiSelectColumn(columnName, resultList);
+        firstPageAction();
     }
 }

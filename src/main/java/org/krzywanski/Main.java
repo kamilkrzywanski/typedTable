@@ -1,7 +1,8 @@
 package org.krzywanski;
 
 import net.miginfocom.swing.MigLayout;
-import org.krzywanski.table.*;
+import org.krzywanski.table.SortColumn;
+import org.krzywanski.table.TypedTablePanel;
 import org.krzywanski.table.components.FilterDialog;
 import org.krzywanski.table.constraints.ActionType;
 import org.krzywanski.table.panel.TypedPanel;
@@ -11,10 +12,8 @@ import org.krzywanski.test.TestModel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -46,9 +45,11 @@ public class Main {
         frame.setTitle("JTable Example");
         frame.setLayout(new MigLayout());
         TypedTablePanel<TestModel> panel = TypedTablePanel.getTableWithProvider(new DefaultDataPrivder<>(20, Main::getData, Main::getSize), TestModel.class);
-        TypedTablePanel<TestModel> panel2 = TypedTablePanel.getTableWithData( Main.getAllData(), TestModel.class);
-
+        TypedTablePanel<TestModel> panel2 = TypedTablePanel.getTableWithData( Main.getAllData(), TestModel.class, 3);
+        panel.addComuptedColumn("Computed column",String.class,  value -> value.getColumnA() + " " + value.getColumnB());
         panel.addGenericSelectionListener(element -> System.out.println(element.getColumnA()));
+        TreeSet<TestModel> collection = new TreeSet<>();
+        panel.addMultiSelectColumn("Multi select column", collection);
         frame.add(panel, "grow,push");
 //        frame.add(panel2, "grow,push");
         frame.add(new TypedPanel<>(Main.getData().get(0)));
@@ -75,7 +76,7 @@ public class Main {
         return Main.getData().stream().filter(testModel -> testModel.getColumnA().toLowerCase().contains(Objects.requireNonNullElse(searchString, ""))).skip(offest).limit(limit).collect(Collectors.toList());
     }
 
-    public static int getSize(String searchString) {
+    public static int getSize(String searchString, Map<String, String> extraParams) {
         return (int) Main.getData().stream().filter(testModel -> testModel.getColumnA().toLowerCase().contains(Objects.requireNonNullElse(searchString, ""))).count();
     }
 
