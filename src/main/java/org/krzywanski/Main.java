@@ -48,7 +48,7 @@ public class Main {
         panel.addComuptedColumn("Computed column",String.class,  value -> value.getColumnA() + " " + value.getColumnB());
         panel.addGenericSelectionListener(element -> System.out.println(element.getColumnA()));
         TreeSet<TestModel> collection = new TreeSet<>();
-        panel2.addMultiSelectColumn("Multi select column", collection);
+        panel.addMultiSelectColumn("Multi select column", collection);
         frame.add(panel, "grow,push");
         frame.add(panel2, "grow,push");
         frame.setVisible(true);
