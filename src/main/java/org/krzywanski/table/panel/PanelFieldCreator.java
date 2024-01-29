@@ -1,11 +1,9 @@
 package org.krzywanski.table.panel;
 
-import net.miginfocom.swing.MigLayout;
 import org.krzywanski.table.panel.annot.PanelField;
-import org.krzywanski.table.table.Pair;
+import org.krzywanski.table.utils.Pair;
 
 import javax.swing.*;
-import javax.swing.text.DefaultFormatter;
 import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
@@ -13,9 +11,9 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.lang.reflect.Field;
 import java.text.NumberFormat;
-import java.util.*;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PanelFieldCreator {
     final Class<?> dataClass;
