@@ -447,6 +447,10 @@ public class TypedTable<T> extends JTable {
      *                   TypeClass needs to implement Comparable interface if you use TreeSet without comparator
      */
     public void addMultiSelectColumn(String columnName, TreeSet<T> resultList) {
+
+        if(resultList.comparator() == null && !Comparable.class.isAssignableFrom(typeClass))
+            throw new RuntimeException("TypeClass needs to implement Comparable interface if you use TreeSet without comparator");
+
         TableColumn tableColumn = new TableColumn(columnCreator.getTableColumns().size(), 100);
         columnCreator.getTableColumns().add(new FieldMock(columnName, Boolean.class, t -> resultList.contains(t), tableColumn, true));
         tableColumn.setHeaderValue(columnName);
