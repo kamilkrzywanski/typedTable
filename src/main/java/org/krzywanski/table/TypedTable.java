@@ -104,6 +104,7 @@ public class TypedTable<T> extends JTable {
      * Property change listener for headers of table
      */
     final ChangeHeaderNamePropertyChangeListener listener;
+
     /**
      * Default constructor if you want to keep the same sizes for multiple tables
      *
@@ -177,7 +178,7 @@ public class TypedTable<T> extends JTable {
         currentData = provider != null ? provider.getData(limit, offset, getSortColumns(), getSearchPhase(), actionType, new HashMap<>(extraParams)) : dataList;
         model.getDataVector().clear();
 
-        if(!getSortColumns().isEmpty() && getSortColumns().get(0) != null && typeClass.isAnnotationPresent(ReflectionSort.class))
+        if (!getSortColumns().isEmpty() && getSortColumns().get(0) != null && typeClass.isAnnotationPresent(ReflectionSort.class))
             sortData(currentData, getSortColumns().get(0).getColumnName(), getSortColumns().get(0).getSortOrder());
 
         currentData.forEach(t -> {
@@ -197,7 +198,7 @@ public class TypedTable<T> extends JTable {
     }
 
     @SuppressWarnings({"rawtypes"})
-    private void sortData(List<T> data, String columnName, SortOrder sortOrder){
+    private void sortData(List<T> data, String columnName, SortOrder sortOrder) {
         try {
             BeanInfo beanInfo = Introspector.getBeanInfo(typeClass);
             final PropertyDescriptor sortByField = Arrays.stream(beanInfo.getPropertyDescriptors()).filter(propertyDescriptor -> propertyDescriptor.getName().equals(columnName)).findFirst().orElseThrow(() -> new RuntimeException("No such field"));
@@ -208,7 +209,7 @@ public class TypedTable<T> extends JTable {
                     if (!(fieldValue instanceof Comparable<?>) && fieldValue != null) {
                         throw new IllegalArgumentException("Field is not comparable!");
                     }
-                    return (Comparable)fieldValue;
+                    return (Comparable) fieldValue;
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     throw new RuntimeException(e);
                 }
@@ -217,10 +218,11 @@ public class TypedTable<T> extends JTable {
             throw new RuntimeException(e);
         }
 
-        if(sortOrder.equals(SortOrder.DESCENDING))
+        if (sortOrder.equals(SortOrder.DESCENDING))
             Collections.reverse(data);
 
     }
+
     /**
      * Actions for pagination
      */
@@ -371,6 +373,7 @@ public class TypedTable<T> extends JTable {
 
     /**
      * Adds GenericSelectionListener - listener which as parameter have selected ithem from row.
+     *
      * @param listener - listener to invoke
      */
     public void addGenericSelectionListener(GenericSelectionListener<T> listener) {
@@ -384,10 +387,11 @@ public class TypedTable<T> extends JTable {
 
     /**
      * Return value from selected row or default when row not found
-     * @param mapper - mapper to map row to result
+     *
+     * @param mapper       - mapper to map row to result
      * @param defaultValue - default value when row not found
+     * @param <E>          - return type of result
      * @return - returns result of function
-     * @param <E> - return type of result
      */
     public <E> E getSelectedValueOrDefault(Function<T, E> mapper, E defaultValue) {
         T selectedItem = getSelectedItem();
@@ -406,18 +410,20 @@ public class TypedTable<T> extends JTable {
 
     /**
      * Checks do pagination is available for current table
+     *
      * @return - true if pagination is enabled
      */
-    public boolean isPaginationEnabled(){
-        return dataList == null  && provider != null && provider.isPaginable();
+    public boolean isPaginationEnabled() {
+        return dataList == null && provider != null && provider.isPaginable();
     }
 
     /**
      * Add function to table at runtime
-     * @param columnName - name of column to add
-     * @param columnClass - class of column to add
+     *
+     * @param columnName        - name of column to add
+     * @param columnClass       - class of column to add
      * @param computingFunction - function passed to result cell
-     * @param <C> - class of result column
+     * @param <C>               - class of result column
      */
     public <C> void addComputedColumn(String columnName, Class<C> columnClass, Function<T, C> computingFunction) {
         TableColumn tableColumn = new TableColumn(columnCreator.getTableColumns().size(), 100);
@@ -432,7 +438,6 @@ public class TypedTable<T> extends JTable {
         } catch (InterruptedException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     /**
