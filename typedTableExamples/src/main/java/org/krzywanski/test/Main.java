@@ -10,7 +10,7 @@ import org.krzywanski.table.SortColumn;
 import org.krzywanski.table.TypedTablePanel;
 import org.krzywanski.table.components.FilterDialog;
 import org.krzywanski.table.constraints.ActionType;
-import org.krzywanski.table.panel.TypedPanel;
+import org.krzywanski.panel.TypedPanel;
 import org.krzywanski.table.providers.DefaultDataPrivder;
 import org.krzywanski.table.providers.IFilterComponent;
 import org.krzywanski.test.dto.TestModelDto;
@@ -81,7 +81,7 @@ public class Main {
 
         frame.add(panel, "grow,push");
 //        frame.add(panel2, "grow,push");
-        frame.add(new TypedPanel<>(Main.getData().get(0)));
+        frame.add(new TypedPanel<>(Main.getData(0,1).get(0)));
         frame.setVisible(true);
         frame.setPreferredSize(new Dimension(1500, 600));
         frame.pack();
