@@ -1,4 +1,4 @@
-package org.krzywanski.table.panel;
+package org.krzywanski.panel;
 
 /**
  * Controller for panel field

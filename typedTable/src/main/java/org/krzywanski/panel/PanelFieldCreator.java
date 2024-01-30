@@ -1,6 +1,6 @@
-package org.krzywanski.table.panel;
+package org.krzywanski.panel;
 
-import org.krzywanski.table.panel.annot.PanelField;
+import org.krzywanski.panel.annot.PanelField;
 import org.krzywanski.table.utils.Pair;
 
 import javax.swing.*;
