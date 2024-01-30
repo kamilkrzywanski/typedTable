@@ -1,12 +1,18 @@
 package org.krzywanski.test;
 
 import net.miginfocom.swing.MigLayout;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 import org.krzywanski.table.SortColumn;
 import org.krzywanski.table.TypedTablePanel;
 import org.krzywanski.table.components.FilterDialog;
 import org.krzywanski.table.constraints.ActionType;
 import org.krzywanski.table.providers.DefaultDataPrivder;
 import org.krzywanski.table.providers.IFilterComponent;
+import org.krzywanski.test.dto.TestModelDto;
+import org.krzywanski.test.mapper.TestModelMapper;
 import org.krzywanski.test.model.TestModel;
 
 import javax.swing.*;
@@ -17,6 +23,8 @@ import java.util.stream.Collectors;
 
 public class Main {
 
+    private static SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+    public static Session session = sessionFactory.openSession();
 
     /**
      * ONLY FOR TEST USING CLASS
@@ -43,11 +51,11 @@ public class Main {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("JTable Example");
         frame.setLayout(new MigLayout());
-        TypedTablePanel<TestModel> panel = TypedTablePanel.getTableWithProvider(new DefaultDataPrivder<>(20, Main::getData, Main::getSize), TestModel.class);
-        TypedTablePanel<TestModel> panel2 = TypedTablePanel.getTableWithData( Main.getAllData(), TestModel.class, 3);
+        TypedTablePanel<TestModelDto> panel = TypedTablePanel.getTableWithProvider(new DefaultDataPrivder<>(20, Main::getData, Main::getSize), TestModelDto.class);
+        TypedTablePanel<TestModelDto> panel2 = TypedTablePanel.getTableWithData( Main.getAllData(), TestModelDto.class, 3);
         panel.addComuptedColumn("Computed column",String.class,  value -> value.getColumnA() + " " + value.getColumnB());
         panel.addGenericSelectionListener(element -> System.out.println(element.getColumnA()));
-        TreeSet<TestModel> collection = new TreeSet<>();
+        TreeSet<TestModelDto> collection = new TreeSet<>();
         panel.addMultiSelectColumn("Multi select column", collection);
         frame.add(panel, "grow,push");
         frame.add(panel2, "grow,push");
@@ -55,10 +63,10 @@ public class Main {
         frame.pack();
     }
 
-    public static List<TestModel> getAllData() {
+    public static List<TestModelDto> getAllData() {
         return Main.getData();
     }
-    public static List<TestModel> getData(int limit, int offest, List<SortColumn> sortColumn, String searchString, ActionType actionType, Map<String, String> extraParams) {
+    public static List<TestModelDto> getData(int limit, int offest, List<SortColumn> sortColumn, String searchString, ActionType actionType, Map<String, String> extraParams) {
         extraParams.forEach((s, s2) -> System.out.println(s + " " + s2));
 //        if (sortColumn != null && !sortColumn.isEmpty() && sortColumn.get(0).getColumnName().equals("columnB")) {
 //
@@ -77,15 +85,9 @@ public class Main {
         return (int) Main.getData().stream().filter(testModel -> testModel.getColumnA().toLowerCase().contains(Objects.requireNonNullElse(searchString, ""))).count();
     }
 
-    static List<TestModel> getData() {
-        List<TestModel> list = new ArrayList<>();
-
-        for (int i = 0; i < 101; i++) {
-            TestModel TestModel2 = new TestModel();
-            TestModel2.setColumnA("TEST VALUE" + i);
-            TestModel2.setColumnB(Double.parseDouble(i + "." + i));
-            list.add(TestModel2);
-        }
-        return list;
+    static List<TestModelDto> getData() {
+        Query<TestModel> list = session.createQuery("from TestModel", TestModel.class);
+        List<TestModel> testModels = list.list();
+        return testModels.stream().map(testModel -> TestModelMapper.mapTestModelToDto(testModel, new TestModelDto())).collect(Collectors.toList());
     }
 }

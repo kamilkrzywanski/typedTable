@@ -1,5 +1,7 @@
 package org.krzywanski.test.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import org.krzywanski.table.annot.MyTableColumn;
 import org.krzywanski.table.annot.ReflectionSort;
 import org.krzywanski.table.annot.TableFilter;
@@ -7,34 +9,25 @@ import org.krzywanski.table.constraints.Alignment;
 
 import java.util.Date;
 
-@ReflectionSort
-@TableFilter(type = String.class, name = "columnA")
-@TableFilter(type = Double.class, name = "columnB", label = "Decimal column")
-@TableFilter(type = TestEnum.class, name = "testEnum", label = "Test enum")
-@TableFilter(type = Boolean.class, name = "testFormatClass", label = "Boolean value")
+@Entity
 public class TestModel implements Comparable<TestModel>{
 
-    @MyTableColumn(label = "XXX", width = 200, sortable = true)
+    @Id
+    private Long id;
     private String columnA;
-
-    @MyTableColumn(label = "Decimal column", format = "0.00$", sortable = true)
     private Double columnB;
-
-    @MyTableColumn(label = "Test label")
     private String columnC;
-
-    @MyTableColumn(label = "DataLable", format = "YYYY", alignment = Alignment.CENTER)
-    private Date date = new Date();
-
-    @MyTableColumn(label = "Test enum")
+    private Date myDate = new Date();
     private TestEnum testEnum = TestEnum.MEDIUM;
-
-    @MyTableColumn(label = "customFormatter")
-    TestFormatClass testFormatClass = new TestFormatClass();
-
-//    @CustomRenderer(renderer = BooleanIconRenderer.class)
-    @MyTableColumn(label = "Boolean value")
     private Boolean booleanValue = true;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Boolean getBooleanValue() {
         return booleanValue;
@@ -68,22 +61,13 @@ public class TestModel implements Comparable<TestModel>{
     }
 
 
-    public Date getDate() {
-        return date;
+    public Date getMyDate() {
+        return myDate;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setMyDate(Date myDate) {
+        this.myDate = myDate;
     }
-
-    public TestFormatClass getTestFormatClass() {
-        return testFormatClass;
-    }
-
-    public void setTestFormatClass(TestFormatClass testFormatClass) {
-        this.testFormatClass = testFormatClass;
-    }
-
 
     public TestEnum getTestEnum() {
         return testEnum;
