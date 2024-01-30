@@ -1,5 +1,6 @@
 package org.krzywanski.test;
 
+import com.formdev.flatlaf.FlatLightLaf;
 import net.miginfocom.swing.MigLayout;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -30,6 +31,9 @@ public class Main {
      * ONLY FOR TEST USING CLASS
      */
     public static void main(String[] args) {
+        FlatLightLaf.setup();
+        UIManager.put("Table.showVerticalLines", true);
+        UIManager.put("Table.showHorizontalLines", true);
         FilterDialog.registerCustomFilterComponent(Boolean.class, new IFilterComponent() {
             final JCheckBox checkBox = new JCheckBox();
             @Override
@@ -51,7 +55,7 @@ public class Main {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("JTable Example");
         frame.setLayout(new MigLayout());
-        TypedTablePanel<TestModelDto> panel = TypedTablePanel.getTableWithProvider(new DefaultDataPrivder<>(20, Main::getData, Main::getSize), TestModelDto.class);
+        TypedTablePanel<TestModelDto> panel = TypedTablePanel.getTableWithProvider(new DefaultDataPrivder<>(10, Main::getData, Main::getSize), TestModelDto.class);
         TypedTablePanel<TestModelDto> panel2 = TypedTablePanel.getTableWithData( Main.getAllData(), TestModelDto.class, 3);
         panel.addComuptedColumn("Computed column",String.class,  value -> value.getColumnA() + " " + value.getColumnB());
         panel.addGenericSelectionListener(element -> System.out.println(element.getColumnA()));
@@ -60,11 +64,12 @@ public class Main {
         frame.add(panel, "grow,push");
         frame.add(panel2, "grow,push");
         frame.setVisible(true);
+        frame.setPreferredSize(new Dimension(1500, 600));
         frame.pack();
     }
 
     public static List<TestModelDto> getAllData() {
-        return Main.getData();
+        return Main.getData(0, Integer.MAX_VALUE);
     }
     public static List<TestModelDto> getData(int limit, int offest, List<SortColumn> sortColumn, String searchString, ActionType actionType, Map<String, String> extraParams) {
         extraParams.forEach((s, s2) -> System.out.println(s + " " + s2));
@@ -77,17 +82,28 @@ public class Main {
 //        }
 
         if(limit == -1)
-            return Main.getData();
-        return Main.getData().stream().filter(testModel -> testModel.getColumnA().toLowerCase().contains(Objects.requireNonNullElse(searchString, ""))).skip(offest).limit(limit).collect(Collectors.toList());
+            return Main.getData(0, Integer.MAX_VALUE);
+        return Main.getData(offest, limit).stream().filter(testModel -> testModel.getColumnA().toLowerCase().contains(Objects.requireNonNullElse(searchString, ""))).collect(Collectors.toList());
     }
 
     public static int getSize(String searchString, Map<String, String> extraParams) {
-        return (int) Main.getData().stream().filter(testModel -> testModel.getColumnA().toLowerCase().contains(Objects.requireNonNullElse(searchString, ""))).count();
+      return getSize();
+//        return (int) Main.getData(0, Integer.MAX_VALUE).stream().filter(testModel -> testModel.getColumnA().toLowerCase().contains(Objects.requireNonNullElse(searchString, ""))).count();
     }
 
-    static List<TestModelDto> getData() {
+    static List<TestModelDto> getData(int from, int limit) {
         Query<TestModel> list = session.createQuery("from TestModel", TestModel.class);
+        list.setFirstResult(from).setMaxResults(limit);
         List<TestModel> testModels = list.list();
-        return testModels.stream().map(testModel -> TestModelMapper.mapTestModelToDto(testModel, new TestModelDto())).collect(Collectors.toList());
+        List<TestModelDto> resultList =  testModels.stream().map(testModel -> TestModelMapper.mapTestModelToDto(testModel, new TestModelDto())).collect(Collectors.toList());
+        System.out.println("Getting data from " + from + " to " + (from + limit));
+        System.out.println("Result list size " + resultList.size());
+        return resultList;
+
+    }
+
+    static int getSize() {
+      Query<TestModel> list = session.createQuery("from TestModel", TestModel.class);
+      return list.list().size();
     }
 }
