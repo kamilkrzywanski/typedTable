@@ -8,7 +8,6 @@ import org.krzywanski.table.providers.GenericSelectionListener;
 import org.krzywanski.table.providers.IFilterComponent;
 import org.krzywanski.table.providers.TableDataProvider;
 import org.krzywanski.table.utils.Page;
-import org.krzywanski.test.TestFormatClass;
 
 import javax.swing.*;
 import java.awt.*;
@@ -60,17 +59,6 @@ public class TypedTablePanel<T> extends JPanel {
         super(new MigLayout());
         table = new TypedTable<>(dataList, typeClass, provider, id);
         createButtons();
-        table.addCustomFormatter(TestFormatClass.class, new Format() {
-            @Override
-            public StringBuffer format(Object obj, StringBuffer toAppendTo, FieldPosition pos) {
-                return new StringBuffer("FORMAT SUCCES");
-            }
-
-            @Override
-            public Object parseObject(String source, ParsePosition pos) {
-                return null;
-            }
-        });
         filterDialog = new FilterDialog((e) -> firstPageAction(), table, this);
         table.addFistPageListener(e -> firstPageAction());
         table.addSearchPhaseSupplier(() -> popupDialog.getText());
@@ -247,5 +235,15 @@ public class TypedTablePanel<T> extends JPanel {
     public void addMultiSelectColumn(String columnName, TreeSet<T> resultList){
         table.addMultiSelectColumn(columnName, resultList);
         firstPageAction();
+    }
+
+    /**
+     * Adds custom formatter for selected class
+     *
+     * @param classFormat - class to format
+     * @param format      - format
+     */
+    public void addCustomFormatter(Class<?> classFormat, Format format) {
+        table.addCustomFormatter(classFormat, format);
     }
 }

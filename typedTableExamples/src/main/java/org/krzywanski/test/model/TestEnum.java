@@ -1,4 +1,4 @@
-package org.krzywanski.test;
+package org.krzywanski.test.model;
 
 public enum TestEnum {
         LOW,

@@ -1,4 +1,4 @@
-package org.krzywanski.test;
+package org.krzywanski.test.model;
 
 import org.krzywanski.table.annot.MyTableColumn;
 import org.krzywanski.table.annot.ReflectionSort;

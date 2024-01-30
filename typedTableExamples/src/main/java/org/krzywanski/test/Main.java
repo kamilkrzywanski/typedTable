@@ -1,4 +1,4 @@
-package org.krzywanski;
+package org.krzywanski.test;
 
 import net.miginfocom.swing.MigLayout;
 import org.krzywanski.table.SortColumn;
@@ -8,7 +8,7 @@ import org.krzywanski.table.constraints.ActionType;
 import org.krzywanski.table.panel.TypedPanel;
 import org.krzywanski.table.providers.DefaultDataPrivder;
 import org.krzywanski.table.providers.IFilterComponent;
-import org.krzywanski.test.TestModel;
+import org.krzywanski.test.model.TestModel;
 
 import javax.swing.*;
 import java.awt.*;

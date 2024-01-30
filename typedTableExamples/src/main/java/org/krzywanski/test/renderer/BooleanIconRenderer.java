@@ -1,4 +1,4 @@
-package org.krzywanski.test;
+package org.krzywanski.test.renderer;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
