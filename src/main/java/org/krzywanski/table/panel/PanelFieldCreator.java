@@ -119,7 +119,7 @@ public class PanelFieldCreator {
                 try
                 {
                     KeyEvent ke = new KeyEvent(evt.getComponent(), KeyEvent.KEY_PRESSED,
-                            System.currentTimeMillis(), InputEvent.CTRL_MASK,
+                            System.currentTimeMillis(), InputEvent.CTRL_DOWN_MASK,
                             KeyEvent.VK_F1, KeyEvent.CHAR_UNDEFINED);
                     evt.getComponent().dispatchEvent(ke);
                 }
