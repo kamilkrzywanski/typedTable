@@ -18,6 +18,10 @@ import java.util.Date;
 @Entity
 public class TestModelDto implements Comparable<TestModelDto>{
 
+    //    @CustomRenderer(renderer = BooleanIconRenderer.class)
+    @MyTableColumn(label = "Boolean value")
+    private Boolean booleanValue = true;
+
     @MyTableColumn(label = "XXX", width = 200, sortable = true)
     private String columnA;
 
@@ -35,10 +39,6 @@ public class TestModelDto implements Comparable<TestModelDto>{
 
     @MyTableColumn(label = "customFormatter")
     TestFormatClass testFormatClass = new TestFormatClass();
-
-    //    @CustomRenderer(renderer = BooleanIconRenderer.class)
-    @MyTableColumn(label = "Boolean value")
-    private Boolean booleanValue = true;
 
     public Boolean getBooleanValue() {
         return booleanValue;

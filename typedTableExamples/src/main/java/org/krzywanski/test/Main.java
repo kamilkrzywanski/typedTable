@@ -81,10 +81,9 @@ public class Main {
                 return null;
             }
         });
-
+        frame.add(new TypedPanel<>(Main.getData(0,1).get(0)),"wrap");
         frame.add(panel, "grow,push");
 //        frame.add(panel2, "grow,push");
-        frame.add(new TypedPanel<>(Main.getData(0,1).get(0)));
         frame.setVisible(true);
         frame.setPreferredSize(new Dimension(1500, 600));
         frame.pack();

@@ -9,11 +9,15 @@ import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.beans.IntrospectionException;
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class PanelFieldCreator {
     final Class<?> dataClass;
@@ -22,24 +26,25 @@ public class PanelFieldCreator {
     }
 
 
-    Map<Component, Component> getComponents() {
-       final Map<Component, Component> componentMap = new HashMap<>();
-       Arrays.stream(dataClass.getDeclaredFields())
-               .map(this::createPanelField)
-               .forEach(componentComponentPair ->
-                       componentMap.put(componentComponentPair.getFirst(),
-                               componentComponentPair.getSecond()));
+    List<FieldControllerElement> getComponents() {
+      return Arrays.stream(dataClass.getDeclaredFields())
+               .map(this::createPanelField).collect(Collectors.toList());
 
-               return componentMap;
     }
 
-    private Pair<Component, Component> createPanelField(Field field) {
+    private FieldControllerElement createPanelField(Field field) {
         Pair<Component, Component> componentPair = createComponent(field);
 
         if(componentPair.getFirst() == null || componentPair.getSecond() == null) {
             System.out.println("Null label for field " + field.getName());
         }
-        return createComponent(field);
+
+        try {
+            return new FieldControllerElement(field.getType(), new PropertyDescriptor(field.getName(), dataClass), componentPair.getFirst(), componentPair.getSecond());
+        } catch (IntrospectionException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     private Pair<Component, Component> createComponent(Field field) {
