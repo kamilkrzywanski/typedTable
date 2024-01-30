@@ -1,6 +1,9 @@
 package org.krzywanski.test;
 
 import com.formdev.flatlaf.FlatLightLaf;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import net.miginfocom.swing.MigLayout;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -109,9 +112,13 @@ public class Main {
     }
 
     static List<TestModelDto> getData(int from, int limit) {
-        Query<TestModel> list = session.createQuery("from TestModel", TestModel.class);
-        list.setFirstResult(from).setMaxResults(limit);
-        List<TestModel> testModels = list.list();
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<TestModel> cr = cb.createQuery(TestModel.class);
+        Root<TestModel> root = cr.from(TestModel.class);
+        cr.select(root);
+        Query<TestModel> query = session.createQuery(cr);
+        query.setFirstResult(from).setMaxResults(limit);
+        List<TestModel> testModels =  query.getResultList();
         List<TestModelDto> resultList =  testModels.stream().map(testModel -> TestModelMapper.mapTestModelToDto(testModel, new TestModelDto())).collect(Collectors.toList());
         System.out.println("Getting data from " + from + " to " + (from + limit));
         System.out.println("Result list size " + resultList.size());
@@ -120,7 +127,12 @@ public class Main {
     }
 
     static int getSize() {
-      Query<TestModel> list = session.createQuery("from TestModel", TestModel.class);
-      return list.list().size();
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<TestModel> cr = cb.createQuery(TestModel.class);
+        Root<TestModel> root = cr.from(TestModel.class);
+        cr.select(root);
+
+        Query<TestModel> query = session.createQuery(cr);
+        return query.getResultList().size();
     }
 }
