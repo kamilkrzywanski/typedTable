@@ -11,6 +11,6 @@
 
     <modules>
         <module>typedTable</module>
-        <module>typedTableIntegration</module>
+        <module>typedTableExamples</module>
     </modules>
 </project>
