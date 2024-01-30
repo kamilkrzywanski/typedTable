@@ -14,10 +14,14 @@ import org.krzywanski.table.providers.DefaultDataPrivder;
 import org.krzywanski.table.providers.IFilterComponent;
 import org.krzywanski.test.dto.TestModelDto;
 import org.krzywanski.test.mapper.TestModelMapper;
+import org.krzywanski.test.model.TestFormatClass;
 import org.krzywanski.test.model.TestModel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.text.FieldPosition;
+import java.text.Format;
+import java.text.ParsePosition;
 import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -61,6 +65,19 @@ public class Main {
         panel.addGenericSelectionListener(element -> System.out.println(element.getColumnA()));
         TreeSet<TestModelDto> collection = new TreeSet<>();
         panel.addMultiSelectColumn("Multi select column", collection);
+
+        panel.addCustomFormatter(TestFormatClass.class, new Format() {
+            @Override
+            public StringBuffer format(Object obj, StringBuffer toAppendTo, FieldPosition pos) {
+                return new StringBuffer("FORMAT");
+            }
+
+            @Override
+            public Object parseObject(String source, ParsePosition pos) {
+                return null;
+            }
+        });
+
         frame.add(panel, "grow,push");
         frame.add(panel2, "grow,push");
         frame.setVisible(true);
