@@ -9,6 +9,9 @@ Simple tool to map Entity to jtable in java
 -Add computed columns
 -Add column with multiselect
 
+Examples of usage yuo can find in:
+https://github.com/kamilkrzywanski/typedTableIntegration
+
 It's olny idea at the moment but by annotations you can create simple table
 like there with export to CSV, EXCEL, Sort mechanism: 
 @annotation @MyTableColumn make entity "table-friendly"
