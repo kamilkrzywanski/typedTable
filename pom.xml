@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.krzywanski</groupId>
-    <artifactId>TypedTable</artifactId>
+    <artifactId>typedTable</artifactId>
     <version>1.0</version>
 
     <properties>
