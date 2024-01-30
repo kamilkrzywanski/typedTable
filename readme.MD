@@ -22,5 +22,5 @@ Custom formatter for objects example:
 
 Incoming features:
 - crud operations on table
-- add select and multiselect panel(needs to make fields editable)
+- create of crud panel for table
 
