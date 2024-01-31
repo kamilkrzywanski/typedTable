@@ -1,9 +1,10 @@
 CREATE TABLE IF NOT EXISTS TestModel (
+    id serial PRIMARY KEY,
     columnA VARCHAR(255),
     columnB DECIMAL,
     columnC VARCHAR(255),
-    date TIMESTAMP,
-    testEnum INTEGER,
+    myDate TIMESTAMP,
+    testEnum SMALLINT,
     testFormatClass VARCHAR(255),
     booleanValue BOOLEAN
 );

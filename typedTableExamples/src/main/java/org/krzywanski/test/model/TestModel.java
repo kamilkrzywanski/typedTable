@@ -7,25 +7,25 @@ import org.krzywanski.table.annot.ReflectionSort;
 import org.krzywanski.table.annot.TableFilter;
 import org.krzywanski.table.constraints.Alignment;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
 public class TestModel implements Comparable<TestModel>{
-
     @Id
-    private Long id;
+    private Integer id;
     private String columnA;
-    private Double columnB;
+    private BigDecimal columnB;
     private String columnC;
     private Date myDate = new Date();
     private TestEnum testEnum = TestEnum.MEDIUM;
     private Boolean booleanValue = true;
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -44,11 +44,11 @@ public class TestModel implements Comparable<TestModel>{
         this.columnA = columnA;
     }
 
-    public Double getColumnB() {
+    public BigDecimal getColumnB() {
         return columnB;
     }
 
-    public void setColumnB(Double columnB) {
+    public void setColumnB(BigDecimal columnB) {
         this.columnB = columnB;
     }
 
