@@ -1,15 +1,18 @@
 package org.krzywanski.panel.fields;
 
-public class StringTextFieldValueController implements FieldValueController<String>{
-    private final javax.swing.JTextField textField;
+import javax.swing.*;
+import java.util.function.Supplier;
 
-    public StringTextFieldValueController(javax.swing.JTextField textField) {
+public class StringTextFieldValueController implements FieldValueController<String>{
+    private final JTextField textField;
+
+    public StringTextFieldValueController(JTextField textField) {
         this.textField = textField;
     }
 
     @Override
-    public java.util.function.Supplier<String> getValue() {
-        return () -> textField.getText();
+    public Supplier<String> getValue() {
+        return textField::getText;
     }
 
     @Override

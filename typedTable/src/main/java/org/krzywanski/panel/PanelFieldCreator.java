@@ -1,9 +1,10 @@
 package org.krzywanski.panel;
 
 import org.krzywanski.panel.annot.PanelField;
+import org.krzywanski.panel.fields.BigDecimalTextFieldValueController;
 import org.krzywanski.panel.fields.BooleanCheckBoxValueController;
+import org.krzywanski.panel.fields.IntegerTextFieldValueController;
 import org.krzywanski.panel.fields.StringTextFieldValueController;
-import org.krzywanski.table.utils.Pair;
 
 import javax.swing.*;
 import javax.swing.text.NumberFormatter;
@@ -13,6 +14,7 @@ import java.awt.event.KeyEvent;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.List;
@@ -59,31 +61,45 @@ public class PanelFieldCreator {
         if(field.getType().equals(Long.class)) {
             return createLongTextField(field);
         }
+        if(field.getType().equals(Short.class)) {
+            return createShortTextField(field);
+        }
+        if(field.getType().equals(BigDecimal.class)) {
+            return createBigDecimalTextField(field);
+        }
 
         field.setFirstComponent(new JLabel("Not supported type + " + field.getType()));
         field.setSecondComponent(new JLabel("Not supported type"));
         return field;
     }
 
+    private FieldControllerElement createBigDecimalTextField(FieldControllerElement field) {
+        return createLabelForTextField(field, createFieldWithFormatter(NumberFormat.getIntegerInstance()));
+    }
+
+    private FieldControllerElement createShortTextField(FieldControllerElement field) {
+        return createLabelForTextField(field, createFieldWithFormatter(NumberFormat.getIntegerInstance()));
+    }
+
 
     private FieldControllerElement createLongTextField(FieldControllerElement field) {
-        return createLabelAndComponent(field, createFieldWithFormatter(NumberFormat.getNumberInstance()));
+        return createLabelForTextField(field, createFieldWithFormatter(NumberFormat.getNumberInstance()));
     }
 
     private FieldControllerElement createFloatTextField(FieldControllerElement field) {
-        return createLabelAndComponent(field, createFieldWithFormatter(NumberFormat.getNumberInstance()));
+        return createLabelForTextField(field, createFieldWithFormatter(NumberFormat.getNumberInstance()));
     }
 
     private FieldControllerElement createDoubleTextField(FieldControllerElement field) {
-        return createLabelAndComponent(field, createFieldWithFormatter(NumberFormat.getNumberInstance()));
+        return createLabelForTextField(field, createFieldWithFormatter(NumberFormat.getNumberInstance()));
     }
 
     private FieldControllerElement createIntegerTextField(FieldControllerElement field) {
-        return createLabelAndComponent(field, createFieldWithFormatter(NumberFormat.getIntegerInstance()));
+        return createLabelForTextField(field, createFieldWithFormatter(NumberFormat.getIntegerInstance()));
     }
 
     private FieldControllerElement createTextField(FieldControllerElement field) {
-       return createLabelAndComponent(field, new JFormattedTextField());
+       return createLabelForTextField(field, new JFormattedTextField());
     }
 
     private FieldControllerElement createCheckBox(FieldControllerElement field) {
@@ -103,10 +119,21 @@ public class PanelFieldCreator {
     }
 
 
-    FieldControllerElement createLabelAndComponent(FieldControllerElement field, JFormattedTextField component) {
+    FieldControllerElement createLabelForTextField(FieldControllerElement field, JFormattedTextField component) {
         field.setFirstComponent(new JLabel(findLabel(field)));
         field.setSecondComponent(component);
-        field.setFieldValueController(new StringTextFieldValueController(component));
+
+        switch (field.getType().getSimpleName()) {
+            case "Integer":
+                field.setFieldValueController(new IntegerTextFieldValueController(component));
+                break;
+            case "String":
+                field.setFieldValueController(new StringTextFieldValueController(component));
+                break;
+            case "BigDecimal":
+                field.setFieldValueController(new BigDecimalTextFieldValueController(component));
+                break;
+        }
 
         return field;
     }
