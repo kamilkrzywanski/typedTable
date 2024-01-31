@@ -8,6 +8,7 @@ import org.krzywanski.table.constraints.Alignment;
 import org.krzywanski.test.model.TestEnum;
 import org.krzywanski.test.model.TestFormatClass;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @ReflectionSort
@@ -22,7 +23,7 @@ public class TestModelDto implements Comparable<TestModelDto>{
     private String columnA;
 
     @MyTableColumn(label = "Decimal column", format = "0.00$", sortable = true)
-    private Double columnB;
+    private BigDecimal columnB;
 
     @MyTableColumn(label = "Test label")
     private String columnC;
@@ -55,11 +56,11 @@ public class TestModelDto implements Comparable<TestModelDto>{
         this.columnA = columnA;
     }
 
-    public Double getColumnB() {
+    public BigDecimal getColumnB() {
         return columnB;
     }
 
-    public void setColumnB(Double columnB) {
+    public void setColumnB(BigDecimal columnB) {
         this.columnB = columnB;
     }
 
