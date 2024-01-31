@@ -1,11 +1,12 @@
 package org.krzywanski.panel;
 
 import org.krzywanski.panel.annot.PanelField;
+import org.krzywanski.panel.fields.BooleanCheckBoxValueController;
+import org.krzywanski.panel.fields.StringTextFieldValueController;
 import org.krzywanski.table.utils.Pair;
 
 import javax.swing.*;
 import javax.swing.text.NumberFormatter;
-import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -14,9 +15,7 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.text.NumberFormat;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class PanelFieldCreator {
@@ -28,26 +27,20 @@ public class PanelFieldCreator {
 
     List<FieldControllerElement> getComponents() {
       return Arrays.stream(dataClass.getDeclaredFields())
-               .map(this::createPanelField).collect(Collectors.toList());
+               .map(this::createFieldControllerElement).collect(Collectors.toList());
 
     }
 
-    private FieldControllerElement createPanelField(Field field) {
-        Pair<Component, Component> componentPair = createComponent(field);
-
-        if(componentPair.getFirst() == null || componentPair.getSecond() == null) {
-            System.out.println("Null label for field " + field.getName());
-        }
-
+    private FieldControllerElement createFieldControllerElement(Field field) {
         try {
-            return new FieldControllerElement(field.getType(), new PropertyDescriptor(field.getName(), dataClass), componentPair.getFirst(), componentPair.getSecond());
+            return createComponent(new FieldControllerElement(field, new PropertyDescriptor(field.getName(), dataClass)));
         } catch (IntrospectionException e) {
             throw new RuntimeException(e);
         }
 
     }
 
-    private Pair<Component, Component> createComponent(Field field) {
+    private FieldControllerElement createComponent(FieldControllerElement field) {
         if(field.getType().equals(Boolean.class)) {
             return createCheckBox(field);
         }
@@ -67,45 +60,55 @@ public class PanelFieldCreator {
             return createLongTextField(field);
         }
 
-        return new Pair<>(new JLabel(), new JLabel());
+        field.setFirstComponent(new JLabel("Not supported type + " + field.getType()));
+        field.setSecondComponent(new JLabel("Not supported type"));
+        return field;
     }
 
 
-    private Pair<Component, Component> createLongTextField(Field field) {
+    private FieldControllerElement createLongTextField(FieldControllerElement field) {
         return createLabelAndComponent(field, createFieldWithFormatter(NumberFormat.getNumberInstance()));
     }
 
-    private Pair<Component, Component> createFloatTextField(Field field) {
+    private FieldControllerElement createFloatTextField(FieldControllerElement field) {
         return createLabelAndComponent(field, createFieldWithFormatter(NumberFormat.getNumberInstance()));
     }
 
-    private Pair<Component, Component> createDoubleTextField(Field field) {
+    private FieldControllerElement createDoubleTextField(FieldControllerElement field) {
         return createLabelAndComponent(field, createFieldWithFormatter(NumberFormat.getNumberInstance()));
     }
 
-    private Pair<Component, Component> createIntegerTextField(Field field) {
+    private FieldControllerElement createIntegerTextField(FieldControllerElement field) {
         return createLabelAndComponent(field, createFieldWithFormatter(NumberFormat.getIntegerInstance()));
     }
 
-    private Pair<Component, Component> createTextField(Field field) {
-       return createLabelAndComponent(field, new JTextField());
+    private FieldControllerElement createTextField(FieldControllerElement field) {
+       return createLabelAndComponent(field, new JFormattedTextField());
     }
 
-    private Pair<Component, Component> createCheckBox(Field field) {
-        return new Pair<>(new JCheckBox(findLabel(field)), null);
+    private FieldControllerElement createCheckBox(FieldControllerElement field) {
+        JCheckBox checkBox = new JCheckBox(findLabel(field));
+        field.setFirstComponent(checkBox);
+        field.setFieldValueController(new BooleanCheckBoxValueController(checkBox));
+
+        return field;
     }
 
-    private String findLabel(Field field) {
-        if(field.isAnnotationPresent(PanelField.class)) {
-            PanelField panelField = field.getAnnotation(PanelField.class);
+    private String findLabel(FieldControllerElement field) {
+        if(field.getField().isAnnotationPresent(PanelField.class)) {
+            PanelField panelField = field.getField().getAnnotation(PanelField.class);
             return panelField.label();
         }
-        return field.getName();
+        return field.getField().getName();
     }
 
 
-    Pair<Component, Component> createLabelAndComponent(Field field, Component component) {
-        return new Pair<>(new JLabel(findLabel(field)), component);
+    FieldControllerElement createLabelAndComponent(FieldControllerElement field, JFormattedTextField component) {
+        field.setFirstComponent(new JLabel(findLabel(field)));
+        field.setSecondComponent(component);
+        field.setFieldValueController(new StringTextFieldValueController(component));
+
+        return field;
     }
 
     private static JFormattedTextField createFieldWithFormatter(NumberFormat format) {

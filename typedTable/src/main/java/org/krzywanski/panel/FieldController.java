@@ -9,6 +9,18 @@ import java.util.List;
  * Pass data to panel
  * Get data from panel
  */
-public class FieldController {
-    List<FieldControllerElement> elements = new ArrayList<>();
+public class FieldController<T> {
+    final List<FieldControllerElement> elements;
+
+    /**
+     * Constructor
+     * @param dataClass class of data
+     */
+    public FieldController(Class<T> dataClass) {
+        this.elements = new PanelFieldCreator(dataClass).getComponents();
+    }
+
+    public List<FieldControllerElement> getElements() {
+        return elements;
+    }
 }
