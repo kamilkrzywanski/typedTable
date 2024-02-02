@@ -78,28 +78,27 @@ public class PanelFieldCreator {
     }
 
     private FieldControllerElement createBigDecimalTextField(FieldControllerElement field) {
-        return createLabelAndInstallControllerForTextField(field, createFieldWithFormatter(NumberFormat.getIntegerInstance()));
+        return createLabelAndInstallControllerForTextField(field, createFieldWithFormatter(NumberFormat.getNumberInstance(), field));
     }
 
     private FieldControllerElement createShortTextField(FieldControllerElement field) {
-        return createLabelAndInstallControllerForTextField(field, createFieldWithFormatter(NumberFormat.getIntegerInstance()));
+        return createLabelAndInstallControllerForTextField(field, createFieldWithFormatter(NumberFormat.getIntegerInstance(), field));
     }
 
-
     private FieldControllerElement createLongTextField(FieldControllerElement field) {
-        return createLabelAndInstallControllerForTextField(field, createFieldWithFormatter(NumberFormat.getNumberInstance()));
+        return createLabelAndInstallControllerForTextField(field, createFieldWithFormatter(NumberFormat.getNumberInstance(), field));
     }
 
     private FieldControllerElement createFloatTextField(FieldControllerElement field) {
-        return createLabelAndInstallControllerForTextField(field, createFieldWithFormatter(NumberFormat.getNumberInstance()));
+        return createLabelAndInstallControllerForTextField(field, createFieldWithFormatter(NumberFormat.getNumberInstance(), field));
     }
 
     private FieldControllerElement createDoubleTextField(FieldControllerElement field) {
-        return createLabelAndInstallControllerForTextField(field, createFieldWithFormatter(NumberFormat.getNumberInstance()));
+        return createLabelAndInstallControllerForTextField(field, createFieldWithFormatter(NumberFormat.getNumberInstance(), field));
     }
 
     private FieldControllerElement createIntegerTextField(FieldControllerElement field) {
-        return createLabelAndInstallControllerForTextField(field, createFieldWithFormatter(NumberFormat.getIntegerInstance()));
+        return createLabelAndInstallControllerForTextField(field, createFieldWithFormatter(NumberFormat.getIntegerInstance(), field));
     }
 
     private FieldControllerElement createTextField(FieldControllerElement field) {
@@ -149,14 +148,11 @@ public class PanelFieldCreator {
         return field;
     }
 
-    private static JFormattedTextField createFieldWithFormatter(NumberFormat format) {
+    private static JFormattedTextField createFieldWithFormatter(NumberFormat format, FieldControllerElement field) {
         NumberFormatter formatter = new NumberFormatter(format);
         //TODO create a factory for this
-        formatter.setValueClass(Integer.class);
-        formatter.setMinimum(0); // Set minimum value as needed
-
+        formatter.setValueClass(field.getType());
         JFormattedTextField formattedTextField = new JFormattedTextField(formatter);
-        formattedTextField.setColumns(10);
 
         // Add a tooltip for the formattedTextField
         formattedTextField.setToolTipText("Enter a valid integer.");
