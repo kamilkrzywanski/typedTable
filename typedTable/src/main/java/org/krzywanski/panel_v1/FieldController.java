@@ -1,6 +1,5 @@
-package org.krzywanski.panel;
+package org.krzywanski.panel_v1;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

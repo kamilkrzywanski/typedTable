@@ -13,7 +13,7 @@ import org.krzywanski.table.SortColumn;
 import org.krzywanski.table.TypedTablePanel;
 import org.krzywanski.table.components.FilterDialog;
 import org.krzywanski.table.constraints.ActionType;
-import org.krzywanski.panel.TypedPanel;
+import org.krzywanski.panel_v1.TypedPanel;
 import org.krzywanski.table.providers.DefaultDataPrivder;
 import org.krzywanski.table.providers.IFilterComponent;
 import org.krzywanski.test.dto.TestModelDto;

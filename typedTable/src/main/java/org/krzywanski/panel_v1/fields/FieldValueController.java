@@ -1,4 +1,4 @@
-package org.krzywanski.panel.fields;
+package org.krzywanski.panel_v1.fields;
 
 import java.util.function.Supplier;
 

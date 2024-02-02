@@ -1,4 +1,4 @@
-package org.krzywanski.panel.annot;
+package org.krzywanski.panel_v1.annot;
 
 import java.lang.annotation.*;
 

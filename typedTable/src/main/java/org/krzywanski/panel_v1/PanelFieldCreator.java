@@ -1,7 +1,7 @@
-package org.krzywanski.panel;
+package org.krzywanski.panel_v1;
 
-import org.krzywanski.panel.annot.PanelField;
-import org.krzywanski.panel.fields.*;
+import org.krzywanski.panel_v1.annot.PanelField;
+import org.krzywanski.panel_v1.fields.*;
 
 import javax.swing.*;
 import javax.swing.text.NumberFormatter;

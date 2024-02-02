@@ -1,13 +1,10 @@
-package org.krzywanski.panel;
+package org.krzywanski.panel_v1;
 
-import org.krzywanski.panel.fields.FieldValueController;
+import org.krzywanski.panel_v1.fields.FieldValueController;
 
-import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class FieldControllerElement {
     /**

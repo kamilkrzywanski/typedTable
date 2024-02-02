@@ -1,4 +1,4 @@
-package org.krzywanski.panel;
+package org.krzywanski.panel_v1;
 
 import net.miginfocom.swing.MigLayout;
 
