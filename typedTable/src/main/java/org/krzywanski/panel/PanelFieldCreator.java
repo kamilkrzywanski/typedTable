@@ -1,10 +1,7 @@
 package org.krzywanski.panel;
 
 import org.krzywanski.panel.annot.PanelField;
-import org.krzywanski.panel.fields.BigDecimalTextFieldValueController;
-import org.krzywanski.panel.fields.BooleanCheckBoxValueController;
-import org.krzywanski.panel.fields.IntegerTextFieldValueController;
-import org.krzywanski.panel.fields.StringTextFieldValueController;
+import org.krzywanski.panel.fields.*;
 
 import javax.swing.*;
 import javax.swing.text.NumberFormatter;
@@ -67,39 +64,46 @@ public class PanelFieldCreator {
         if(field.getType().equals(BigDecimal.class)) {
             return createBigDecimalTextField(field);
         }
+        if(field.getType().isEnum()) {
+            return createEnumComboBox(field);
+        }
 
         field.setFirstComponent(new JLabel("Not supported type + " + field.getType()));
         field.setSecondComponent(new JLabel("Not supported type"));
         return field;
     }
 
+    private FieldControllerElement createEnumComboBox(FieldControllerElement field) {
+        return createLabelAndInstallControllerForComboBox(field, new JComboBox<>(field.getType().getEnumConstants()));
+    }
+
     private FieldControllerElement createBigDecimalTextField(FieldControllerElement field) {
-        return createLabelForTextField(field, createFieldWithFormatter(NumberFormat.getIntegerInstance()));
+        return createLabelAndInstallControllerForTextField(field, createFieldWithFormatter(NumberFormat.getIntegerInstance()));
     }
 
     private FieldControllerElement createShortTextField(FieldControllerElement field) {
-        return createLabelForTextField(field, createFieldWithFormatter(NumberFormat.getIntegerInstance()));
+        return createLabelAndInstallControllerForTextField(field, createFieldWithFormatter(NumberFormat.getIntegerInstance()));
     }
 
 
     private FieldControllerElement createLongTextField(FieldControllerElement field) {
-        return createLabelForTextField(field, createFieldWithFormatter(NumberFormat.getNumberInstance()));
+        return createLabelAndInstallControllerForTextField(field, createFieldWithFormatter(NumberFormat.getNumberInstance()));
     }
 
     private FieldControllerElement createFloatTextField(FieldControllerElement field) {
-        return createLabelForTextField(field, createFieldWithFormatter(NumberFormat.getNumberInstance()));
+        return createLabelAndInstallControllerForTextField(field, createFieldWithFormatter(NumberFormat.getNumberInstance()));
     }
 
     private FieldControllerElement createDoubleTextField(FieldControllerElement field) {
-        return createLabelForTextField(field, createFieldWithFormatter(NumberFormat.getNumberInstance()));
+        return createLabelAndInstallControllerForTextField(field, createFieldWithFormatter(NumberFormat.getNumberInstance()));
     }
 
     private FieldControllerElement createIntegerTextField(FieldControllerElement field) {
-        return createLabelForTextField(field, createFieldWithFormatter(NumberFormat.getIntegerInstance()));
+        return createLabelAndInstallControllerForTextField(field, createFieldWithFormatter(NumberFormat.getIntegerInstance()));
     }
 
     private FieldControllerElement createTextField(FieldControllerElement field) {
-       return createLabelForTextField(field, new JFormattedTextField());
+       return createLabelAndInstallControllerForTextField(field, new JFormattedTextField());
     }
 
     private FieldControllerElement createCheckBox(FieldControllerElement field) {
@@ -119,7 +123,7 @@ public class PanelFieldCreator {
     }
 
 
-    FieldControllerElement createLabelForTextField(FieldControllerElement field, JFormattedTextField component) {
+    FieldControllerElement createLabelAndInstallControllerForTextField(FieldControllerElement field, JFormattedTextField component) {
         field.setFirstComponent(new JLabel(findLabel(field)));
         field.setSecondComponent(component);
 
@@ -138,8 +142,16 @@ public class PanelFieldCreator {
         return field;
     }
 
+    private FieldControllerElement createLabelAndInstallControllerForComboBox(FieldControllerElement field, JComboBox<?> jComboBox) {
+        field.setFirstComponent(new JLabel(findLabel(field)));
+        field.setSecondComponent(jComboBox);
+        field.setFieldValueController(new ComboBoxValueController<>(jComboBox));
+        return field;
+    }
+
     private static JFormattedTextField createFieldWithFormatter(NumberFormat format) {
         NumberFormatter formatter = new NumberFormatter(format);
+        //TODO create a factory for this
         formatter.setValueClass(Integer.class);
         formatter.setMinimum(0); // Set minimum value as needed
 
