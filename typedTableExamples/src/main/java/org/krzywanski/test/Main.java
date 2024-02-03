@@ -9,17 +9,21 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
+import org.jdesktop.swingx.JXDatePicker;
+import org.krzywanski.panel_v1.TypedPanelFields;
+import org.krzywanski.panel_v1.fields.DefaultFieldProvider;
 import org.krzywanski.table.SortColumn;
 import org.krzywanski.table.TypedTablePanel;
 import org.krzywanski.table.components.FilterDialog;
 import org.krzywanski.table.constraints.ActionType;
-import org.krzywanski.panel_v1.TypedPanel;
+import org.krzywanski.panel_v1.TypedAutoPanel;
 import org.krzywanski.table.providers.DefaultDataPrivder;
 import org.krzywanski.table.providers.IFilterComponent;
 import org.krzywanski.test.dto.TestModelDto;
 import org.krzywanski.test.mapper.TestModelMapper;
 import org.krzywanski.test.model.TestFormatClass;
 import org.krzywanski.test.model.TestModel;
+import org.krzywanski.test.panelfield.DateValueController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,6 +43,7 @@ public class Main {
      * ONLY FOR TEST USING CLASS
      */
     public static void main(String[] args) {
+        TypedPanelFields.registerField(Date.class, new DefaultFieldProvider<>(new JXDatePicker(), component -> new DateValueController(component)));
         FlatLightLaf.setup();
         UIManager.put("Table.showVerticalLines", true);
         UIManager.put("Table.showHorizontalLines", true);
@@ -81,8 +86,10 @@ public class Main {
                 return null;
             }
         });
-        frame.add(new TypedPanel<>(Main.getData(0,1).get(0)),"wrap");
+        frame.add(new TypedAutoPanel<>(Main.getData(0,1).get(0)),"wrap");
         frame.add(panel, "grow,push");
+//        JXDatePicker datePicker = new JXDatePicker();
+//        datePicker.set
 //        frame.add(panel2, "grow,push");
         frame.setVisible(true);
         frame.setPreferredSize(new Dimension(1500, 600));

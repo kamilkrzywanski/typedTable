@@ -2,6 +2,7 @@ package org.krzywanski.panel_v1;
 
 import org.krzywanski.panel_v1.fields.FieldValueController;
 
+import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
@@ -30,7 +31,7 @@ public class FieldControllerElement {
      */
     Component secondComponent;
 
-    FieldValueController<Object> fieldValueController;
+    FieldValueController<Object, JComponent> fieldValueController;
 
     /**
      * Constructor
@@ -85,11 +86,14 @@ public class FieldControllerElement {
     }
 
 
-    public FieldValueController<Object> getFieldValueController() {
+    public FieldValueController<Object, JComponent> getFieldValueController() {
         return fieldValueController;
     }
 
-    public void setFieldValueController(FieldValueController<?> fieldValueController) {
-        this.fieldValueController = (FieldValueController<Object>) fieldValueController;
+    public void setFieldValueController(FieldValueController<?, ?> fieldValueController) {
+        this.fieldValueController = (FieldValueController<Object, JComponent>) fieldValueController;
+    }
+    public void setEditable(boolean aFlag) {
+
     }
 }

@@ -40,6 +40,16 @@ public class PanelFieldCreator {
     }
 
     private FieldControllerElement createComponent(FieldControllerElement field) {
+
+        if(TypedPanelFields.getField(field.getType()) != null) {
+            FieldProvider<?> fieldProvider = TypedPanelFields.getField(field.getType());
+
+            field.setFirstComponent(new JLabel(findLabel(field)));
+            field.setSecondComponent(fieldProvider.getComponent());
+            field.setFieldValueController(fieldProvider.getController());
+            return field;
+        }
+
         if(field.getType().equals(Boolean.class)) {
             return createCheckBox(field);
         }

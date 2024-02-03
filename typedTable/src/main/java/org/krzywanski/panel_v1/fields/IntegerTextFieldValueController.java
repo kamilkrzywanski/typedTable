@@ -1,9 +1,10 @@
 package org.krzywanski.panel_v1.fields;
 
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
 import java.util.function.Supplier;
 
-public class IntegerTextFieldValueController implements FieldValueController<Integer>{
+public class IntegerTextFieldValueController implements DefaultTextFieldValueController<Integer>{
     private final JFormattedTextField textField;
 
     public IntegerTextFieldValueController(JFormattedTextField textField) {
@@ -11,8 +12,8 @@ public class IntegerTextFieldValueController implements FieldValueController<Int
     }
 
     @Override
-    public Supplier<Integer> getValue() {
-        return () -> (Integer) textField.getValue();
+    public Integer getValue() {
+        return (Integer) textField.getValue();
     }
 
     @Override
@@ -20,4 +21,8 @@ public class IntegerTextFieldValueController implements FieldValueController<Int
         textField.setValue(value.getValue());
     }
 
+    @Override
+    public JTextComponent getComponent() {
+        return textField;
+    }
 }

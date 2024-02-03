@@ -1,8 +1,11 @@
 package org.krzywanski.panel_v1.fields;
 
-import java.util.function.Supplier;
+import javax.swing.*;
 
-public interface FieldValueController<T> {
-    Supplier<T> getValue();
+public interface FieldValueController<T, R extends JComponent> {
+    T getValue();
     void setValue(FieldValueSupplier<T> value);
+
+    void setEditable(boolean enabled);
+    R getComponent();
 }
