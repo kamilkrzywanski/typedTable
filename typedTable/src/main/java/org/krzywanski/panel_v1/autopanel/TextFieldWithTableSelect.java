@@ -5,6 +5,7 @@ import org.krzywanski.table.TypedTable;
 import org.krzywanski.table.TypedTablePanel;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class TextFieldWithTableSelect<T> extends JPanel {
     T currentValue;
@@ -35,8 +36,8 @@ public class TextFieldWithTableSelect<T> extends JPanel {
             dialog.setVisible(true);
 
         });
-
-        add(textField);
+        setLayout(new MigLayout("gapx 0, insets 0"));
+        add(textField, "grow, push");
         add(button);
         table.firstPageAction();
     }

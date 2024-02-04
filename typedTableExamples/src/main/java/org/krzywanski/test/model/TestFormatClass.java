@@ -3,13 +3,16 @@ package org.krzywanski.test.model;
 import org.krzywanski.table.annot.MyTableColumn;
 
 public class TestFormatClass {
-
     @MyTableColumn
-    private String value = "test";
+    private String value;
+
+    public TestFormatClass(String value) {
+        this.value = value;
+    }
 
     @Override
     public String toString() {
-        return "FormatClass{}";
+        return value;
     }
 
     public String getValue() {

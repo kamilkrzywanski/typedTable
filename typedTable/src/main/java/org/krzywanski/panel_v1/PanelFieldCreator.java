@@ -46,7 +46,8 @@ public class PanelFieldCreator {
 
         //IN CASE OF USE addDataEditor() moethod
         if(fieldControllers.containsKey(field.getField().getName())){
-            field.setFirstComponent(fieldControllers.get(field.getField().getName()).getComponent());
+            field.setFirstComponent(new JLabel(findLabel(field)));
+            field.setSecondComponent(fieldControllers.get(field.getField().getName()).getComponent());
             field.setFieldValueController(fieldControllers.get(field.getField().getName()));
             return field;
         }

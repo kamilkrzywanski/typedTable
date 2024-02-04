@@ -90,7 +90,7 @@ public class Main {
         });
         TypedAutoPanel<TestModelDto> autoPanel = new TypedAutoPanel<>(Main.getData(0,1).get(0));
 
-        TypedTablePanel<TestFormatClass> selectPanel = TypedTablePanel.getTableWithData(List.of(new TestFormatClass(), new TestFormatClass()), TestFormatClass.class);
+        TypedTablePanel<TestFormatClass> selectPanel = TypedTablePanel.getTableWithData(List.of(new TestFormatClass("A"), new TestFormatClass("B")), TestFormatClass.class);
         TableValueController<TestFormatClass> valueController = new TableValueController<>(new TextFieldWithTableSelect<>(selectPanel));
         autoPanel.addDataEditor("testFormatClass", TestFormatClass.class, valueController);
 

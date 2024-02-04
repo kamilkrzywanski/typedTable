@@ -39,7 +39,7 @@ public class TestModelDto implements Comparable<TestModelDto>{
     private TestEnum testEnum = TestEnum.MEDIUM;
 
     @MyTableColumn(label = "customFormatter")
-    TestFormatClass testFormatClass = new TestFormatClass();
+    TestFormatClass testFormatClass = new TestFormatClass("X");
 
     public Boolean getBooleanValue() {
         return booleanValue;
