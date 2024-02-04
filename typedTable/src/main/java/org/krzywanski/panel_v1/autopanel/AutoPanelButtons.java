@@ -1,8 +1,6 @@
 package org.krzywanski.panel_v1.autopanel;
 
 import javax.swing.*;
-import java.lang.reflect.InvocationTargetException;
-import java.util.function.Supplier;
 
 public class AutoPanelButtons<T> extends JPanel {
     final TypedAutoPanel<T> dataPanel;
