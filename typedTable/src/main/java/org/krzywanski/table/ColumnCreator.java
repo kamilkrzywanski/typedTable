@@ -50,6 +50,10 @@ public class ColumnCreator {
             fields.sort(Comparator.comparing(item -> columnsNamesOrdered.indexOf(item.getField().getName())));
         }
 
+        if(fields.stream().filter(fieldMock -> fieldMock.getField().isAnnotationPresent(MyTableColumn.class)).count() == 0){
+            throw new RuntimeException("No fields with MyTableColumn annotation at class " + classType.getCanonicalName());
+        }
+
         for (FieldMock field : fields) {
             PropertyDescriptor pd = propertyDescriptors.stream().
                     filter(propertyDescriptor -> propertyDescriptor.getName().equals(field.getName())).
