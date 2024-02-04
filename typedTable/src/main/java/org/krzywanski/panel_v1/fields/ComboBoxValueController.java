@@ -22,7 +22,7 @@ public class ComboBoxValueController<T> implements FieldValueController<T, JComb
 
     @Override
     public void setEditable(boolean enabled) {
-        comboBox.setEditable(enabled);
+        comboBox.setEnabled(enabled);
     }
 
     @Override

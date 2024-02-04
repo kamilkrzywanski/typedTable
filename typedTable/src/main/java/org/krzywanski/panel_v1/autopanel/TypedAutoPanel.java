@@ -1,6 +1,7 @@
-package org.krzywanski.panel_v1;
+package org.krzywanski.panel_v1.autopanel;
 
 import net.miginfocom.swing.MigLayout;
+import org.krzywanski.panel_v1.FieldController;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
@@ -11,7 +12,7 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class TypedAutoPanel<T> extends JPanel {
     
-    private final T data;
+    private T data;
 
     private final Class<T> dataClass;
 
@@ -23,40 +24,16 @@ public class TypedAutoPanel<T> extends JPanel {
         this.dataClass = (Class<T>) data.getClass();
         this.fieldController = new FieldController<>(dataClass);
         setLayout(new MigLayout());
+
+    }
+    public TypedAutoPanel<T> buildPanel(){
         addFields();
-        addControllButtons();
-        fillWithData(data);
+        add(new AutoPanelButtons<>(this));
+        fillWithData();
+        return this;
     }
 
-    private void addControllButtons() {
-        JButton cancelButton = new JButton("Cancel");
-        cancelButton.addActionListener(e -> fillWithData(data));
-        add(cancelButton, "grow");
-
-
-        JButton editButton = new JButton("Edit");
-        editButton.addActionListener(e -> {
-            fieldController.getElements().stream().filter(el -> el.getFieldValueController() != null).forEach((element) -> {
-                element.getFieldValueController().setEditable(true);
-            });
-        });
-
-
-
-        JButton saveButton = new JButton("Save");
-        saveButton.addActionListener(e -> {
-            fieldController.getElements().stream().filter(el -> el.getFieldValueController() != null).forEach((element) -> {
-                try {
-                    element.getPropertyDescriptor().getWriteMethod().invoke(data, element.getFieldValueController().getValue());
-                } catch (IllegalAccessException | InvocationTargetException ex) {
-                    throw new RuntimeException(ex);
-                }
-            });
-        });
-        add(saveButton, "grow, span 2, wrap");
-    }
-
-    private void fillWithData(T data) {
+    protected void fillWithData() {
         fieldController.getElements().stream().filter(el -> el.getFieldValueController() != null).forEach((element) -> {
             element.getFieldValueController().setEditable(false);
         });
@@ -80,6 +57,22 @@ public class TypedAutoPanel<T> extends JPanel {
             add(element.getFirstComponent(), element.getSecondComponent() != null ? "grow" : "grow, span 2, wrap");
             if(element.getSecondComponent() != null)
                 add(element.getSecondComponent(), "grow, wrap");
+        });
+    }
+
+    protected void saveChanges(){
+        fieldController.getElements().stream().filter(el -> el.getFieldValueController() != null).forEach((element) -> {
+            try {
+                element.getPropertyDescriptor().getWriteMethod().invoke(data, element.getFieldValueController().getValue());
+            } catch (IllegalAccessException | InvocationTargetException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+    }
+
+    protected void setFieldsEditable(boolean enabled) {
+        fieldController.getElements().stream().filter(el -> el.getFieldValueController() != null).forEach((element) -> {
+            element.getFieldValueController().setEditable(enabled);
         });
     }
 }

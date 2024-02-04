@@ -16,7 +16,7 @@ import org.krzywanski.table.SortColumn;
 import org.krzywanski.table.TypedTablePanel;
 import org.krzywanski.table.components.FilterDialog;
 import org.krzywanski.table.constraints.ActionType;
-import org.krzywanski.panel_v1.TypedAutoPanel;
+import org.krzywanski.panel_v1.autopanel.TypedAutoPanel;
 import org.krzywanski.table.providers.DefaultDataPrivder;
 import org.krzywanski.table.providers.IFilterComponent;
 import org.krzywanski.test.dto.TestModelDto;
@@ -86,7 +86,9 @@ public class Main {
                 return null;
             }
         });
-        frame.add(new TypedAutoPanel<>(Main.getData(0,1).get(0)),"wrap");
+        TypedAutoPanel<TestModelDto> autoPanel = new TypedAutoPanel<>(Main.getData(0,1).get(0));
+
+        frame.add(autoPanel.buildPanel(),"wrap");
         frame.add(panel, "grow,push");
 //        JXDatePicker datePicker = new JXDatePicker();
 //        datePicker.set
