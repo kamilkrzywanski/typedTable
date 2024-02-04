@@ -88,6 +88,9 @@ public class Main {
         });
         TypedAutoPanel<TestModelDto> autoPanel = new TypedAutoPanel<>(Main.getData(0,1).get(0));
 
+
+        autoPanel.addDataEditor("columnA",TestFormatClass.class );
+
         frame.add(autoPanel.buildPanel(),"wrap");
         frame.add(panel, "grow,push");
 //        JXDatePicker datePicker = new JXDatePicker();

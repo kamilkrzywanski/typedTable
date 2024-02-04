@@ -75,4 +75,7 @@ public class TypedAutoPanel<T> extends JPanel {
             element.getFieldValueController().setEditable(enabled);
         });
     }
+
+    public <R> void addDataEditor(String columnA, R columnClass) {
+    }
 }
