@@ -1,5 +1,7 @@
 package org.krzywanski.panel_v1;
 
+import org.krzywanski.panel_v1.fields.FieldValueController;
+
 import java.util.List;
 
 /**
@@ -9,17 +11,24 @@ import java.util.List;
  * Get data from panel
  */
 public class FieldController<T> {
-    final List<FieldControllerElement> elements;
+    final Class<T> dataClass;
+
+    final PanelFieldCreator panelFieldCreator;
 
     /**
      * Constructor
      * @param dataClass class of data
      */
     public FieldController(Class<T> dataClass) {
-        this.elements = new PanelFieldCreator(dataClass).getComponents();
+        this.dataClass = dataClass;
+        this.panelFieldCreator = new PanelFieldCreator(dataClass);
     }
 
     public List<FieldControllerElement> getElements() {
-        return elements;
+        return panelFieldCreator.getComponents();
+    }
+
+    public <R> void addDataEditor(String fieldName, R columnClass, FieldValueController<? extends R,?> fieldValueController) {
+        panelFieldCreator.addDataEditor(fieldName, columnClass, fieldValueController);
     }
 }

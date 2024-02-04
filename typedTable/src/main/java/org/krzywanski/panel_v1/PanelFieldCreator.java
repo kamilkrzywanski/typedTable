@@ -14,11 +14,14 @@ import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class PanelFieldCreator {
     final Class<?> dataClass;
+    final Map<String, FieldValueController<?, ?>> fieldControllers = new HashMap<>();
     PanelFieldCreator(Class<?> dataClass) {
         this.dataClass = dataClass;
     }
@@ -40,6 +43,13 @@ public class PanelFieldCreator {
     }
 
     private FieldControllerElement createComponent(FieldControllerElement field) {
+
+        //IN CASE OF USE addDataEditor() moethod
+        if(fieldControllers.containsKey(field.getField().getName())){
+            field.setFirstComponent(fieldControllers.get(field.getField().getName()).getComponent());
+            field.setFieldValueController(fieldControllers.get(field.getField().getName()));
+            return field;
+        }
 
         if(TypedPanelFields.getField(field.getType()) != null) {
             FieldProvider<?> fieldProvider = TypedPanelFields.getField(field.getType());
@@ -182,5 +192,9 @@ public class PanelFieldCreator {
         });
 
         return formattedTextField;
+    }
+
+    protected  <R> void addDataEditor(String fieldName, R columnClass, FieldValueController<? ,?> fieldValueController) {
+        fieldControllers.put(fieldName, fieldValueController);
     }
 }

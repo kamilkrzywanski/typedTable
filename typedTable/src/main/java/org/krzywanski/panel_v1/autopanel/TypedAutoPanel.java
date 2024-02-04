@@ -2,6 +2,8 @@ package org.krzywanski.panel_v1.autopanel;
 
 import net.miginfocom.swing.MigLayout;
 import org.krzywanski.panel_v1.FieldController;
+import org.krzywanski.panel_v1.fields.FieldValueController;
+import org.krzywanski.panel_v1.fields.TableValueController;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
@@ -76,6 +78,8 @@ public class TypedAutoPanel<T> extends JPanel {
         });
     }
 
-    public <R> void addDataEditor(String columnA, R columnClass) {
+    public <R> void addDataEditor(String fieldName, R columnClass, FieldValueController<? extends R, ?> fieldValueController) {
+        fieldController.addDataEditor(fieldName, columnClass, fieldValueController);
     }
+
 }

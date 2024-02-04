@@ -11,7 +11,9 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 import org.jdesktop.swingx.JXDatePicker;
 import org.krzywanski.panel_v1.TypedPanelFields;
+import org.krzywanski.panel_v1.autopanel.TextFieldWithTableSelect;
 import org.krzywanski.panel_v1.fields.DefaultFieldProvider;
+import org.krzywanski.panel_v1.fields.TableValueController;
 import org.krzywanski.table.SortColumn;
 import org.krzywanski.table.TypedTablePanel;
 import org.krzywanski.table.components.FilterDialog;
@@ -88,8 +90,9 @@ public class Main {
         });
         TypedAutoPanel<TestModelDto> autoPanel = new TypedAutoPanel<>(Main.getData(0,1).get(0));
 
-
-        autoPanel.addDataEditor("columnA",TestFormatClass.class );
+        TypedTablePanel<TestFormatClass> selectPanel = TypedTablePanel.getTableWithData(List.of(new TestFormatClass(), new TestFormatClass()), TestFormatClass.class);
+        TableValueController<TestFormatClass> valueController = new TableValueController<>(new TextFieldWithTableSelect<>(selectPanel));
+        autoPanel.addDataEditor("testFormatClass", TestFormatClass.class, valueController);
 
         frame.add(autoPanel.buildPanel(),"wrap");
         frame.add(panel, "grow,push");
