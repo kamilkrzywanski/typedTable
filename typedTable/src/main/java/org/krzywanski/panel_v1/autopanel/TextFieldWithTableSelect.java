@@ -6,12 +6,15 @@ import org.krzywanski.table.TypedTablePanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class TextFieldWithTableSelect<T> extends JPanel {
     T currentValue;
     final JTextField textField = new JTextField();
     final TypedTablePanel<T> table;
     final JButton button = new JButton("...");
+    final JButton okBUtton =  new JButton("OK");
 
     public TextFieldWithTableSelect(TypedTablePanel<T> table) {
         this.table = table;
@@ -20,10 +23,19 @@ public class TextFieldWithTableSelect<T> extends JPanel {
         button.addActionListener(e ->{
             JDialog dialog = new JDialog();
             dialog.setLayout(new MigLayout());
+
+            table.addTableKeyListener(new KeyAdapter() {
+                @Override
+                public void keyPressed(KeyEvent e) {
+                    if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                        okBUtton.doClick();
+                    }
+                }
+            });
+
             dialog.add(table, "grow, span 2, wrap");
             dialog.add(new JButton("Cancel"));
 
-           JButton okBUtton =  new JButton("OK");
            okBUtton.addActionListener(e1 -> {
                 currentValue = table.getSelectedItem();
                 textField.setText(currentValue.toString());
@@ -44,6 +56,7 @@ public class TextFieldWithTableSelect<T> extends JPanel {
     }
 
     public void setTextField(T value){
+        currentValue = value;
         textField.setText(value.toString());
     }
     public T getCurrentValue() {

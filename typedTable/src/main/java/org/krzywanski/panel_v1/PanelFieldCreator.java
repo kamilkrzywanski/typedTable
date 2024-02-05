@@ -2,6 +2,7 @@ package org.krzywanski.panel_v1;
 
 import org.krzywanski.panel_v1.annot.PanelField;
 import org.krzywanski.panel_v1.fields.*;
+import org.krzywanski.table.annot.MyTableColumn;
 
 import javax.swing.*;
 import javax.swing.text.NumberFormatter;
@@ -27,10 +28,16 @@ public class PanelFieldCreator {
      * Value - field controller
      */
     final Map<String, FieldValueController<?, ?>> fieldControllers = new HashMap<>();
+    final boolean useFieldsFromTable;
 
     List<FieldControllerElement> components;
     PanelFieldCreator(Class<?> dataClass) {
+        this(dataClass, true);
+    }
+
+    PanelFieldCreator(Class<?> dataClass, boolean useFieldsFromTable) {
         this.dataClass = dataClass;
+        this.useFieldsFromTable = useFieldsFromTable;
     }
 
 
@@ -146,6 +153,15 @@ public class PanelFieldCreator {
     }
 
     private String findLabel(FieldControllerElement field) {
+
+        if(useFieldsFromTable && field.getField().isAnnotationPresent(MyTableColumn.class) && !field.getField().isAnnotationPresent(PanelField.class)) {
+            MyTableColumn panelField = field.getField().getAnnotation(MyTableColumn.class);
+
+            if(!panelField.label().isEmpty()) {
+                return panelField.label();
+            }
+        }
+
         if(field.getField().isAnnotationPresent(PanelField.class)) {
             PanelField panelField = field.getField().getAnnotation(PanelField.class);
             return panelField.label();

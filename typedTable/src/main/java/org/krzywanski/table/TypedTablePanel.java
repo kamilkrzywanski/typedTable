@@ -11,6 +11,8 @@ import org.krzywanski.table.utils.Page;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.text.FieldPosition;
 import java.text.Format;
@@ -247,5 +249,13 @@ public class TypedTablePanel<T> extends JPanel {
      */
     public void addCustomFormatter(Class<?> classFormat, Format format) {
         table.addCustomFormatter(classFormat, format);
+    }
+
+    public void addTableMouseListener(MouseListener listener){
+        table.addMouseListener(listener);
+    }
+
+    public void addTableKeyListener(KeyListener listener){
+        table.addKeyListener(listener);
     }
 }

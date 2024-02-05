@@ -30,7 +30,7 @@ public class TypedAutoPanel<T> extends JPanel {
     }
     public TypedAutoPanel<T> buildPanel(){
         addFields();
-        add(new AutoPanelButtons<>(this));
+        add(new AutoPanelButtons<>(this), "grow, span 3");
         fillWithData();
         return this;
     }
