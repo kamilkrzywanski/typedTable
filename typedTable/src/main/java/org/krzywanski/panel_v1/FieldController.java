@@ -28,7 +28,7 @@ public class FieldController<T> {
         return panelFieldCreator.getComponents();
     }
 
-    public <R> void addDataEditor(String fieldName, R columnClass, FieldValueController<? extends R,?> fieldValueController) {
+    public <R> void addDataEditor(String fieldName, Class<R> columnClass, FieldValueController<? extends R,?> fieldValueController) {
         panelFieldCreator.addDataEditor(fieldName, columnClass, fieldValueController);
     }
 }

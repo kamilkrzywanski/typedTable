@@ -76,7 +76,7 @@ public class TypedAutoPanel<T> extends JPanel {
         });
     }
 
-    public <R> void addDataEditor(String fieldName, R columnClass, FieldValueController<? extends R, ?> fieldValueController) {
+    public <R> void addDataEditor(String fieldName, Class<R> columnClass, FieldValueController<? extends R, ?> fieldValueController) {
         fieldController.addDataEditor(fieldName, columnClass, fieldValueController);
     }
 

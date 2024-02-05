@@ -21,6 +21,11 @@ import java.util.stream.Collectors;
 
 public class PanelFieldCreator {
     final Class<?> dataClass;
+    /**
+     * Map of controllers for custom field
+     * Key - field name
+     * Value - field controller
+     */
     final Map<String, FieldValueController<?, ?>> fieldControllers = new HashMap<>();
 
     List<FieldControllerElement> components;
@@ -201,7 +206,19 @@ public class PanelFieldCreator {
         return formattedTextField;
     }
 
-    protected  <R> void addDataEditor(String fieldName, R columnClass, FieldValueController<? ,?> fieldValueController) {
+    protected  <R> void addDataEditor(String fieldName, Class<R> columnClass, FieldValueController<? ,?> fieldValueController) {
+        validateEditor(fieldName, columnClass);
         fieldControllers.put(fieldName, fieldValueController);
+    }
+
+    public void validateEditor(String fieldName, Class<?> columnClass){
+        Arrays.stream(dataClass.getDeclaredFields())
+                .filter(field -> field.getName().equals(fieldName))
+                .findFirst()
+                .ifPresent(field -> {
+                    if(!field.getType().equals(columnClass)){
+                        throw new RuntimeException("Field type is not compatible with column class");
+                    }
+                });
     }
 }
