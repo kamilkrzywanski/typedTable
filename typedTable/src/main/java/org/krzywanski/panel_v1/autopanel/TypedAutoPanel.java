@@ -16,14 +16,10 @@ public class TypedAutoPanel<T> extends JPanel {
     
     private T data;
 
-    private final Class<T> dataClass;
-
     FieldController<T> fieldController;
 
-    @SuppressWarnings("unchecked")
-    public TypedAutoPanel(T data) {
+    public TypedAutoPanel(T data, Class<T> dataClass) {
         this.data = data;
-        this.dataClass = (Class<T>) data.getClass();
         this.fieldController = new FieldController<>(dataClass);
         setLayout(new MigLayout());
 
@@ -42,7 +38,9 @@ public class TypedAutoPanel<T> extends JPanel {
         fieldController.getElements().stream().filter(el -> el.getFieldValueController() != null).forEach((element) -> {
             element.getFieldValueController().setValue(() -> {
                 try {
-                   return element.getPropertyDescriptor().getReadMethod().invoke(data);
+                    if(data != null)
+                        return element.getPropertyDescriptor().getReadMethod().invoke(data);
+                    return null;
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     throw new RuntimeException(e);
                 }
