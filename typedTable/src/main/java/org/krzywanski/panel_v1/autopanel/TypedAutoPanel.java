@@ -80,4 +80,9 @@ public class TypedAutoPanel<T> extends JPanel {
         fieldController.addDataEditor(fieldName, columnClass, fieldValueController);
     }
 
+    public void updateCurrentData(T data) {
+        this.data = data;
+        fillWithData();
+    }
+
 }
