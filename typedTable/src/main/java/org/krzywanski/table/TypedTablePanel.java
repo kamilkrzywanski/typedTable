@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.TreeSet;
 import java.util.function.Function;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Container for table and pagination buttons
@@ -122,7 +124,7 @@ public class TypedTablePanel<T> extends JPanel {
         try {
             table.exportToExcel(Objects.requireNonNull(selectFiles()).toPath());
         } catch (Exception ex) {
-            System.out.println("export failed");
+            Logger.getAnonymousLogger().log(Level.SEVERE, "export failed", ex);
         }
     }
 

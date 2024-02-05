@@ -136,10 +136,7 @@ public class Main {
         Query<TestModel> query = session.createQuery(cr);
         query.setFirstResult(from).setMaxResults(limit);
         List<TestModel> testModels =  query.getResultList();
-        List<TestModelDto> resultList =  testModels.stream().map(testModel -> TestModelMapper.mapTestModelToDto(testModel, new TestModelDto())).collect(Collectors.toList());
-        System.out.println("Getting data from " + from + " to " + (from + limit));
-        System.out.println("Result list size " + resultList.size());
-        return resultList;
+        return testModels.stream().map(testModel -> TestModelMapper.mapTestModelToDto(testModel, new TestModelDto())).collect(Collectors.toList());
 
     }
 
