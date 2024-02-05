@@ -380,7 +380,7 @@ public class TypedTable<T> extends JTable {
     public void addGenericSelectionListener(GenericSelectionListener<T> listener) {
         listeners.add(listener);
         getSelectionModel().addListSelectionListener(e -> {
-            if (e.getValueIsAdjusting()) {
+            if (!e.getValueIsAdjusting()) {
                 listener.getSelectedItem(getSelectedItem());
             }
         });
