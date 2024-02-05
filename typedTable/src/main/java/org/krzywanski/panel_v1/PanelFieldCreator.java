@@ -217,7 +217,8 @@ public class PanelFieldCreator {
                 .findFirst()
                 .ifPresent(field -> {
                     if(!field.getType().equals(columnClass)){
-                        throw new RuntimeException("Field type is not compatible with column class");
+                        throw new RuntimeException(
+                                "Field type {" + field.getType() + "} is not compatible with column type {" + columnClass + "} of class {" + dataClass.getName() + "}");
                     }
                 });
     }
