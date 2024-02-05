@@ -10,6 +10,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 import org.jdesktop.swingx.JXDatePicker;
+import org.krzywanski.panel_v1.PanelTableController;
 import org.krzywanski.panel_v1.TypedPanelFields;
 import org.krzywanski.panel_v1.autopanel.TextFieldWithTableSelect;
 import org.krzywanski.panel_v1.fields.DefaultFieldProvider;
@@ -93,6 +94,8 @@ public class Main {
         TypedTablePanel<TestFormatClass> selectPanel = TypedTablePanel.getTableWithData(List.of(new TestFormatClass("A"), new TestFormatClass("B")), TestFormatClass.class);
         TableValueController<TestFormatClass> valueController = new TableValueController<>(new TextFieldWithTableSelect<>(selectPanel));
         autoPanel.addDataEditor("testFormatClass", TestFormatClass.class, valueController);
+
+        new PanelTableController<>(panel.table, autoPanel);
 
         frame.add(autoPanel.buildPanel(),"wrap");
         frame.add(panel, "grow,push");
