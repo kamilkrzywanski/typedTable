@@ -88,7 +88,7 @@ public class Main {
                 return null;
             }
         });
-        TypedAutoPanel<TestModelDto> autoPanel = new TypedAutoPanel<>(Main.getData(0,1).get(0), TestModelDto.class);
+        TypedAutoPanel<TestModelDto> autoPanel = new TypedAutoPanel<>(null, TestModelDto.class);
 
         TypedTablePanel<TestFormatClass> selectPanel = TypedTablePanel.getTableWithData(List.of(new TestFormatClass("A"), new TestFormatClass("B")), TestFormatClass.class);
         TableValueController<TestFormatClass> valueController = new TableValueController<>(new TextFieldWithTableSelect<>(selectPanel));

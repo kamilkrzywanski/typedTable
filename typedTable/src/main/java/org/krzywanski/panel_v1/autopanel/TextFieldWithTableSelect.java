@@ -57,7 +57,11 @@ public class TextFieldWithTableSelect<T> extends JPanel {
 
     public void setTextField(T value){
         currentValue = value;
-        textField.setText(value.toString());
+
+        if(value != null)
+            textField.setText(value.toString());
+        else
+            textField.setText("");
     }
     public T getCurrentValue() {
         return currentValue;

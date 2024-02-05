@@ -18,7 +18,11 @@ public class BooleanCheckBoxValueController implements FieldValueController<Bool
 
     @Override
     public void setValue(FieldValueSupplier<Boolean> value) {
-        checkBox.setSelected(value.getValue());
+        if(value.getValue() == null) {
+            checkBox.setSelected(false);
+        } else {
+            checkBox.setSelected(value.getValue());
+        }
     }
 
     @Override
