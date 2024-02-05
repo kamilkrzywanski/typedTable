@@ -33,6 +33,7 @@ public class TextFieldWithTableSelect<T> extends JPanel {
 
             dialog.repaint();
             dialog.pack();
+            dialog.setLocationRelativeTo(button);
             dialog.setVisible(true);
 
         });

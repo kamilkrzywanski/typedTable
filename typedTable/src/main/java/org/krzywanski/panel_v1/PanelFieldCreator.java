@@ -22,14 +22,20 @@ import java.util.stream.Collectors;
 public class PanelFieldCreator {
     final Class<?> dataClass;
     final Map<String, FieldValueController<?, ?>> fieldControllers = new HashMap<>();
+
+    List<FieldControllerElement> components;
     PanelFieldCreator(Class<?> dataClass) {
         this.dataClass = dataClass;
     }
 
 
     List<FieldControllerElement> getComponents() {
-      return Arrays.stream(dataClass.getDeclaredFields())
-               .map(this::createFieldControllerElement).collect(Collectors.toList());
+        if(components == null) {
+             components = Arrays.stream(dataClass.getDeclaredFields())
+                     .map(this::createFieldControllerElement).collect(Collectors.toList());
+        }
+
+      return components;
 
     }
 

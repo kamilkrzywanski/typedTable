@@ -27,6 +27,6 @@ public class ComboBoxValueController<T> implements FieldValueController<T, JComb
 
     @Override
     public JComboBox<T> getComponent() {
-        return null;
+        return comboBox;
     }
 }

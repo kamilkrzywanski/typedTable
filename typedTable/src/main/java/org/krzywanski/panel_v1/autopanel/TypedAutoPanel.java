@@ -36,9 +36,7 @@ public class TypedAutoPanel<T> extends JPanel {
     }
 
     protected void fillWithData() {
-        fieldController.getElements().stream().filter(el -> el.getFieldValueController() != null).forEach((element) -> {
-            element.getFieldValueController().setEditable(false);
-        });
+        setFieldsEditable(false);
 
         //TODO remove filter when all elements will have implemented FieldValueController
         fieldController.getElements().stream().filter(el -> el.getFieldValueController() != null).forEach((element) -> {
