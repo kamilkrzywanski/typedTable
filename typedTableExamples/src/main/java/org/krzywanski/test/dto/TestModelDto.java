@@ -35,7 +35,7 @@ public class TestModelDto implements Comparable<TestModelDto>, Serializable {
     @MyTableColumn(label = "Test label")
     private String columnC;
 
-    @MyTableColumn(label = "DataLable", format = "YYYY", alignment = Alignment.CENTER)
+    @MyTableColumn(label = "DataLable", format = "dd-MM-yyyy", alignment = Alignment.CENTER)
     private Date date = new Date();
 
     @MyTableColumn(label = "Test enum")

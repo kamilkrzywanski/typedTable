@@ -65,10 +65,18 @@ public class AutoPanelButtons<T> extends JPanel {
         add(saveButton, "grow, span 3");
     }
 
+    /**
+     * Lock external components when panel is in edit mode
+     * @param lock true if components should be locked
+     */
     private void lockExternalComponents(boolean lock) {
         externalComponents.forEach(component -> component.setEnabled(lock));
     }
 
+    /**
+     * Add external component to lock when panel is in edit mode
+     * @param component component to lock
+     */
     public void addExternalComponent(JComponent component) {
         externalComponents.add(component);
     }

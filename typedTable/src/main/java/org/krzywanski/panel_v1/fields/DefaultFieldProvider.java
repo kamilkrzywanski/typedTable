@@ -9,6 +9,7 @@ public class DefaultFieldProvider<T, R extends JComponent> implements FieldProvi
     final FieldValueController<T, JComponent> fieldValueController;
     final R component;
 
+    @SuppressWarnings("unchecked")
     public DefaultFieldProvider(R component, Function<R, FieldValueController<T, R>> fieldValueController) {
         this.fieldValueController = (FieldValueController<T, JComponent>) fieldValueController.apply(component);
         this.component = component;

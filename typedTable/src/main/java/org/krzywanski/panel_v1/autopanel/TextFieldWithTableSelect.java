@@ -10,8 +10,17 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class TextFieldWithTableSelect<T> extends JPanel {
+    /**
+     * Currently selected value
+     */
     T currentValue;
+    /**
+     * Text field for displaying the selected value
+     */
     final JTextField textField = new JTextField();
+    /**
+     * Table with selectable values
+     */
     final TypedTablePanel<T> table;
     final JButton button = new JButton("...");
     final JButton okBUtton =  new JButton("OK");

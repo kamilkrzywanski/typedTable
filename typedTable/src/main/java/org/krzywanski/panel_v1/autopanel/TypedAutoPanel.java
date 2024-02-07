@@ -38,6 +38,9 @@ public class TypedAutoPanel<T> extends JPanel {
         return this;
     }
 
+    /**
+     * Fills fields with data from data object
+     */
     protected void fillWithData() {
         if(autoPanelButtons.getMode() == PanelMode.UPDATE)
             return;
@@ -60,6 +63,9 @@ public class TypedAutoPanel<T> extends JPanel {
 
     }
 
+    /**
+     * Adds fields to panel
+     */
     private void addFields() {
         fieldController.getElements().forEach((element) -> {
             add(element.getFirstComponent(), element.getSecondComponent() != null ? "grow" : "grow, span 2, wrap");
@@ -68,6 +74,9 @@ public class TypedAutoPanel<T> extends JPanel {
         });
     }
 
+    /**
+     * Saves changes to data object
+     */
     protected void saveChanges(){
         fieldController.getElements().stream().filter(el -> el.getFieldValueController() != null).forEach((element) -> {
             try {
@@ -84,22 +93,40 @@ public class TypedAutoPanel<T> extends JPanel {
         listeners.forEach(listener -> listener.valueChanged(data));
     }
 
+    /**
+     * Sets fields editable
+     * @param enabled true if fields should be editable
+     */
     protected void setFieldsEditable(boolean enabled) {
         fieldController.getElements().stream().filter(el -> el.getFieldValueController() != null).forEach((element) -> {
             element.getFieldValueController().setEditable(enabled);
         });
     }
 
+    /**
+     * Adds data editor to field
+     * @param fieldName name of field
+     * @param columnClass class of column
+     * @param fieldValueController field value controller
+     * @param <R> type of column
+     */
     public <R> void addDataEditor(String fieldName, Class<R> columnClass, FieldValueController<? extends R, ?> fieldValueController) {
         fieldController.addDataEditor(fieldName, columnClass, fieldValueController);
     }
 
+    /**
+     * Update fields with passed data
+     * @param data data
+     */
     public void updateCurrentData(T data) {
         this.data = data;
         fillWithData();
     }
 
-
+    /**
+     * Sets data flow controller for crud operations
+     * @param repository - interface for data flow
+     */
     public void setDataFlowController(DataFlowController<T> repository) {
         this.repository = repository;
     }
