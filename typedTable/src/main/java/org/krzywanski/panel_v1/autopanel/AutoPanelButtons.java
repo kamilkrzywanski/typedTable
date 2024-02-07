@@ -55,7 +55,9 @@ public class AutoPanelButtons<T> extends JPanel {
             saveButton.setEnabled(false);
             editButton.setEnabled(true);
             lockExternalComponents(true);
-            setAddOrCancelButton(Button.ADD);
+            setAddOrCancelButton(AddOrCancel.ADD);
+            setDeleteOrSaveButton(DeleteOrSave.DELETE);
+
 
             dataPanel.setFieldsEditable(false);
             dataPanel.saveChanges(mode == PanelMode.ADD ? DataAction.INSERT : DataAction.UPDATE);
@@ -69,7 +71,8 @@ public class AutoPanelButtons<T> extends JPanel {
             editButton.setEnabled(false);
             lockExternalComponents(false);
             mode = PanelMode.UPDATE;
-            setAddOrCancelButton(Button.CANCEL);
+            setAddOrCancelButton(AddOrCancel.CANCEL);
+            setDeleteOrSaveButton(DeleteOrSave.SAVE);
 
             dataPanel.setFieldsEditable(true);
         });
@@ -83,7 +86,8 @@ public class AutoPanelButtons<T> extends JPanel {
 
 
             mode = PanelMode.NONE;
-            setAddOrCancelButton(Button.ADD);
+            setAddOrCancelButton(AddOrCancel.ADD);
+            setDeleteOrSaveButton(DeleteOrSave.DELETE);
 
             dataPanel.updateCurrentData(dataPanel.dataSupplier.get());
             dataPanel.fillWithData();
@@ -109,7 +113,8 @@ public class AutoPanelButtons<T> extends JPanel {
             dataPanel.setFieldsEditable(true);
             mode = PanelMode.ADD;
 
-            setAddOrCancelButton(Button.CANCEL);
+            setAddOrCancelButton(AddOrCancel.CANCEL);
+            setDeleteOrSaveButton(DeleteOrSave.SAVE);
 
 
         });
@@ -128,7 +133,7 @@ public class AutoPanelButtons<T> extends JPanel {
         editButton.setEnabled(true);
         lockExternalComponents(false);
         mode = PanelMode.NONE;
-        setAddOrCancelButton(Button.ADD);
+        setAddOrCancelButton(AddOrCancel.ADD);
         dataPanel.setFieldsEditable(false);
     }
     /**
@@ -150,8 +155,8 @@ public class AutoPanelButtons<T> extends JPanel {
     public PanelMode getMode() {
         return mode;
     }
-    private void setAddOrCancelButton(Button button){
-        if(button == Button.ADD){
+    private void setAddOrCancelButton(AddOrCancel button){
+        if(button == AddOrCancel.ADD){
             addOrCancelPanel.remove(cancelButton);
             addOrCancelPanel.add(addButton, "grow");
         } else {
@@ -162,7 +167,23 @@ public class AutoPanelButtons<T> extends JPanel {
         addOrCancelPanel.revalidate();
     }
 
-    enum Button{
+    private void setDeleteOrSaveButton(DeleteOrSave button){
+        if(button == DeleteOrSave.DELETE){
+            deleteOrSavePanel.remove(saveButton);
+            deleteOrSavePanel.add(deleteButton, "grow");
+        } else {
+            deleteOrSavePanel.remove(deleteButton);
+            deleteOrSavePanel.add(saveButton, "grow");
+        }
+        deleteOrSavePanel.repaint();
+        deleteOrSavePanel.revalidate();
+    }
+
+    enum AddOrCancel {
         ADD, CANCEL
+    }
+
+    enum DeleteOrSave {
+        DELETE, SAVE
     }
 }
