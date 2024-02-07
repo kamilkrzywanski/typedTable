@@ -7,11 +7,12 @@ import org.krzywanski.table.annot.ReflectionSort;
 import org.krzywanski.table.annot.TableFilter;
 import org.krzywanski.table.constraints.Alignment;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
-public class TestModel implements Comparable<TestModel>{
+public class TestModel implements Comparable<TestModel>, Serializable {
     @Id
     private Integer id;
     private String columnA;
