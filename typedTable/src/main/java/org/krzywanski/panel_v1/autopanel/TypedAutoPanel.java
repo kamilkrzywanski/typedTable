@@ -8,13 +8,16 @@ import org.krzywanski.panel_v1.fields.TableValueController;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Basic implementation of panel for data with auto generated fields
  * @param <T> - type of data
  */
 public class TypedAutoPanel<T> extends JPanel {
-    
+
+    List<PanelChangeValueListener<T>> listeners = new ArrayList<>();
     private T data;
     private DataFlowController<T> repository;
 
@@ -24,7 +27,6 @@ public class TypedAutoPanel<T> extends JPanel {
         this.data = data;
         this.fieldController = new FieldController<>(dataClass);
         setLayout(new MigLayout());
-
     }
     public TypedAutoPanel<T> buildPanel(){
         addFields();
@@ -73,6 +75,7 @@ public class TypedAutoPanel<T> extends JPanel {
             if(repository.update(data) != null)
                 setFieldsEditable(false);
         }
+        listeners.forEach(listener -> listener.valueChanged(data));
     }
 
     protected void setFieldsEditable(boolean enabled) {
@@ -93,6 +96,10 @@ public class TypedAutoPanel<T> extends JPanel {
 
     public void setDataFlowController(DataFlowController<T> repository) {
         this.repository = repository;
+    }
+
+    public void addPanelChangeValueListener(PanelChangeValueListener<T> listener){
+        listeners.add(listener);
     }
 
 }
