@@ -1,6 +1,7 @@
 package org.krzywanski.panel_v1.autopanel;
 
 import net.miginfocom.swing.MigLayout;
+import org.krzywanski.panel_v1.DataFlowController;
 import org.krzywanski.panel_v1.FieldController;
 import org.krzywanski.panel_v1.fields.FieldValueController;
 import org.krzywanski.panel_v1.fields.TableValueController;
@@ -15,6 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 public class TypedAutoPanel<T> extends JPanel {
     
     private T data;
+    private DataFlowController<T> repository;
 
     FieldController<T> fieldController;
 
@@ -66,6 +68,11 @@ public class TypedAutoPanel<T> extends JPanel {
                 throw new RuntimeException(ex);
             }
         });
+
+        if(data != null && repository != null){
+            if(repository.update(data) != null)
+                setFieldsEditable(false);
+        }
     }
 
     protected void setFieldsEditable(boolean enabled) {
@@ -81,6 +88,11 @@ public class TypedAutoPanel<T> extends JPanel {
     public void updateCurrentData(T data) {
         this.data = data;
         fillWithData();
+    }
+
+
+    public void setDataFlowController(DataFlowController<T> repository) {
+        this.repository = repository;
     }
 
 }

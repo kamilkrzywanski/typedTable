@@ -10,6 +10,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 import org.jdesktop.swingx.JXDatePicker;
+import org.krzywanski.panel_v1.DataFlowController;
 import org.krzywanski.panel_v1.PanelTableController;
 import org.krzywanski.panel_v1.TypedPanelFields;
 import org.krzywanski.panel_v1.autopanel.TextFieldWithTableSelect;
@@ -27,6 +28,7 @@ import org.krzywanski.test.mapper.TestModelMapper;
 import org.krzywanski.test.model.TestFormatClass;
 import org.krzywanski.test.model.TestModel;
 import org.krzywanski.test.panelfield.DateValueController;
+import org.krzywanski.test.service.TestModelService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,9 +41,7 @@ import java.util.stream.Collectors;
 
 public class Main {
 
-    private static SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
-    public static Session session = sessionFactory.openSession();
-
+    public static SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
     /**
      * ONLY FOR TEST USING CLASS
      */
@@ -80,19 +80,19 @@ public class Main {
         TreeSet<TestModelDto> collection = new TreeSet<>();
         panel.addMultiSelectColumn("Multi select column", collection);
 
-        panel.addCustomFormatter(TestFormatClass.class, new Format() {
-            @Override
-            public StringBuffer format(Object obj, StringBuffer toAppendTo, FieldPosition pos) {
-                return new StringBuffer("FORMAT");
-            }
-
-            @Override
-            public Object parseObject(String source, ParsePosition pos) {
-                return null;
-            }
-        });
+//        panel.addCustomFormatter(TestFormatClass.class, new Format() {
+//            @Override
+//            public StringBuffer format(Object obj, StringBuffer toAppendTo, FieldPosition pos) {
+//                return new StringBuffer("FORMAT");
+//            }
+//
+//            @Override
+//            public Object parseObject(String source, ParsePosition pos) {
+//                return null;
+//            }
+//        });
         TypedAutoPanel<TestModelDto> autoPanel = new TypedAutoPanel<>(null, TestModelDto.class);
-
+        autoPanel.setDataFlowController(new TestModelService());
         TypedTablePanel<TestFormatClass> selectPanel = TypedTablePanel.getTableWithData(List.of(new TestFormatClass("A"), new TestFormatClass("B")), TestFormatClass.class);
 
 
@@ -132,11 +132,12 @@ public class Main {
     }
 
     static List<TestModelDto> getData(int from, int limit) {
-        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaBuilder cb = sessionFactory.openSession().getCriteriaBuilder();
         CriteriaQuery<TestModel> cr = cb.createQuery(TestModel.class);
         Root<TestModel> root = cr.from(TestModel.class);
+        cr.orderBy(cb.asc(root.get("id")));
         cr.select(root);
-        Query<TestModel> query = session.createQuery(cr);
+        Query<TestModel> query = sessionFactory.openSession().createQuery(cr);
         query.setFirstResult(from).setMaxResults(limit);
         List<TestModel> testModels =  query.getResultList();
         return testModels.stream().map(testModel -> TestModelMapper.mapTestModelToDto(testModel, new TestModelDto())).collect(Collectors.toList());
@@ -144,12 +145,12 @@ public class Main {
     }
 
     static int getSize() {
-        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaBuilder cb = sessionFactory.openSession().getCriteriaBuilder();
         CriteriaQuery<TestModel> cr = cb.createQuery(TestModel.class);
         Root<TestModel> root = cr.from(TestModel.class);
         cr.select(root);
 
-        Query<TestModel> query = session.createQuery(cr);
+        Query<TestModel> query = sessionFactory.openSession().createQuery(cr);
         return query.getResultList().size();
     }
 }

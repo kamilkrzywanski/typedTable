@@ -6,6 +6,7 @@ import org.krzywanski.test.model.TestModel;
 public class TestModelMapper {
 
     public static TestModelDto mapTestModelToDto(TestModel testModel, TestModelDto dto){
+        dto.setId(testModel.getId());
         dto.setColumnA(testModel.getColumnA());
         dto.setColumnB(testModel.getColumnB());
         dto.setColumnC(testModel.getColumnC());
@@ -13,6 +14,17 @@ public class TestModelMapper {
         dto.setTestEnum(testModel.getTestEnum());
         dto.setBooleanValue(testModel.getBooleanValue());
         return dto;
+    }
+
+    public static TestModel mapTestModelDto(TestModelDto dto, TestModel testModel){
+        testModel.setId(dto.getId());
+        testModel.setColumnA(dto.getColumnA());
+        testModel.setColumnB(dto.getColumnB());
+        testModel.setColumnC(dto.getColumnC());
+        testModel.setMyDate(dto.getDate());
+        testModel.setTestEnum(dto.getTestEnum());
+        testModel.setBooleanValue(dto.getBooleanValue());
+        return testModel;
     }
 
 }

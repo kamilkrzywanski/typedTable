@@ -8,6 +8,7 @@ import org.krzywanski.table.constraints.Alignment;
 import org.krzywanski.test.model.TestEnum;
 import org.krzywanski.test.model.TestFormatClass;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -17,7 +18,9 @@ import java.util.Date;
 @TableFilter(type = TestEnum.class, name = "testEnum", label = "Test enum")
 @TableFilter(type = Boolean.class, name = "testFormatClass", label = "Boolean value")
 @Entity
-public class TestModelDto implements Comparable<TestModelDto>{
+public class TestModelDto implements Comparable<TestModelDto>, Serializable {
+
+    Integer id;
 
     //    @CustomRenderer(renderer = BooleanIconRenderer.class)
     @MyTableColumn(label = "Boolean value")
@@ -40,6 +43,14 @@ public class TestModelDto implements Comparable<TestModelDto>{
 
     @MyTableColumn(label = "customFormatter")
     TestFormatClass testFormatClass = new TestFormatClass("X");
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public Boolean getBooleanValue() {
         return booleanValue;
