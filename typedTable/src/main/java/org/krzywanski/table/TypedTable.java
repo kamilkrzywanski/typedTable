@@ -526,4 +526,11 @@ public class TypedTable<T> extends JTable {
         model.getDataVector().set(row, createDataRow(data));
         model.fireTableDataChanged();
     }
+
+    /**
+     * Refresh data in current page
+     */
+    public void refreshData() {
+        paginationUtils.refreshData();
+    }
 }
