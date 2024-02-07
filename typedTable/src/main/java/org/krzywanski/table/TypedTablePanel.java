@@ -248,4 +248,9 @@ public class TypedTablePanel<T> extends JPanel {
     public void addCustomFormatter(Class<?> classFormat, Format format) {
         table.addCustomFormatter(classFormat, format);
     }
+
+    public void setSelectFirstRow(boolean selectFirstRow) {
+        table.setSelectFirstRow(selectFirstRow);
+    }
+
 }

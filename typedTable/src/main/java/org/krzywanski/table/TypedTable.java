@@ -105,7 +105,10 @@ public class TypedTable<T> extends JTable {
      * Property change listener for headers of table
      */
     final ChangeHeaderNamePropertyChangeListener listener;
-
+    /**
+     * If true first row will be selected after data is loaded
+     */
+    private boolean selectFirstRow = true;
     /**
      * Default constructor if you want to keep the same sizes for multiple tables
      *
@@ -195,6 +198,10 @@ public class TypedTable<T> extends JTable {
             model.addRow(element);
         });
         revalidate();
+
+        if(selectFirstRow)
+            setRowSelectionInterval(0, 0);
+
         if (!currentData.isEmpty())
             listeners.forEach(genericSelectionListener -> genericSelectionListener.getSelectedItem(getItemAt(0)));
     }
@@ -495,5 +502,17 @@ public class TypedTable<T> extends JTable {
                 getColumns().
                 asIterator().
                 forEachRemaining(tableColumn -> tableColumn.removePropertyChangeListener(listener));
+    }
+
+    public boolean isSelectFirstRow() {
+        return selectFirstRow;
+    }
+
+    public void setSelectFirstRow(boolean selectFirstRow) {
+        if(selectFirstRow)
+            setRowSelectionInterval(0, 0);
+        else
+            clearSelection();
+        this.selectFirstRow = selectFirstRow;
     }
 }
