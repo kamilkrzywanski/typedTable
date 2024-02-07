@@ -258,4 +258,9 @@ public class TypedTablePanel<T> extends JPanel {
     public void addTableKeyListener(KeyListener listener){
         table.addKeyListener(listener);
     }
+
+    public void setSelectFirstRow(boolean selectFirstRow) {
+        table.setSelectFirstRow(selectFirstRow);
+    }
+
 }
