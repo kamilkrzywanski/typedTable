@@ -85,6 +85,11 @@ public class PaginationUtils {
         return new Page(1, localLimit, dataSize);
     }
 
+    public void refreshData() {
+        limit = findCurrentLimit();
+        localAddData(ActionType.REFRESH);
+    }
+
     private void localAddData(ActionType actionType) {
         limit = computeLimit(limit, provider);
         tTypedTable.addData(limit, offset, actionType);

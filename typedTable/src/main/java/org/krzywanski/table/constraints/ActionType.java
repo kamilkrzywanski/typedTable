@@ -9,5 +9,6 @@ public enum ActionType {
     PREV_PAGE,
     LAST_PAGE,
     EXPORT,
-    REFLECTION_SORT
+    REFLECTION_SORT,
+    REFRESH
 }

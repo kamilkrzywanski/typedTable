@@ -70,7 +70,7 @@ public class TypedTablePanel<T> extends JPanel {
         firstPageAction();
     }
 
-    void initButtons(){
+    void initButtons() {
         filterButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("filter-symbol.png")));
         exportExcelButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("export_excel.png")));
         nextPageButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("next.png")));
@@ -92,12 +92,12 @@ public class TypedTablePanel<T> extends JPanel {
             addButton(exportExcelButton, "split, al right");
         }
 
-        if(table.isPaginationEnabled()) {
+        if (table.isPaginationEnabled()) {
             addButton(firstPageButton, "");
             addButton(prevPageButton, "");
         }
         add(pageLabel);
-        if(table.isPaginationEnabled()) {
+        if (table.isPaginationEnabled()) {
             addButton(nextPageButton, "");
             addButton(lastPageButton, "");
         }
@@ -146,10 +146,10 @@ public class TypedTablePanel<T> extends JPanel {
 
     private void setLabelText(Page page) {
 
-        if(table.isPaginationEnabled())
-            this.pageLabel.setText(page.getCurrentPage() + "/" + page.getTotalPages() + " (" + page.getTotalElements() + ")" );
+        if (table.isPaginationEnabled())
+            this.pageLabel.setText(page.getCurrentPage() + "/" + page.getTotalPages() + " (" + page.getTotalElements() + ")");
         else
-            this.pageLabel.setText("(" + page.getTotalElements() + ")" );
+            this.pageLabel.setText("(" + page.getTotalElements() + ")");
     }
 
     private void addButton(JButton button, String constraints) {
@@ -208,10 +208,11 @@ public class TypedTablePanel<T> extends JPanel {
 
     /**
      * Return value from selected row or default when row not found
-     * @param mapper - mapper to map row to result
+     *
+     * @param mapper       - mapper to map row to result
      * @param defaultValue - default value when row not found
+     * @param <E>          - return type of result
      * @return - returns result of function
-     * @param <E> - return type of result
      */
     public <E> E getSelectedValueOrDefault(Function<T, E> mapper, E defaultValue) {
         return table.getSelectedValueOrDefault(mapper, defaultValue);
@@ -219,22 +220,23 @@ public class TypedTablePanel<T> extends JPanel {
 
     /**
      * Add function to table at runtime
-     * @param columnName - name of column to add
-     * @param columnClass - class of column to add
+     *
+     * @param columnName        - name of column to add
+     * @param columnClass       - class of column to add
      * @param computingFunction - function passed to result cell
-     * @param <C> - class of result column
+     * @param <C>               - class of result column
      */
-    public <C> void addComuptedColumn(String columnName ,Class<C> columnClass,  Function<T, C> computingFunction) {
+    public <C> void addComuptedColumn(String columnName, Class<C> columnClass, Function<T, C> computingFunction) {
         table.addComputedColumn(columnName, columnClass, computingFunction);
         firstPageAction();
     }
 
     /**
-     @param columnName - name of column to add
-     @param resultList - Tree set to in case of custom method to compare objects
-     TypeClass needs to implement Comparable interface if you use TreeSet without comparator
+     * @param columnName - name of column to add
+     * @param resultList - Tree set to in case of custom method to compare objects
+     *                   TypeClass needs to implement Comparable interface if you use TreeSet without comparator
      */
-    public void addMultiSelectColumn(String columnName, TreeSet<T> resultList){
+    public void addMultiSelectColumn(String columnName, TreeSet<T> resultList) {
         table.addMultiSelectColumn(columnName, resultList);
         firstPageAction();
     }
@@ -251,6 +253,7 @@ public class TypedTablePanel<T> extends JPanel {
 
     /**
      * Set select first row after data change
+     *
      * @param selectFirstRow - true if first row should be selected
      */
     public void setSelectFirstRow(boolean selectFirstRow) {
@@ -261,4 +264,7 @@ public class TypedTablePanel<T> extends JPanel {
         table.setDataAt(row, data);
     }
 
+    public void refreshData() {
+        table.refreshData();
+    }
 }

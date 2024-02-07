@@ -86,6 +86,7 @@ public class Main {
 
 
         panel.setDataAt(0, new TestModelDto());
+        panel.refreshData();
         frame.add(panel, "grow,push");
         frame.add(panel2, "grow,push");
         frame.setVisible(true);
