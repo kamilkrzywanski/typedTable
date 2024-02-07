@@ -72,7 +72,6 @@ public class Main {
         frame.setTitle("JTable Example");
         frame.setLayout(new MigLayout());
         TypedTablePanel<TestModelDto> panel = TypedTablePanel.getTableWithProvider(new DefaultDataPrivder<>(10, Main::getData, Main::getSize), TestModelDto.class);
-        TypedTablePanel<TestModelDto> panel2 = TypedTablePanel.getTableWithData( Main.getAllData(), TestModelDto.class, 3);
         panel.addComuptedColumn("Computed column",String.class,  value -> value.getColumnA() + " " + value.getColumnB());
         panel.addGenericSelectionListener(element -> {
             if (element != null)
@@ -95,16 +94,14 @@ public class Main {
         TypedAutoPanel<TestModelDto> autoPanel = new TypedAutoPanel<>(null, TestModelDto.class);
 
         TypedTablePanel<TestFormatClass> selectPanel = TypedTablePanel.getTableWithData(List.of(new TestFormatClass("A"), new TestFormatClass("B")), TestFormatClass.class);
-        TableValueController<TestFormatClass> valueController = new TableValueController<>(new TextFieldWithTableSelect<>(selectPanel));
-        autoPanel.addDataEditor("testFormatClass", TestFormatClass.class, valueController);
+
+
+        autoPanel.addDataEditor("testFormatClass", TestFormatClass.class, new TableValueController<>(selectPanel));
 
         new PanelTableController<>(panel.table, autoPanel);
 
         frame.add(autoPanel.buildPanel(),"wrap");
         frame.add(panel, "grow,push");
-//        JXDatePicker datePicker = new JXDatePicker();
-//        datePicker.set
-//        frame.add(panel2, "grow,push");
         frame.setVisible(true);
         frame.setPreferredSize(new Dimension(1500, 600));
         frame.pack();

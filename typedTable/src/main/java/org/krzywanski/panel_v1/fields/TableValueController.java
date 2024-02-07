@@ -2,12 +2,13 @@ package org.krzywanski.panel_v1.fields;
 
 import org.krzywanski.panel_v1.autopanel.TextFieldWithTableSelect;
 import org.krzywanski.table.TypedTable;
+import org.krzywanski.table.TypedTablePanel;
 
 public class TableValueController<T> implements FieldValueController<T, TextFieldWithTableSelect<T>> {
     final TextFieldWithTableSelect<T> table;
 
-    public TableValueController(TextFieldWithTableSelect<T> table) {
-        this.table = table;
+    public TableValueController(TypedTablePanel<T> table) {
+        this.table = new TextFieldWithTableSelect<>(table);
     }
 
     @Override
@@ -28,5 +29,9 @@ public class TableValueController<T> implements FieldValueController<T, TextFiel
     @Override
     public TextFieldWithTableSelect<T> getComponent() {
         return table;
+    }
+
+    TableValueController<T> builder(){
+        return this;
     }
 }
