@@ -17,6 +17,8 @@ public class AutoPanelButtons<T> extends JPanel {
     JButton saveButton = new JButton("Save");
     JPanel addOrCancelPanel = new JPanel(new MigLayout("gapx 0, insets 0"));
     JButton addButton = new JButton("Add");
+    JButton deleteButton = new JButton("Delete");
+    JPanel deleteOrSavePanel = new JPanel(new MigLayout("gapx 0, insets 0"));
     List<JComponent> externalComponents = new ArrayList<>();
     PanelMode mode = PanelMode.NONE;
 
@@ -38,7 +40,10 @@ public class AutoPanelButtons<T> extends JPanel {
         add(editButton, "grow");
 
         cancelButton.setEnabled(false);
-        add(saveButton, "grow, span 3");
+
+        deleteOrSavePanel.add(deleteButton, "grow");
+
+        add(deleteOrSavePanel, "grow, span 3");
 
         installListeners();
     }
@@ -107,6 +112,11 @@ public class AutoPanelButtons<T> extends JPanel {
             setAddOrCancelButton(Button.CANCEL);
 
 
+        });
+
+        deleteButton.addActionListener(e -> {
+            dataPanel.removeCurrentData();
+            restorePanel();
         });
     }
 

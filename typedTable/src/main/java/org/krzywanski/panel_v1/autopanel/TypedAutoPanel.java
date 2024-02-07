@@ -138,6 +138,16 @@ public class TypedAutoPanel<T> extends JPanel {
     }
 
     /**
+     *
+     */
+    public void removeCurrentData() {
+        if(data != null && repository != null){
+            repository.remove(data);
+//            listeners.forEach(listener -> listener.valueChanged(null));
+        }
+    }
+
+    /**
      * Sets data flow controller for crud operations
      * @param repository - interface for data flow
      */
