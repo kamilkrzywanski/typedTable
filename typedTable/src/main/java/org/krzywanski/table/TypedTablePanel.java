@@ -249,8 +249,16 @@ public class TypedTablePanel<T> extends JPanel {
         table.addCustomFormatter(classFormat, format);
     }
 
+    /**
+     * Set select first row after data change
+     * @param selectFirstRow - true if first row should be selected
+     */
     public void setSelectFirstRow(boolean selectFirstRow) {
         table.setSelectFirstRow(selectFirstRow);
+    }
+
+    public void setDataAt(int row, T data) {
+        table.setDataAt(row, data);
     }
 
 }
