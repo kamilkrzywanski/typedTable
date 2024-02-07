@@ -32,7 +32,8 @@ public class TypedAutoPanel<T> extends JPanel {
     }
     public TypedAutoPanel<T> buildPanel(){
         addFields();
-        add(autoPanelButtons, "grow, span 3");
+        add(new JLabel());
+        add(autoPanelButtons, "grow");
         fillWithData();
         return this;
     }

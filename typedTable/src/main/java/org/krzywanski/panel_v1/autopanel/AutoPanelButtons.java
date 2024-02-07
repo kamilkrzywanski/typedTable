@@ -1,5 +1,7 @@
 package org.krzywanski.panel_v1.autopanel;
 
+import net.miginfocom.swing.MigLayout;
+
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +15,7 @@ public class AutoPanelButtons<T> extends JPanel {
     PanelMode mode = PanelMode.NONE;
 
     public AutoPanelButtons(TypedAutoPanel<T> dataPanel) {
-        super();
+        super(new MigLayout("gapx 0, insets 0"));
         this.dataPanel = dataPanel;
         addControllButtons();
     }
