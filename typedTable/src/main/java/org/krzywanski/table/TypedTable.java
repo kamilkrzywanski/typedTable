@@ -178,6 +178,7 @@ public class TypedTable<T> extends JTable {
 
         currentData = provider != null ? provider.getData(limit, offset, getSortColumns(), getSearchPhase(), actionType, new HashMap<>(extraParams)) : dataList;
         model.getDataVector().clear();
+        model.fireTableDataChanged();
 
         if (!getSortColumns().isEmpty() && getSortColumns().get(0) != null && typeClass.isAnnotationPresent(ReflectionSort.class))
             sortData(currentData, getSortColumns().get(0).getColumnName(), getSortColumns().get(0).getSortOrder());
