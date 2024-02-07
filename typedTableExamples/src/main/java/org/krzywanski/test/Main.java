@@ -74,7 +74,10 @@ public class Main {
         TypedTablePanel<TestModelDto> panel = TypedTablePanel.getTableWithProvider(new DefaultDataPrivder<>(10, Main::getData, Main::getSize), TestModelDto.class);
         TypedTablePanel<TestModelDto> panel2 = TypedTablePanel.getTableWithData( Main.getAllData(), TestModelDto.class, 3);
         panel.addComuptedColumn("Computed column",String.class,  value -> value.getColumnA() + " " + value.getColumnB());
-        panel.addGenericSelectionListener(element -> System.out.println(element.getColumnA()));
+        panel.addGenericSelectionListener(element -> {
+            if (element != null)
+                System.out.println(element.getColumnA());
+        });
         TreeSet<TestModelDto> collection = new TreeSet<>();
         panel.addMultiSelectColumn("Multi select column", collection);
 
