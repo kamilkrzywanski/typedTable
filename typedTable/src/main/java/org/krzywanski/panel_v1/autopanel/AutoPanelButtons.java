@@ -1,11 +1,14 @@
 package org.krzywanski.panel_v1.autopanel;
 
 import net.miginfocom.swing.MigLayout;
+import org.krzywanski.panel_v1.UpdateOrInsert;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class AutoPanelButtons<T> extends JPanel {
     final TypedAutoPanel<T> dataPanel;
@@ -47,11 +50,11 @@ public class AutoPanelButtons<T> extends JPanel {
             saveButton.setEnabled(false);
             editButton.setEnabled(true);
             lockExternalComponents(true);
-            mode = PanelMode.NONE;
             setAddOrCancelButton(Button.ADD);
 
             dataPanel.setFieldsEditable(false);
-            dataPanel.saveChanges();
+            dataPanel.saveChanges(mode == PanelMode.ADD ? UpdateOrInsert.INSERT : UpdateOrInsert.UPDATE);
+            mode = PanelMode.NONE;
         });
 
         editButton.addActionListener(e -> {
@@ -91,10 +94,15 @@ public class AutoPanelButtons<T> extends JPanel {
                 dataPanel.updateCurrentData(dataPanel.dataClass.getDeclaredConstructor().newInstance());
             } catch (InvocationTargetException | InstantiationException | IllegalAccessException |
                      NoSuchMethodException ex) {
-                throw new RuntimeException(ex);
+                restorePanel();
+                Logger.getAnonymousLogger().log(Level.SEVERE,
+                        "Error while creating new instance of data object." +
+                        " Restoring panel to previous state." +
+                        " Is default constructor present?", ex);
+                return;
             }
             dataPanel.setFieldsEditable(true);
-            mode = PanelMode.UPDATE;
+            mode = PanelMode.ADD;
 
             setAddOrCancelButton(Button.CANCEL);
 
@@ -102,6 +110,17 @@ public class AutoPanelButtons<T> extends JPanel {
         });
     }
 
+    private void restorePanel() {
+        dataPanel.updateCurrentData(dataPanel.dataSupplier.get());
+        dataPanel.fillWithData();
+        cancelButton.setEnabled(false);
+        saveButton.setEnabled(false);
+        editButton.setEnabled(true);
+        lockExternalComponents(false);
+        mode = PanelMode.NONE;
+        setAddOrCancelButton(Button.ADD);
+        dataPanel.setFieldsEditable(false);
+    }
     /**
      * Lock external components when panel is in edit mode
      * @param lock true if components should be locked

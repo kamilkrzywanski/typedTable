@@ -31,6 +31,7 @@ public abstract class GenericDaoImpl<T extends Serializable, Id extends Serializ
             session.persist(entity);
             transaction.commit();
         } catch (Exception x) {
+            x.printStackTrace();
             if (transaction != null) transaction.rollback();
             System.out.println("Error while inserting data");
         }

@@ -1,6 +1,8 @@
 package org.krzywanski.test.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import org.krzywanski.table.annot.MyTableColumn;
 import org.krzywanski.table.annot.ReflectionSort;
@@ -14,6 +16,7 @@ import java.util.Date;
 @Entity
 public class TestModel implements Comparable<TestModel>, Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String columnA;
     private BigDecimal columnB;
