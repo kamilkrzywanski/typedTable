@@ -187,15 +187,7 @@ public class TypedTable<T> extends JTable {
             sortData(currentData, getSortColumns().get(0).getColumnName(), getSortColumns().get(0).getSortOrder());
 
         currentData.forEach(t -> {
-            Vector<Object> element = new Vector<>();
-            columnCreator.getTableColumns().forEach(fieldMock -> {
-                try {
-                    element.add(fieldMock.invoke(t));
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-            model.addRow(element);
+            model.addRow(createDataRow(t));
         });
         revalidate();
 
@@ -205,6 +197,19 @@ public class TypedTable<T> extends JTable {
         if (!currentData.isEmpty())
             listeners.forEach(genericSelectionListener -> genericSelectionListener.getSelectedItem(getItemAt(0)));
     }
+
+    private Vector<Object> createDataRow(T data){
+        Vector<Object> element = new Vector<>();
+        columnCreator.getTableColumns().forEach(fieldMock -> {
+            try {
+                element.add(fieldMock.invoke(data));
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        return element;
+    }
+
 
     @SuppressWarnings({"rawtypes"})
     private void sortData(List<T> data, String columnName, SortOrder sortOrder) {
@@ -514,5 +519,11 @@ public class TypedTable<T> extends JTable {
         else
             clearSelection();
         this.selectFirstRow = selectFirstRow;
+    }
+
+    public void setDataAt(int row, T data){
+        currentData.set(row, data);
+        model.getDataVector().set(row, createDataRow(data));
+        model.fireTableDataChanged();
     }
 }

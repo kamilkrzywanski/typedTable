@@ -101,6 +101,7 @@ public class Main {
         new PanelTableController<>(panel.table, autoPanel);
 
         frame.add(autoPanel.buildPanel(),"wrap");
+
         frame.add(panel, "grow,push");
         frame.setVisible(true);
         frame.setPreferredSize(new Dimension(1500, 600));
