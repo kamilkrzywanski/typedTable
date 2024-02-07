@@ -3,6 +3,7 @@ package org.krzywanski.panel_v1.autopanel;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,8 @@ public class AutoPanelButtons<T> extends JPanel {
     JButton cancelButton = new JButton("Cancel");
     JButton editButton = new JButton("Edit");
     JButton saveButton = new JButton("Save");
+    JPanel addOrCancelPanel = new JPanel(new MigLayout("gapx 0, insets 0"));
+    JButton addButton = new JButton("Add");
     List<JComponent> externalComponents = new ArrayList<>();
     PanelMode mode = PanelMode.NONE;
 
@@ -22,20 +25,34 @@ public class AutoPanelButtons<T> extends JPanel {
 
 
     private void addControllButtons() {
-        cancelButton.setEnabled(false);
-        cancelButton.addActionListener(e -> {
 
+        cancelButton.setEnabled(false);
+        addOrCancelPanel.add(addButton, "grow");
+        add(addOrCancelPanel, "grow");
+
+
+
+        add(editButton, "grow");
+
+        cancelButton.setEnabled(false);
+        add(saveButton, "grow, span 3");
+
+        installListeners();
+    }
+
+    private void installListeners() {
+        saveButton.addActionListener(e -> {
+
+            cancelButton.setEnabled(false);
             saveButton.setEnabled(false);
             editButton.setEnabled(true);
-            cancelButton.setEnabled(false);
             lockExternalComponents(true);
             mode = PanelMode.NONE;
+            setAddOrCancelButton(Button.ADD);
 
-            dataPanel.fillWithData();
             dataPanel.setFieldsEditable(false);
+            dataPanel.saveChanges();
         });
-        add(cancelButton, "grow");
-
 
         editButton.addActionListener(e -> {
 
@@ -44,25 +61,45 @@ public class AutoPanelButtons<T> extends JPanel {
             editButton.setEnabled(false);
             lockExternalComponents(false);
             mode = PanelMode.UPDATE;
+            setAddOrCancelButton(Button.CANCEL);
 
             dataPanel.setFieldsEditable(true);
         });
-        add(editButton, "grow");
 
+        cancelButton.addActionListener(e -> {
 
-        cancelButton.setEnabled(false);
-        saveButton.addActionListener(e -> {
-
-            cancelButton.setEnabled(false);
             saveButton.setEnabled(false);
             editButton.setEnabled(true);
+            cancelButton.setEnabled(false);
             lockExternalComponents(true);
-            mode = PanelMode.NONE;
 
+
+            mode = PanelMode.NONE;
+            setAddOrCancelButton(Button.ADD);
+
+            dataPanel.updateCurrentData(dataPanel.dataSupplier.get());
+            dataPanel.fillWithData();
             dataPanel.setFieldsEditable(false);
-            dataPanel.saveChanges();
         });
-        add(saveButton, "grow, span 3");
+
+        addButton.addActionListener(e -> {
+            cancelButton.setEnabled(true);
+            saveButton.setEnabled(true);
+            editButton.setEnabled(false);
+            lockExternalComponents(false);
+            try {
+                dataPanel.updateCurrentData(dataPanel.dataClass.getDeclaredConstructor().newInstance());
+            } catch (InvocationTargetException | InstantiationException | IllegalAccessException |
+                     NoSuchMethodException ex) {
+                throw new RuntimeException(ex);
+            }
+            dataPanel.setFieldsEditable(true);
+            mode = PanelMode.UPDATE;
+
+            setAddOrCancelButton(Button.CANCEL);
+
+
+        });
     }
 
     /**
@@ -83,5 +120,20 @@ public class AutoPanelButtons<T> extends JPanel {
 
     public PanelMode getMode() {
         return mode;
+    }
+    private void setAddOrCancelButton(Button button){
+        if(button == Button.ADD){
+            addOrCancelPanel.remove(cancelButton);
+            addOrCancelPanel.add(addButton, "grow");
+        } else {
+            addOrCancelPanel.remove(addButton);
+            addOrCancelPanel.add(cancelButton, "grow");
+        }
+        addOrCancelPanel.repaint();
+        addOrCancelPanel.revalidate();
+    }
+
+    enum Button{
+        ADD, CANCEL
     }
 }

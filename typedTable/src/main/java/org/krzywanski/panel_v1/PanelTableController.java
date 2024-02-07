@@ -15,7 +15,6 @@ public class PanelTableController<T> {
     }
 
     private void connectPanelWithTable() {
-        panel.updateCurrentData(table.getSelectedItem());
         table.addGenericSelectionListener(panel::updateCurrentData);
         panel.addPanelChangeValueListener(element -> {
             int selectedRow = table.getSelectedRow();

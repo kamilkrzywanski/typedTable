@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Basic implementation of panel for data with auto generated fields
@@ -19,13 +20,17 @@ public class TypedAutoPanel<T> extends JPanel {
 
     List<PanelChangeValueListener<T>> listeners = new ArrayList<>();
     private T data;
+    protected Supplier<T> dataSupplier;
     private DataFlowController<T> repository;
+    final Class<T> dataClass;
 
     FieldController<T> fieldController;
     final AutoPanelButtons<T> autoPanelButtons;
 
-    public TypedAutoPanel(T data, Class<T> dataClass) {
-        this.data = data;
+    public TypedAutoPanel(Supplier<T> dataSupplier, Class<T> dataClass) {
+        this.data = dataSupplier.get();
+        this.dataSupplier = dataSupplier;
+        this.dataClass = dataClass;
         this.fieldController = new FieldController<>(dataClass);
         this.autoPanelButtons = new AutoPanelButtons<>(this);
         setLayout(new MigLayout());
@@ -42,7 +47,7 @@ public class TypedAutoPanel<T> extends JPanel {
      * Fills fields with data from data object
      */
     protected void fillWithData() {
-        if(autoPanelButtons.getMode() == PanelMode.UPDATE)
+        if(autoPanelButtons.getMode() == PanelMode.UPDATE || autoPanelButtons.getMode() == PanelMode.ADD)
             return;
 
         setFieldsEditable(false);

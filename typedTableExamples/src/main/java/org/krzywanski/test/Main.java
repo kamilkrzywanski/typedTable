@@ -91,7 +91,7 @@ public class Main {
 //                return null;
 //            }
 //        });
-        TypedAutoPanel<TestModelDto> autoPanel = new TypedAutoPanel<>(null, TestModelDto.class);
+        TypedAutoPanel<TestModelDto> autoPanel = new TypedAutoPanel<>(() ->panel.getSelectedItem(), TestModelDto.class);
         autoPanel.setDataFlowController(new TestModelService());
         TypedTablePanel<TestFormatClass> selectPanel = TypedTablePanel.getTableWithData(List.of(new TestFormatClass("A"), new TestFormatClass("B")), TestFormatClass.class);
 
