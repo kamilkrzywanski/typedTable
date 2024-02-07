@@ -44,7 +44,9 @@ public class PanelFieldCreator {
     List<FieldControllerElement> getComponents() {
         if(components == null) {
              components = Arrays.stream(dataClass.getDeclaredFields())
-                     .map(this::createFieldControllerElement).collect(Collectors.toList());
+                     .filter(field -> field.isAnnotationPresent(PanelField.class) || (useFieldsFromTable && field.isAnnotationPresent(MyTableColumn.class)))
+                     .map(this::createFieldControllerElement)
+                     .collect(Collectors.toList());
         }
 
       return components;
