@@ -22,20 +22,25 @@ public class TypedAutoPanel<T> extends JPanel {
     private DataFlowController<T> repository;
 
     FieldController<T> fieldController;
+    final AutoPanelButtons<T> autoPanelButtons;
 
     public TypedAutoPanel(T data, Class<T> dataClass) {
         this.data = data;
         this.fieldController = new FieldController<>(dataClass);
+        this.autoPanelButtons = new AutoPanelButtons<>(this);
         setLayout(new MigLayout());
     }
     public TypedAutoPanel<T> buildPanel(){
         addFields();
-        add(new AutoPanelButtons<>(this), "grow, span 3");
+        add(autoPanelButtons, "grow, span 3");
         fillWithData();
         return this;
     }
 
     protected void fillWithData() {
+        if(autoPanelButtons.getMode() == PanelMode.UPDATE)
+            return;
+
         setFieldsEditable(false);
 
         //TODO remove filter when all elements will have implemented FieldValueController
@@ -100,6 +105,10 @@ public class TypedAutoPanel<T> extends JPanel {
 
     public void addPanelChangeValueListener(PanelChangeValueListener<T> listener){
         listeners.add(listener);
+    }
+
+    public void addExternalComponent(JComponent component){
+        autoPanelButtons.addExternalComponent(component);
     }
 
 }

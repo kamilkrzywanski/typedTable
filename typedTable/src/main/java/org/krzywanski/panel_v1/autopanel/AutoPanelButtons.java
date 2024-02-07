@@ -1,12 +1,16 @@
 package org.krzywanski.panel_v1.autopanel;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AutoPanelButtons<T> extends JPanel {
     final TypedAutoPanel<T> dataPanel;
     JButton cancelButton = new JButton("Cancel");
     JButton editButton = new JButton("Edit");
     JButton saveButton = new JButton("Save");
+    List<JComponent> externalComponents = new ArrayList<>();
+    PanelMode mode = PanelMode.NONE;
 
     public AutoPanelButtons(TypedAutoPanel<T> dataPanel) {
         super();
@@ -22,6 +26,8 @@ public class AutoPanelButtons<T> extends JPanel {
             saveButton.setEnabled(false);
             editButton.setEnabled(true);
             cancelButton.setEnabled(false);
+            lockExternalComponents(true);
+            mode = PanelMode.NONE;
 
             dataPanel.fillWithData();
             dataPanel.setFieldsEditable(false);
@@ -34,6 +40,8 @@ public class AutoPanelButtons<T> extends JPanel {
             cancelButton.setEnabled(true);
             saveButton.setEnabled(true);
             editButton.setEnabled(false);
+            lockExternalComponents(false);
+            mode = PanelMode.UPDATE;
 
             dataPanel.setFieldsEditable(true);
         });
@@ -46,10 +54,24 @@ public class AutoPanelButtons<T> extends JPanel {
             cancelButton.setEnabled(false);
             saveButton.setEnabled(false);
             editButton.setEnabled(true);
+            lockExternalComponents(true);
+            mode = PanelMode.NONE;
 
             dataPanel.setFieldsEditable(false);
             dataPanel.saveChanges();
         });
         add(saveButton, "grow, span 3");
+    }
+
+    private void lockExternalComponents(boolean lock) {
+        externalComponents.forEach(component -> component.setEnabled(lock));
+    }
+
+    public void addExternalComponent(JComponent component) {
+        externalComponents.add(component);
+    }
+
+    public PanelMode getMode() {
+        return mode;
     }
 }
