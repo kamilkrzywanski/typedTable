@@ -16,7 +16,12 @@ public class PanelTableController<T> {
 
     private void connectPanelWithTable() {
         table.addGenericSelectionListener(panel::updateCurrentData);
-        panel.addPanelChangeValueListener(element -> {
+        panel.addPanelChangeValueListener( (element, action) -> {
+
+            if (action == DataAction.REMOVE) {
+                table.refreshData();
+                return;
+            }
             int selectedRow = table.getSelectedRow();
             table.setDataAt(selectedRow, element);
             table.getSelectionModel().setSelectionInterval(selectedRow, selectedRow);

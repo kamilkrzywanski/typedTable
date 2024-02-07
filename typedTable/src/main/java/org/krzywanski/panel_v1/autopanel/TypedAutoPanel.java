@@ -1,9 +1,9 @@
 package org.krzywanski.panel_v1.autopanel;
 
 import net.miginfocom.swing.MigLayout;
+import org.krzywanski.panel_v1.DataAction;
 import org.krzywanski.panel_v1.DataFlowController;
 import org.krzywanski.panel_v1.FieldController;
-import org.krzywanski.panel_v1.UpdateOrInsert;
 import org.krzywanski.panel_v1.fields.FieldValueController;
 import org.krzywanski.panel_v1.fields.TableValueController;
 
@@ -83,7 +83,7 @@ public class TypedAutoPanel<T> extends JPanel {
     /**
      * Saves changes to data object
      */
-    protected void saveChanges(UpdateOrInsert updateOrInsert) {
+    protected void saveChanges(DataAction updateOrInsert) {
         fieldController.getElements().stream().filter(el -> el.getFieldValueController() != null).forEach((element) -> {
             try {
                 element.getPropertyDescriptor().getWriteMethod().invoke(data, element.getFieldValueController().getValue());
@@ -104,7 +104,7 @@ public class TypedAutoPanel<T> extends JPanel {
                     break;
             }
         }
-        listeners.forEach(listener -> listener.valueChanged(data));
+        listeners.forEach(listener -> listener.valueChanged(data, updateOrInsert));
     }
 
     /**
@@ -143,7 +143,7 @@ public class TypedAutoPanel<T> extends JPanel {
     public void removeCurrentData() {
         if(data != null && repository != null){
             repository.remove(data);
-//            listeners.forEach(listener -> listener.valueChanged(null));
+            listeners.forEach(listener -> listener.valueChanged(null, DataAction.REMOVE));
         }
     }
 

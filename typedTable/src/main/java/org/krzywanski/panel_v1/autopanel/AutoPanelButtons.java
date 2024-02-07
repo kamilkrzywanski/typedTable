@@ -1,7 +1,7 @@
 package org.krzywanski.panel_v1.autopanel;
 
 import net.miginfocom.swing.MigLayout;
-import org.krzywanski.panel_v1.UpdateOrInsert;
+import org.krzywanski.panel_v1.DataAction;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
@@ -58,7 +58,7 @@ public class AutoPanelButtons<T> extends JPanel {
             setAddOrCancelButton(Button.ADD);
 
             dataPanel.setFieldsEditable(false);
-            dataPanel.saveChanges(mode == PanelMode.ADD ? UpdateOrInsert.INSERT : UpdateOrInsert.UPDATE);
+            dataPanel.saveChanges(mode == PanelMode.ADD ? DataAction.INSERT : DataAction.UPDATE);
             mode = PanelMode.NONE;
         });
 
