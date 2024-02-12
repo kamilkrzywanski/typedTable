@@ -159,14 +159,15 @@ public class TypedAutoPanel<T> extends JPanel {
         this.insertRepository = repository;
         this.removeRepository = repository;
         this.updateRepository = repository;
+        autoPanelButtons.validateButtonsState();
     }
 
     public void addPanelChangeValueListener(PanelChangeValueListener<T> listener){
         listeners.add(listener);
     }
 
-    public void addExternalComponent(JComponent component){
-        autoPanelButtons.addExternalComponent(component);
+    public void addExternalComponentToLock(JComponent component) {
+        autoPanelButtons.addExternalComponentToLock(component);
     }
 
 }

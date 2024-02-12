@@ -45,7 +45,10 @@ public class AutoPanelButtons<T> extends JPanel {
     private void addControllButtons() {
 
         cancelButton.setEnabled(false);
-        addOrCancelPanel.add(addButton, "grow");
+//        addOrCancelPanel.add(addButton, "grow");
+
+        setAddOrCancelButton(AddOrCancel.ADD);
+
         add(addOrCancelPanel, "grow");
 
 
@@ -54,8 +57,7 @@ public class AutoPanelButtons<T> extends JPanel {
 
         cancelButton.setEnabled(false);
 
-        removeOrSavePanel.add(removeButton, "grow");
-
+        setRemoveOrSaveButton(RemoveOrSave.REMOVE);
         add(removeOrSavePanel, "grow, span 3");
 
         installListeners();
@@ -161,7 +163,7 @@ public class AutoPanelButtons<T> extends JPanel {
      * Add external component to lock when panel is in edit mode
      * @param component component to lock
      */
-    public void addExternalComponent(JComponent component) {
+    public void addExternalComponentToLock(JComponent component) {
         externalComponents.add(component);
     }
 
@@ -190,10 +192,27 @@ public class AutoPanelButtons<T> extends JPanel {
         } else {
             removeOrSavePanel.remove(removeButton);
             removeOrSavePanel.add(saveButton, "grow");
-            saveButton.setEnabled(updateSupplier.get() != null);
+            saveButton.setEnabled(mode == PanelMode.UPDATE ? updateSupplier.get() != null : insertSupplier.get() != null);
         }
         removeOrSavePanel.repaint();
         removeOrSavePanel.revalidate();
+    }
+
+    /**
+     * Validates buttons state in case of some external changes at interfaces
+     */
+    public void validateButtonsState() {
+        if (mode == PanelMode.NONE) {
+            setAddOrCancelButton(AddOrCancel.ADD);
+            setRemoveOrSaveButton(RemoveOrSave.REMOVE);
+        } else if (mode == PanelMode.ADD) {
+            setAddOrCancelButton(AddOrCancel.CANCEL);
+            setRemoveOrSaveButton(RemoveOrSave.SAVE);
+        } else {
+            setAddOrCancelButton(AddOrCancel.CANCEL);
+            setRemoveOrSaveButton(RemoveOrSave.SAVE);
+        }
+        editButton.setEnabled(updateSupplier.get() != null);
     }
 
     enum AddOrCancel {
