@@ -42,6 +42,7 @@ import java.util.stream.Collectors;
 public class Main {
 
     public static SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+
     /**
      * ONLY FOR TEST USING CLASS
      */
@@ -52,6 +53,7 @@ public class Main {
         UIManager.put("Table.showHorizontalLines", true);
         FilterDialog.registerCustomFilterComponent(Boolean.class, new IFilterComponent() {
             final JCheckBox checkBox = new JCheckBox();
+
             @Override
             public String getFilterValue() {
                 return checkBox.isSelected() ? "true" : "false";
@@ -72,7 +74,7 @@ public class Main {
         frame.setTitle("JTable Example");
         frame.setLayout(new MigLayout());
         TypedTablePanel<TestModelDto> panel = TypedTablePanel.getTableWithProvider(new DefaultDataPrivder<>(10, Main::getData, Main::getSize), TestModelDto.class);
-        panel.addComuptedColumn("Computed column",String.class,  value -> value.getColumnA() + " " + value.getColumnB());
+        panel.addComuptedColumn("Computed column", String.class, value -> value.getColumnA() + " " + value.getColumnB());
         panel.addGenericSelectionListener(element -> {
             if (element != null)
                 System.out.println(element.getColumnA());
@@ -91,7 +93,7 @@ public class Main {
 //                return null;
 //            }
 //        });
-        TypedAutoPanel<TestModelDto> autoPanel = new TypedAutoPanel<>(() ->panel.getSelectedItem(), TestModelDto.class);
+        TypedAutoPanel<TestModelDto> autoPanel = new TypedAutoPanel<>(() -> panel.getSelectedItem(), TestModelDto.class);
         autoPanel.setDataFlowController(new TestModelService());
         TypedTablePanel<TestFormatClass> selectPanel = TypedTablePanel.getTableWithData(List.of(new TestFormatClass("A"), new TestFormatClass("B")), TestFormatClass.class);
 
@@ -100,7 +102,7 @@ public class Main {
 
         new PanelTableController<>(panel.table, autoPanel);
 
-        frame.add(autoPanel.buildPanel(),"wrap");
+        frame.add(autoPanel.buildPanel(), "wrap");
 
         frame.add(panel, "grow,push");
         frame.setVisible(true);
@@ -112,6 +114,7 @@ public class Main {
     public static List<TestModelDto> getAllData() {
         return Main.getData(0, Integer.MAX_VALUE);
     }
+
     public static List<TestModelDto> getData(int limit, int offest, List<SortColumn> sortColumn, String searchString, ActionType actionType, Map<String, String> extraParams) {
         extraParams.forEach((s, s2) -> System.out.println(s + " " + s2));
 //        if (sortColumn != null && !sortColumn.isEmpty() && sortColumn.get(0).getColumnName().equals("columnB")) {
@@ -122,13 +125,13 @@ public class Main {
 //                return Main.getData().stream().filter(testModel -> testModel.getColumnA().toLowerCase().contains(Objects.requireNonNullElse(searchString, ""))).sorted((o1, o2) -> o2.getColumnB().compareTo(o1.getColumnB())).skip(offest).limit(limit).collect(Collectors.toList());
 //        }
 
-        if(limit == -1)
+        if (limit == -1)
             return Main.getData(0, Integer.MAX_VALUE);
         return Main.getData(offest, limit).stream().filter(testModel -> testModel.getColumnA().toLowerCase().contains(Objects.requireNonNullElse(searchString, ""))).collect(Collectors.toList());
     }
 
     public static int getSize(String searchString, Map<String, String> extraParams) {
-      return getSize();
+        return getSize();
 //        return (int) Main.getData(0, Integer.MAX_VALUE).stream().filter(testModel -> testModel.getColumnA().toLowerCase().contains(Objects.requireNonNullElse(searchString, ""))).count();
     }
 
@@ -140,7 +143,7 @@ public class Main {
         cr.select(root);
         Query<TestModel> query = sessionFactory.openSession().createQuery(cr);
         query.setFirstResult(from).setMaxResults(limit);
-        List<TestModel> testModels =  query.getResultList();
+        List<TestModel> testModels = query.getResultList();
         return testModels.stream().map(testModel -> TestModelMapper.mapTestModelToDto(testModel, new TestModelDto())).collect(Collectors.toList());
 
     }
