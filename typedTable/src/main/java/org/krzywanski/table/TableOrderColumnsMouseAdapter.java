@@ -36,7 +36,7 @@ class TableOrderColumnsMouseAdapter extends MouseAdapter {
             columns.put(columnPd.getName(), column.getWidth());
         }
 
-        if (instance != null) instance.updateColumns(table.typeClass.getName(), columns, table.id);
+        if (instance != null) instance.updateColumns(table.typeClass.getCanonicalName(), columns, table.id);
     }
 
     @Override
