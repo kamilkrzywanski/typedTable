@@ -6,6 +6,8 @@ public class TestFormatClass {
     @MyTableColumn
     private String value;
 
+    @MyTableColumn
+    final String value2 = "value2";
     public TestFormatClass(String value) {
         this.value = value;
     }
@@ -22,4 +24,9 @@ public class TestFormatClass {
     public void setValue(String value) {
         this.value = value;
     }
+
+    public String getValue2() {
+        return value2;
+    }
+
 }

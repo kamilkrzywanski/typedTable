@@ -7,6 +7,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.function.Function;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Object to keep information about field, property descriptor and column name
@@ -17,7 +19,7 @@ public class FieldMock {
     final Class<?> type;
     final Function<Object, Object> functionToCompute;
 
-    final PropertyDescriptor propertyDescriptor;
+    PropertyDescriptor propertyDescriptor;
 
     final TableColumn tableColumn;
 
@@ -45,7 +47,14 @@ public class FieldMock {
         try {
             this.propertyDescriptor = new PropertyDescriptor(field.getName(), field.getDeclaringClass());
         } catch (IntrospectionException e) {
-            throw new RuntimeException(e);
+            Logger.getAnonymousLogger().log(Level.WARNING, "Did you forget to add getter and setter for field " + field.getName() + " in class " + field.getDeclaringClass().getCanonicalName() + "?");
+            try {
+                //MOCK IN CASE OF NO SETTER IN CASE OF READ ONLY FIELD
+                this.propertyDescriptor = new PropertyDescriptor(field.getName(), field.getDeclaringClass(), ReflectionUtils.IS_PREFIX + ReflectionUtils.capitalize(field.getName()), null);
+                Logger.getAnonymousLogger().log(Level.WARNING, "Field " + field.getName() + " will be not editable!");
+            } catch (IntrospectionException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 
