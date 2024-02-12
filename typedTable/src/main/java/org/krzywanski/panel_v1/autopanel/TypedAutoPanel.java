@@ -2,10 +2,12 @@ package org.krzywanski.panel_v1.autopanel;
 
 import net.miginfocom.swing.MigLayout;
 import org.krzywanski.panel_v1.DataAction;
-import org.krzywanski.panel_v1.DataFlowController;
+import org.krzywanski.panel_v1.dataflow.DataFlowAdapter;
 import org.krzywanski.panel_v1.FieldController;
+import org.krzywanski.panel_v1.dataflow.Insert;
+import org.krzywanski.panel_v1.dataflow.Remove;
+import org.krzywanski.panel_v1.dataflow.Update;
 import org.krzywanski.panel_v1.fields.FieldValueController;
-import org.krzywanski.panel_v1.fields.TableValueController;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
@@ -22,7 +24,9 @@ public class TypedAutoPanel<T> extends JPanel {
     List<PanelChangeValueListener<T>> listeners = new ArrayList<>();
     private T data;
     protected Supplier<T> dataSupplier;
-    private DataFlowController<T> repository;
+    protected Insert<T> insertRepository;
+    protected Remove<T> removeRepository;
+    protected Update<T> updateRepository;
     final Class<T> dataClass;
 
     FieldController<T> fieldController;
@@ -92,14 +96,14 @@ public class TypedAutoPanel<T> extends JPanel {
             }
         });
 
-        if(data != null && repository != null){
+        if (data != null) {
             switch (updateOrInsert){
                 case UPDATE:
-                    if(repository.update(data) != null)
+                    if (updateRepository != null && updateRepository.update(data) != null)
                         setFieldsEditable(false);
                     break;
                 case INSERT:
-                    if(repository.insert(data) != null)
+                    if (insertRepository != null && insertRepository.insert(data) != null)
                         setFieldsEditable(false);
                     break;
             }
@@ -141,8 +145,8 @@ public class TypedAutoPanel<T> extends JPanel {
      *
      */
     public void removeCurrentData() {
-        if(data != null && repository != null){
-            repository.remove(data);
+        if (data != null && removeRepository != null) {
+            removeRepository.remove(data);
             listeners.forEach(listener -> listener.valueChanged(null, DataAction.REMOVE));
         }
     }
@@ -151,8 +155,10 @@ public class TypedAutoPanel<T> extends JPanel {
      * Sets data flow controller for crud operations
      * @param repository - interface for data flow
      */
-    public void setDataFlowController(DataFlowController<T> repository) {
-        this.repository = repository;
+    public void setDataFlowController(DataFlowAdapter<T> repository) {
+        this.insertRepository = repository;
+        this.removeRepository = repository;
+        this.updateRepository = repository;
     }
 
     public void addPanelChangeValueListener(PanelChangeValueListener<T> listener){

@@ -7,17 +7,20 @@ import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class AutoPanelButtons<T> extends JPanel {
+    ResourceBundle resourceBundle = ResourceBundle.getBundle("PanelBundle", Locale.getDefault());
     final TypedAutoPanel<T> dataPanel;
-    JButton cancelButton = new JButton("Cancel");
-    JButton editButton = new JButton("Edit");
-    JButton saveButton = new JButton("Save");
+    JButton cancelButton = new JButton(resourceBundle.getString("panel.cancel.button"));
+    JButton editButton = new JButton(resourceBundle.getString("panel.edit.button"));
+    JButton saveButton = new JButton(resourceBundle.getString("panel.save.button"));
+    JButton addButton = new JButton(resourceBundle.getString("panel.add.button"));
+    JButton deleteButton = new JButton(resourceBundle.getString("panel.remove.button"));
     JPanel addOrCancelPanel = new JPanel(new MigLayout("gapx 0, insets 0"));
-    JButton addButton = new JButton("Add");
-    JButton deleteButton = new JButton("Delete");
     JPanel deleteOrSavePanel = new JPanel(new MigLayout("gapx 0, insets 0"));
     List<JComponent> externalComponents = new ArrayList<>();
     PanelMode mode = PanelMode.NONE;

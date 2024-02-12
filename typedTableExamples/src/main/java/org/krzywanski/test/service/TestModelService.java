@@ -1,14 +1,13 @@
 package org.krzywanski.test.service;
 
-import jakarta.persistence.EntityManager;
-import org.krzywanski.panel_v1.DataFlowController;
+import org.krzywanski.panel_v1.dataflow.DataFlowAdapter;
 import org.krzywanski.test.Main;
 import org.krzywanski.test.dao.TestModelDao;
 import org.krzywanski.test.dto.TestModelDto;
 import org.krzywanski.test.mapper.TestModelMapper;
 import org.krzywanski.test.model.TestModel;
 
-public class TestModelService implements DataFlowController<TestModelDto> {
+public class TestModelService implements DataFlowAdapter<TestModelDto> {
     TestModelDao testModelDao = new TestModelDao(Main.sessionFactory);
 
     @Override

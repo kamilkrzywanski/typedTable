@@ -3,7 +3,6 @@ package org.krzywanski.test.dao;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.krzywanski.panel_v1.DataFlowController;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
