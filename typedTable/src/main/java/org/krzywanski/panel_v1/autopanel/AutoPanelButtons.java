@@ -2,6 +2,9 @@ package org.krzywanski.panel_v1.autopanel;
 
 import net.miginfocom.swing.MigLayout;
 import org.krzywanski.panel_v1.DataAction;
+import org.krzywanski.panel_v1.dataflow.Insert;
+import org.krzywanski.panel_v1.dataflow.Remove;
+import org.krzywanski.panel_v1.dataflow.Update;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
@@ -9,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,15 +23,21 @@ public class AutoPanelButtons<T> extends JPanel {
     JButton editButton = new JButton(resourceBundle.getString("panel.edit.button"));
     JButton saveButton = new JButton(resourceBundle.getString("panel.save.button"));
     JButton addButton = new JButton(resourceBundle.getString("panel.add.button"));
-    JButton deleteButton = new JButton(resourceBundle.getString("panel.remove.button"));
+    JButton removeButton = new JButton(resourceBundle.getString("panel.remove.button"));
     JPanel addOrCancelPanel = new JPanel(new MigLayout("gapx 0, insets 0"));
-    JPanel deleteOrSavePanel = new JPanel(new MigLayout("gapx 0, insets 0"));
+    JPanel removeOrSavePanel = new JPanel(new MigLayout("gapx 0, insets 0"));
     List<JComponent> externalComponents = new ArrayList<>();
     PanelMode mode = PanelMode.NONE;
+    final Supplier<Insert<?>> insertSupplier;
+    final Supplier<Remove<?>> removeSupplier;
+    final Supplier<Update<?>> updateSupplier;
 
-    public AutoPanelButtons(TypedAutoPanel<T> dataPanel) {
+    public AutoPanelButtons(TypedAutoPanel<T> dataPanel, Supplier<Insert<?>> insertSupplier, Supplier<Remove<?>> removeSupplier, Supplier<Update<?>> updateSupplier) {
         super(new MigLayout("gapx 0, insets 0"));
         this.dataPanel = dataPanel;
+        this.insertSupplier = insertSupplier;
+        this.removeSupplier = removeSupplier;
+        this.updateSupplier = updateSupplier;
         addControllButtons();
     }
 
@@ -44,9 +54,9 @@ public class AutoPanelButtons<T> extends JPanel {
 
         cancelButton.setEnabled(false);
 
-        deleteOrSavePanel.add(deleteButton, "grow");
+        removeOrSavePanel.add(removeButton, "grow");
 
-        add(deleteOrSavePanel, "grow, span 3");
+        add(removeOrSavePanel, "grow, span 3");
 
         installListeners();
     }
@@ -59,7 +69,7 @@ public class AutoPanelButtons<T> extends JPanel {
             editButton.setEnabled(true);
             lockExternalComponents(true);
             setAddOrCancelButton(AddOrCancel.ADD);
-            setDeleteOrSaveButton(DeleteOrSave.DELETE);
+            setRemoveOrSaveButton(RemoveOrSave.REMOVE);
 
 
             dataPanel.setFieldsEditable(false);
@@ -75,7 +85,7 @@ public class AutoPanelButtons<T> extends JPanel {
             lockExternalComponents(false);
             mode = PanelMode.UPDATE;
             setAddOrCancelButton(AddOrCancel.CANCEL);
-            setDeleteOrSaveButton(DeleteOrSave.SAVE);
+            setRemoveOrSaveButton(RemoveOrSave.SAVE);
 
             dataPanel.setFieldsEditable(true);
         });
@@ -90,7 +100,7 @@ public class AutoPanelButtons<T> extends JPanel {
 
             mode = PanelMode.NONE;
             setAddOrCancelButton(AddOrCancel.ADD);
-            setDeleteOrSaveButton(DeleteOrSave.DELETE);
+            setRemoveOrSaveButton(RemoveOrSave.REMOVE);
 
             dataPanel.updateCurrentData(dataPanel.dataSupplier.get());
             dataPanel.fillWithData();
@@ -117,12 +127,12 @@ public class AutoPanelButtons<T> extends JPanel {
             mode = PanelMode.ADD;
 
             setAddOrCancelButton(AddOrCancel.CANCEL);
-            setDeleteOrSaveButton(DeleteOrSave.SAVE);
+            setRemoveOrSaveButton(RemoveOrSave.SAVE);
 
 
         });
 
-        deleteButton.addActionListener(e -> {
+        removeButton.addActionListener(e -> {
             dataPanel.removeCurrentData();
             restorePanel();
         });
@@ -162,31 +172,35 @@ public class AutoPanelButtons<T> extends JPanel {
         if(button == AddOrCancel.ADD){
             addOrCancelPanel.remove(cancelButton);
             addOrCancelPanel.add(addButton, "grow");
+            addButton.setEnabled(insertSupplier.get() != null);
         } else {
             addOrCancelPanel.remove(addButton);
             addOrCancelPanel.add(cancelButton, "grow");
+            cancelButton.setEnabled(updateSupplier.get() != null);
         }
         addOrCancelPanel.repaint();
         addOrCancelPanel.revalidate();
     }
 
-    private void setDeleteOrSaveButton(DeleteOrSave button){
-        if(button == DeleteOrSave.DELETE){
-            deleteOrSavePanel.remove(saveButton);
-            deleteOrSavePanel.add(deleteButton, "grow");
+    private void setRemoveOrSaveButton(RemoveOrSave button) {
+        if (button == RemoveOrSave.REMOVE) {
+            removeOrSavePanel.remove(saveButton);
+            removeOrSavePanel.add(removeButton, "grow");
+            removeButton.setEnabled(removeSupplier.get() != null);
         } else {
-            deleteOrSavePanel.remove(deleteButton);
-            deleteOrSavePanel.add(saveButton, "grow");
+            removeOrSavePanel.remove(removeButton);
+            removeOrSavePanel.add(saveButton, "grow");
+            saveButton.setEnabled(updateSupplier.get() != null);
         }
-        deleteOrSavePanel.repaint();
-        deleteOrSavePanel.revalidate();
+        removeOrSavePanel.repaint();
+        removeOrSavePanel.revalidate();
     }
 
     enum AddOrCancel {
         ADD, CANCEL
     }
 
-    enum DeleteOrSave {
-        DELETE, SAVE
+    enum RemoveOrSave {
+        REMOVE, SAVE
     }
 }

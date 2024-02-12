@@ -37,7 +37,7 @@ public class TypedAutoPanel<T> extends JPanel {
         this.dataSupplier = dataSupplier;
         this.dataClass = dataClass;
         this.fieldController = new FieldController<>(dataClass);
-        this.autoPanelButtons = new AutoPanelButtons<>(this);
+        this.autoPanelButtons = new AutoPanelButtons<>(this, () -> insertRepository, () -> removeRepository, () -> updateRepository);
         setLayout(new MigLayout());
     }
     public TypedAutoPanel<T> buildPanel(){
