@@ -27,3 +27,11 @@ Incoming features:
 - crud operations on table
 - create of crud panel for table
 
+
+Test environment:
+- to run test database you need to have docker installed and run command:
+```docker-compose up -d```
+
+- application is located in typedTable directory
+- example of usage is located in typedTableExamples directory
+
