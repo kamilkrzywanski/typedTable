@@ -95,10 +95,9 @@ public class Main {
 //        });
         TypedAutoPanel<TestModelDto> autoPanel = new TypedAutoPanel<>(() -> panel.getSelectedItem(), TestModelDto.class);
         autoPanel.setDataFlowController(new TestModelService());
+
         TypedTablePanel<TestFormatClass> selectPanel = TypedTablePanel.getTableWithData(List.of(new TestFormatClass("A"), new TestFormatClass("B")), TestFormatClass.class);
-
-
-        autoPanel.addDataEditor("testFormatClass", TestFormatClass.class, new TableValueController<>(selectPanel));
+        autoPanel.addDataEditor("testFormatClass", TestFormatClass.class, new TableValueController<>(selectPanel, "Select format class"));
 
         new PanelTableController<>(panel.table, autoPanel);
 

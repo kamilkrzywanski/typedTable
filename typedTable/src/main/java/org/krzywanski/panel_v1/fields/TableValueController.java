@@ -1,14 +1,13 @@
 package org.krzywanski.panel_v1.fields;
 
 import org.krzywanski.panel_v1.autopanel.TextFieldWithTableSelect;
-import org.krzywanski.table.TypedTable;
 import org.krzywanski.table.TypedTablePanel;
 
 public class TableValueController<T> implements FieldValueController<T, TextFieldWithTableSelect<T>> {
     final TextFieldWithTableSelect<T> table;
 
-    public TableValueController(TypedTablePanel<T> table) {
-        this.table = new TextFieldWithTableSelect<>(table);
+    public TableValueController(TypedTablePanel<T> table, String dialogTitle) {
+        this.table = new TextFieldWithTableSelect<>(table, dialogTitle);
     }
 
     @Override

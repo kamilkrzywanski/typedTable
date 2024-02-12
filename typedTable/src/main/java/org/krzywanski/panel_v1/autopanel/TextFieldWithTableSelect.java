@@ -1,11 +1,9 @@
 package org.krzywanski.panel_v1.autopanel;
 
 import net.miginfocom.swing.MigLayout;
-import org.krzywanski.table.TypedTable;
 import org.krzywanski.table.TypedTablePanel;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
@@ -25,12 +23,13 @@ public class TextFieldWithTableSelect<T> extends JPanel {
     final JButton button = new JButton("...");
     final JButton okBUtton =  new JButton("OK");
 
-    public TextFieldWithTableSelect(TypedTablePanel<T> table) {
+    public TextFieldWithTableSelect(TypedTablePanel<T> table, String dialogTitle) {
         this.table = table;
         this.textField.setEditable(false);
 
         button.addActionListener(e ->{
-            JDialog dialog = new JDialog();
+            JDialog dialog = new JDialog(SwingUtilities.getWindowAncestor(table));
+            dialog.setModal(true);
             dialog.setLayout(new MigLayout());
 
             table.addTableKeyListener(new KeyAdapter() {
@@ -41,7 +40,7 @@ public class TextFieldWithTableSelect<T> extends JPanel {
                     }
                 }
             });
-
+            dialog.setTitle(dialogTitle);
             dialog.add(table, "grow, span 2, wrap");
             dialog.add(new JButton("Cancel"));
 
