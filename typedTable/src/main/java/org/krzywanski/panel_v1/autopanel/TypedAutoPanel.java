@@ -69,8 +69,7 @@ public class TypedAutoPanel<T> extends JPanel {
                 }
             });
         });
-
-
+        autoPanelButtons.validateButtonsState();
     }
 
     /**
