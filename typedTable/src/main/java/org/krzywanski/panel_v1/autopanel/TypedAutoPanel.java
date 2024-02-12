@@ -155,7 +155,7 @@ public class TypedAutoPanel<T> extends JPanel {
      * Sets data flow controller for all crud operations
      * @param repository - interface for data flow
      */
-    public void setDataFlowController(DataFlowAdapter<T> repository) {
+    public void setDataFlowAdapter(DataFlowAdapter<T> repository) {
         this.insertRepository = repository;
         this.removeRepository = repository;
         this.updateRepository = repository;
