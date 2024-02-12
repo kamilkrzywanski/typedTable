@@ -12,11 +12,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class AutoPanelButtons<T> extends JPanel {
+    final List<Supplier<Boolean>> insertValidators = new ArrayList<>();
+    final List<Supplier<Boolean>> updateValidators = new ArrayList<>();
+    final List<Supplier<Boolean>> removeValidators = new ArrayList<>();
     ResourceBundle resourceBundle = ResourceBundle.getBundle("PanelBundle", Locale.getDefault());
     final TypedAutoPanel<T> dataPanel;
     JButton cancelButton = new JButton(resourceBundle.getString("panel.cancel.button"));
@@ -68,7 +73,7 @@ public class AutoPanelButtons<T> extends JPanel {
 
             cancelButton.setEnabled(false);
             saveButton.setEnabled(false);
-            editButton.setEnabled(true);
+            editButton.setEnabled(updateValidators.stream().allMatch(Supplier::get));
             lockExternalComponents(true);
             setAddOrCancelButton(AddOrCancel.ADD);
             setRemoveOrSaveButton(RemoveOrSave.REMOVE);
@@ -95,7 +100,7 @@ public class AutoPanelButtons<T> extends JPanel {
         cancelButton.addActionListener(e -> {
 
             saveButton.setEnabled(false);
-            editButton.setEnabled(true);
+            editButton.setEnabled(updateValidators.stream().allMatch(Supplier::get));
             cancelButton.setEnabled(false);
             lockExternalComponents(true);
 
@@ -145,7 +150,7 @@ public class AutoPanelButtons<T> extends JPanel {
         dataPanel.fillWithData();
         cancelButton.setEnabled(false);
         saveButton.setEnabled(false);
-        editButton.setEnabled(true);
+        editButton.setEnabled(updateValidators.stream().allMatch(Supplier::get));
         lockExternalComponents(false);
         mode = PanelMode.NONE;
         setAddOrCancelButton(AddOrCancel.ADD);
@@ -174,7 +179,7 @@ public class AutoPanelButtons<T> extends JPanel {
         if(button == AddOrCancel.ADD){
             addOrCancelPanel.remove(cancelButton);
             addOrCancelPanel.add(addButton, "grow");
-            addButton.setEnabled(insertSupplier.get() != null);
+            addButton.setEnabled(insertSupplier.get() != null && insertValidators.stream().allMatch(Supplier::get));
         } else {
             addOrCancelPanel.remove(addButton);
             addOrCancelPanel.add(cancelButton, "grow");
@@ -188,11 +193,13 @@ public class AutoPanelButtons<T> extends JPanel {
         if (button == RemoveOrSave.REMOVE) {
             removeOrSavePanel.remove(saveButton);
             removeOrSavePanel.add(removeButton, "grow");
-            removeButton.setEnabled(removeSupplier.get() != null);
+            removeButton.setEnabled(removeSupplier.get() != null && removeValidators.stream().allMatch(Supplier::get));
         } else {
             removeOrSavePanel.remove(removeButton);
             removeOrSavePanel.add(saveButton, "grow");
-            saveButton.setEnabled(mode == PanelMode.UPDATE ? updateSupplier.get() != null : insertSupplier.get() != null);
+            saveButton.setEnabled(
+                    mode == PanelMode.UPDATE ? updateSupplier.get() != null && updateValidators.stream().allMatch(Supplier::get)
+                            : insertSupplier.get() != null && insertValidators.stream().allMatch(Supplier::get));
         }
         removeOrSavePanel.repaint();
         removeOrSavePanel.revalidate();
@@ -212,7 +219,7 @@ public class AutoPanelButtons<T> extends JPanel {
             setAddOrCancelButton(AddOrCancel.CANCEL);
             setRemoveOrSaveButton(RemoveOrSave.SAVE);
         }
-        editButton.setEnabled(updateSupplier.get() != null);
+        editButton.setEnabled(updateSupplier.get() != null && updateValidators.stream().allMatch(Supplier::get));
     }
 
     enum AddOrCancel {
@@ -221,5 +228,17 @@ public class AutoPanelButtons<T> extends JPanel {
 
     enum RemoveOrSave {
         REMOVE, SAVE
+    }
+
+    public void addInsertValidator(Supplier<Boolean> validator) {
+        insertValidators.add(validator);
+    }
+
+    public void addUpdateValidator(Supplier<Boolean> validator) {
+        updateValidators.add(validator);
+    }
+
+    public void addRemoveValidator(Supplier<Boolean> validator) {
+        removeValidators.add(validator);
     }
 }

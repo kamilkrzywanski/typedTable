@@ -185,4 +185,15 @@ public class TypedAutoPanel<T> extends JPanel {
         autoPanelButtons.addExternalComponentToLock(component);
     }
 
+    public void addInsertValidator(Supplier<Boolean> validator) {
+        autoPanelButtons.addInsertValidator(validator);
+    }
+
+    public void addUpdateValidator(Supplier<Boolean> validator) {
+        autoPanelButtons.addUpdateValidator(validator);
+    }
+
+    public void addRemoveValidator(Supplier<Boolean> validator) {
+        autoPanelButtons.addRemoveValidator(validator);
+    }
 }
