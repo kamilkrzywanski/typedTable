@@ -70,7 +70,11 @@ public class AutoPanelButtons<T> extends JPanel {
 
     private void installListeners() {
         saveButton.addActionListener(e -> {
-            dataPanel.saveChanges(mode == PanelMode.ADD ? DataAction.INSERT : DataAction.UPDATE);
+            boolean result = dataPanel.saveChanges(mode == PanelMode.ADD ? DataAction.INSERT : DataAction.UPDATE);
+
+            if (!result) {
+                return;
+            }
 
             cancelButton.setEnabled(false);
             saveButton.setEnabled(false);

@@ -90,7 +90,8 @@ public class TypedAutoPanel<T> extends JPanel {
     /**
      * Saves changes to data object
      */
-    protected void saveChanges(DataAction updateOrInsert) {
+    protected boolean saveChanges(DataAction updateOrInsert) {
+        boolean result = true;
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
         FieldValidator<T> fieldValidator = new FieldValidator<>();
@@ -100,10 +101,14 @@ public class TypedAutoPanel<T> extends JPanel {
 
                 if (!validationResult.isEmpty()) {
                     validationResult.forEach(v -> JOptionPane.showMessageDialog(this, v.getMessage()));
-                    return;
+                    result = false;
                 }
             }
         }
+
+        if (!result)
+            return result;
+
 
         fieldController.getElements().stream().filter(el -> el.getFieldValueController() != null).forEach((element) -> {
             try {
@@ -126,6 +131,7 @@ public class TypedAutoPanel<T> extends JPanel {
             }
         }
         listeners.forEach(listener -> listener.valueChanged(data, updateOrInsert));
+        return result;
     }
 
     /**
