@@ -2,11 +2,8 @@ package org.krzywanski.panel_v1.autopanel;
 
 import net.miginfocom.swing.MigLayout;
 import org.krzywanski.panel_v1.DataAction;
-import org.krzywanski.panel_v1.dataflow.DataFlowAdapter;
+import org.krzywanski.panel_v1.dataflow.*;
 import org.krzywanski.panel_v1.FieldController;
-import org.krzywanski.panel_v1.dataflow.Insert;
-import org.krzywanski.panel_v1.dataflow.Remove;
-import org.krzywanski.panel_v1.dataflow.Update;
 import org.krzywanski.panel_v1.fields.FieldValueController;
 
 import javax.swing.*;
@@ -184,15 +181,15 @@ public class TypedAutoPanel<T> extends JPanel {
         autoPanelButtons.addExternalComponentToLock(component);
     }
 
-    public void addInsertValidator(Supplier<Boolean> validator) {
+    public void addInsertValidator(ControllerValidator validator) {
         autoPanelButtons.addInsertValidator(validator);
     }
 
-    public void addUpdateValidator(Supplier<Boolean> validator) {
+    public void addUpdateValidator(ControllerValidator validator) {
         autoPanelButtons.addUpdateValidator(validator);
     }
 
-    public void addRemoveValidator(Supplier<Boolean> validator) {
+    public void addRemoveValidator(ControllerValidator validator) {
         autoPanelButtons.addRemoveValidator(validator);
     }
 }

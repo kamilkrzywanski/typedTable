@@ -2,6 +2,7 @@ package org.krzywanski.panel_v1.autopanel;
 
 import net.miginfocom.swing.MigLayout;
 import org.krzywanski.panel_v1.DataAction;
+import org.krzywanski.panel_v1.dataflow.ControllerValidator;
 import org.krzywanski.panel_v1.dataflow.Insert;
 import org.krzywanski.panel_v1.dataflow.Remove;
 import org.krzywanski.panel_v1.dataflow.Update;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -19,9 +21,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class AutoPanelButtons<T> extends JPanel {
-    final List<Supplier<Boolean>> insertValidators = new ArrayList<>();
-    final List<Supplier<Boolean>> updateValidators = new ArrayList<>();
-    final List<Supplier<Boolean>> removeValidators = new ArrayList<>();
+    final List<ControllerValidator> insertValidators = new ArrayList<>();
+    final List<ControllerValidator> updateValidators = new ArrayList<>();
+    final List<ControllerValidator> removeValidators = new ArrayList<>();
     ResourceBundle resourceBundle = ResourceBundle.getBundle("PanelBundle", Locale.getDefault());
     final TypedAutoPanel<T> dataPanel;
     JButton cancelButton = new JButton(resourceBundle.getString("panel.cancel.button"));
@@ -73,7 +75,7 @@ public class AutoPanelButtons<T> extends JPanel {
 
             cancelButton.setEnabled(false);
             saveButton.setEnabled(false);
-            editButton.setEnabled(updateValidators.stream().allMatch(Supplier::get));
+            editButton.setEnabled(validateAndInsertTooltip(updateValidators, editButton));
             lockExternalComponents(true);
             setAddOrCancelButton(AddOrCancel.ADD);
             setRemoveOrSaveButton(RemoveOrSave.REMOVE);
@@ -100,7 +102,7 @@ public class AutoPanelButtons<T> extends JPanel {
         cancelButton.addActionListener(e -> {
 
             saveButton.setEnabled(false);
-            editButton.setEnabled(updateValidators.stream().allMatch(Supplier::get));
+            editButton.setEnabled(validateAndInsertTooltip(updateValidators, editButton));
             cancelButton.setEnabled(false);
             lockExternalComponents(true);
 
@@ -150,7 +152,7 @@ public class AutoPanelButtons<T> extends JPanel {
         dataPanel.fillWithData();
         cancelButton.setEnabled(false);
         saveButton.setEnabled(false);
-        editButton.setEnabled(updateValidators.stream().allMatch(Supplier::get));
+        editButton.setEnabled(validateAndInsertTooltip(updateValidators, editButton));
         lockExternalComponents(false);
         mode = PanelMode.NONE;
         setAddOrCancelButton(AddOrCancel.ADD);
@@ -179,7 +181,7 @@ public class AutoPanelButtons<T> extends JPanel {
         if(button == AddOrCancel.ADD){
             addOrCancelPanel.remove(cancelButton);
             addOrCancelPanel.add(addButton, "grow");
-            addButton.setEnabled(insertSupplier.get() != null && insertValidators.stream().allMatch(Supplier::get));
+            addButton.setEnabled(insertSupplier.get() != null && validateAndInsertTooltip(insertValidators, addButton));
         } else {
             addOrCancelPanel.remove(addButton);
             addOrCancelPanel.add(cancelButton, "grow");
@@ -193,13 +195,13 @@ public class AutoPanelButtons<T> extends JPanel {
         if (button == RemoveOrSave.REMOVE) {
             removeOrSavePanel.remove(saveButton);
             removeOrSavePanel.add(removeButton, "grow");
-            removeButton.setEnabled(removeSupplier.get() != null && removeValidators.stream().allMatch(Supplier::get));
+            removeButton.setEnabled(removeSupplier.get() != null && validateAndInsertTooltip(removeValidators, removeButton));
         } else {
             removeOrSavePanel.remove(removeButton);
             removeOrSavePanel.add(saveButton, "grow");
             saveButton.setEnabled(
-                    mode == PanelMode.UPDATE ? updateSupplier.get() != null && updateValidators.stream().allMatch(Supplier::get)
-                            : insertSupplier.get() != null && insertValidators.stream().allMatch(Supplier::get));
+                    mode == PanelMode.UPDATE ? updateSupplier.get() != null && validateAndInsertTooltip(updateValidators, saveButton)
+                            : insertSupplier.get() != null && validateAndInsertTooltip(insertValidators, saveButton));
         }
         removeOrSavePanel.repaint();
         removeOrSavePanel.revalidate();
@@ -219,7 +221,7 @@ public class AutoPanelButtons<T> extends JPanel {
             setAddOrCancelButton(AddOrCancel.CANCEL);
             setRemoveOrSaveButton(RemoveOrSave.SAVE);
         }
-        editButton.setEnabled(updateSupplier.get() != null && updateValidators.stream().allMatch(Supplier::get));
+        editButton.setEnabled(updateSupplier.get() != null && validateAndInsertTooltip(updateValidators, editButton));
     }
 
     enum AddOrCancel {
@@ -230,15 +232,27 @@ public class AutoPanelButtons<T> extends JPanel {
         REMOVE, SAVE
     }
 
-    public void addInsertValidator(Supplier<Boolean> validator) {
+    public void addInsertValidator(ControllerValidator validator) {
         insertValidators.add(validator);
     }
 
-    public void addUpdateValidator(Supplier<Boolean> validator) {
+    public void addUpdateValidator(ControllerValidator validator) {
         updateValidators.add(validator);
     }
 
-    public void addRemoveValidator(Supplier<Boolean> validator) {
+    public void addRemoveValidator(ControllerValidator validator) {
         removeValidators.add(validator);
+    }
+
+
+    private boolean validateAndInsertTooltip(List<ControllerValidator> validators, JButton button) {
+        AtomicBoolean result = new AtomicBoolean(true);
+
+        validators.stream().filter(controllerValidator -> !controllerValidator.validate().get()).findFirst().ifPresent(controllerValidator -> {
+            result.set(false);
+            button.setToolTipText(controllerValidator.getMessage());
+        });
+
+        return result.get();
     }
 }

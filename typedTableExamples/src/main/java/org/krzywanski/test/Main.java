@@ -11,6 +11,7 @@ import org.hibernate.query.Query;
 import org.jdesktop.swingx.JXDatePicker;
 import org.krzywanski.panel_v1.PanelTableController;
 import org.krzywanski.panel_v1.TypedPanelFields;
+import org.krzywanski.panel_v1.dataflow.DefaultControllerValidator;
 import org.krzywanski.panel_v1.fields.DefaultFieldProvider;
 import org.krzywanski.panel_v1.fields.TableValueController;
 import org.krzywanski.table.SortColumn;
@@ -93,7 +94,7 @@ public class Main {
         autoPanel.addDataEditor("testFormatClass", TestFormatClass.class, new TableValueController<>(selectPanel, "Select format class"));
 
         new PanelTableController<>(panel.table, autoPanel);
-        autoPanel.addInsertValidator(() -> !"M".equals(panel.getSelectedItem().getColumnA()));
+        autoPanel.addInsertValidator(new DefaultControllerValidator(() -> !"M".equals(panel.getSelectedItem().getColumnA()), () -> "ERROR"));
 
         frame.add(autoPanel.buildPanel(), "wrap");
 
