@@ -14,8 +14,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -232,7 +230,7 @@ public class AutoPanelButtons<T> extends JPanel {
         REMOVE, SAVE
     }
 
-    public void addInsertValidator(ControllerValidator validator) {
+    public void addInsertValidator(ControllerValidator<T> validator) {
         insertValidators.add(validator);
     }
 
