@@ -1,7 +1,13 @@
 package org.krzywanski.panel_v1.autopanel;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 import net.miginfocom.swing.MigLayout;
 import org.krzywanski.panel_v1.DataAction;
+import org.krzywanski.panel_v1.FieldControllerElement;
+import org.krzywanski.panel_v1.FieldValidator;
 import org.krzywanski.panel_v1.dataflow.*;
 import org.krzywanski.panel_v1.FieldController;
 import org.krzywanski.panel_v1.fields.FieldValueController;
@@ -10,6 +16,7 @@ import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Supplier;
 
 /**
@@ -84,6 +91,20 @@ public class TypedAutoPanel<T> extends JPanel {
      * Saves changes to data object
      */
     protected void saveChanges(DataAction updateOrInsert) {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+        FieldValidator<T> fieldValidator = new FieldValidator<>();
+        for (FieldControllerElement element : fieldController.getElements()) {
+            if (element.getFieldValueController() != null) {
+                Set<ConstraintViolation<T>> validationResult = fieldValidator.validateField(element, validator, dataClass);
+
+                if (!validationResult.isEmpty()) {
+                    validationResult.forEach(v -> JOptionPane.showMessageDialog(this, v.getMessage()));
+                    return;
+                }
+            }
+        }
+
         fieldController.getElements().stream().filter(el -> el.getFieldValueController() != null).forEach((element) -> {
             try {
                 element.getPropertyDescriptor().getWriteMethod().invoke(data, element.getFieldValueController().getValue());

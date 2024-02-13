@@ -1,6 +1,10 @@
 package org.krzywanski.test.dto;
 
 import jakarta.persistence.Entity;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
 import org.krzywanski.table.annot.MyTableColumn;
 import org.krzywanski.table.annot.ReflectionSort;
 import org.krzywanski.table.annot.TableFilter;
@@ -28,10 +32,10 @@ public class TestModelDto implements Comparable<TestModelDto>, Serializable {
 
     @MyTableColumn(label = "XXX", width = 200, sortable = true)
     private String columnA;
-
     @MyTableColumn(label = "Decimal column", format = "0.00$", sortable = true)
     private BigDecimal columnB;
-
+    @NotEmpty(message = "Test label cannot be empty")
+    @Email
     @MyTableColumn(label = "Test label")
     private String columnC;
 

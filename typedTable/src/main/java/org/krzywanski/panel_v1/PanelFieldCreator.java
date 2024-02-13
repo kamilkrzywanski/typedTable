@@ -1,5 +1,8 @@
 package org.krzywanski.panel_v1;
 
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 import org.krzywanski.panel_v1.annot.PanelField;
 import org.krzywanski.panel_v1.fields.*;
 import org.krzywanski.table.annot.MyTableColumn;
