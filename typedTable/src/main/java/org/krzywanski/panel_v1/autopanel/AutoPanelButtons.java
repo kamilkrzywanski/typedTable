@@ -21,9 +21,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class AutoPanelButtons<T> extends JPanel {
-    final List<ControllerValidator> insertValidators = new ArrayList<>();
-    final List<ControllerValidator> updateValidators = new ArrayList<>();
-    final List<ControllerValidator> removeValidators = new ArrayList<>();
+    final List<ControllerValidator<T>> insertValidators = new ArrayList<>();
+    final List<ControllerValidator<T>> updateValidators = new ArrayList<>();
+    final List<ControllerValidator<T>> removeValidators = new ArrayList<>();
     ResourceBundle resourceBundle = ResourceBundle.getBundle("PanelBundle", Locale.getDefault());
     final TypedAutoPanel<T> dataPanel;
     JButton cancelButton = new JButton(resourceBundle.getString("panel.cancel.button"));
@@ -236,19 +236,19 @@ public class AutoPanelButtons<T> extends JPanel {
         insertValidators.add(validator);
     }
 
-    public void addUpdateValidator(ControllerValidator validator) {
+    public void addUpdateValidator(ControllerValidator<T> validator) {
         updateValidators.add(validator);
     }
 
-    public void addRemoveValidator(ControllerValidator validator) {
+    public void addRemoveValidator(ControllerValidator<T> validator) {
         removeValidators.add(validator);
     }
 
 
-    private boolean validateAndInsertTooltip(List<ControllerValidator> validators, JButton button) {
+    private boolean validateAndInsertTooltip(List<ControllerValidator<T>> validators, JButton button) {
         AtomicBoolean result = new AtomicBoolean(true);
 
-        validators.stream().filter(controllerValidator -> !controllerValidator.validate().get()).findFirst().ifPresent(controllerValidator -> {
+        validators.stream().filter(controllerValidator -> !controllerValidator.validate().apply(dataPanel.data)).findFirst().ifPresent(controllerValidator -> {
             result.set(false);
             button.setToolTipText(controllerValidator.getMessage());
         });

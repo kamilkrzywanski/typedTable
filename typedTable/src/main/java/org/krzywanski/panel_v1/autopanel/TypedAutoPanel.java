@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 public class TypedAutoPanel<T> extends JPanel {
 
     List<PanelChangeValueListener<T>> listeners = new ArrayList<>();
-    private T data;
+    protected T data;
     protected Supplier<T> dataSupplier;
     protected Insert<T> insertRepository;
     protected Remove<T> removeRepository;

@@ -94,7 +94,7 @@ public class Main {
         autoPanel.addDataEditor("testFormatClass", TestFormatClass.class, new TableValueController<>(selectPanel, "Select format class"));
 
         new PanelTableController<>(panel.table, autoPanel);
-        autoPanel.addInsertValidator(new DefaultControllerValidator(() -> !"M".equals(panel.getSelectedItem().getColumnA()), () -> "ERROR"));
+        autoPanel.addInsertValidator(new DefaultControllerValidator<>((r) -> !"M".equals(panel.getSelectedItem().getColumnA()), () -> "ERROR"));
 
         frame.add(autoPanel.buildPanel(), "wrap");
 

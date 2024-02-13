@@ -1,18 +1,19 @@
 package org.krzywanski.panel_v1.dataflow;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class DefaultControllerValidator implements ControllerValidator {
-    private final Supplier<Boolean> validate;
+public class DefaultControllerValidator<T> implements ControllerValidator<T> {
+    private final Function<T, Boolean> validate;
     private final Supplier<String> message;
 
-    public DefaultControllerValidator(Supplier<Boolean> validate, Supplier<String> message) {
+    public DefaultControllerValidator(Function<T, Boolean> validate, Supplier<String> message) {
         this.validate = validate;
         this.message = message;
     }
 
     @Override
-    public Supplier<Boolean> validate() {
+    public Function<T, Boolean> validate() {
         return validate;
     }
 
