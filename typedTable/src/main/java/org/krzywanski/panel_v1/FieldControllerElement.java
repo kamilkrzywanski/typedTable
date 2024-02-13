@@ -81,7 +81,7 @@ public class FieldControllerElement {
         return secondComponent;
     }
 
-    public void setSecondComponent(Component secondComponent) {
+    public void setSecondComponent(JComponent secondComponent) {
         this.secondComponent = secondComponent;
     }
 
@@ -95,5 +95,12 @@ public class FieldControllerElement {
     }
     public void setEditable(boolean aFlag) {
 
+    }
+
+    public Component getEditorComponent() {
+        if (secondComponent != null)
+            return secondComponent;
+        else
+            return firstComponent;
     }
 }

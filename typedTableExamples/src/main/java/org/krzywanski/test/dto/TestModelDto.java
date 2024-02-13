@@ -2,9 +2,8 @@ package org.krzywanski.test.dto;
 
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 import org.krzywanski.table.annot.MyTableColumn;
 import org.krzywanski.table.annot.ReflectionSort;
 import org.krzywanski.table.annot.TableFilter;
@@ -30,6 +29,8 @@ public class TestModelDto implements Comparable<TestModelDto>, Serializable {
     @MyTableColumn(label = "Boolean value")
     private Boolean booleanValue = true;
 
+    @NotEmpty(message = "Mobile Number can not be a null or empty")
+    @Pattern(regexp = "(^$|[0-9]{10})", message = "Mobile Number must be 10 digits")
     @MyTableColumn(label = "XXX", width = 200, sortable = true)
     private String columnA;
     @MyTableColumn(label = "Decimal column", format = "0.00$", sortable = true)

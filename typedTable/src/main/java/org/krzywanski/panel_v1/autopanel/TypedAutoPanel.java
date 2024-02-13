@@ -1,16 +1,17 @@
 package org.krzywanski.panel_v1.autopanel;
 
 import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
 import net.miginfocom.swing.MigLayout;
 import org.krzywanski.panel_v1.DataAction;
-import org.krzywanski.panel_v1.FieldControllerElement;
-import org.krzywanski.panel_v1.FieldValidator;
-import org.krzywanski.panel_v1.dataflow.*;
 import org.krzywanski.panel_v1.FieldController;
+import org.krzywanski.panel_v1.FieldControllerElement;
+import org.krzywanski.panel_v1.dataflow.DataFlowAdapter;
+import org.krzywanski.panel_v1.dataflow.Insert;
+import org.krzywanski.panel_v1.dataflow.Remove;
+import org.krzywanski.panel_v1.dataflow.Update;
 import org.krzywanski.panel_v1.fields.FieldValueController;
+import org.krzywanski.panel_v1.validation.ControllerValidator;
+import org.krzywanski.panel_v1.validation.FieldValidator;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
+import java.util.logging.Logger;
 
 /**
  * Basic implementation of panel for data with auto generated fields
@@ -40,7 +42,7 @@ public class TypedAutoPanel<T> extends JPanel {
         this.data = dataSupplier.get();
         this.dataSupplier = dataSupplier;
         this.dataClass = dataClass;
-        this.fieldController = new FieldController<>(dataClass);
+        this.fieldController = new FieldController<>(dataClass, this);
         this.autoPanelButtons = new AutoPanelButtons<>(this, () -> insertRepository, () -> removeRepository, () -> updateRepository);
         setLayout(new MigLayout());
     }
@@ -91,24 +93,17 @@ public class TypedAutoPanel<T> extends JPanel {
      * Saves changes to data object
      */
     protected boolean saveChanges(DataAction updateOrInsert) {
-        boolean result = true;
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
         FieldValidator<T> fieldValidator = new FieldValidator<>();
         for (FieldControllerElement element : fieldController.getElements()) {
             if (element.getFieldValueController() != null) {
-                Set<ConstraintViolation<T>> validationResult = fieldValidator.validateField(element, validator, dataClass);
+                Set<ConstraintViolation<T>> validationResult = fieldValidator.validateField(dataClass, element);
 
                 if (!validationResult.isEmpty()) {
-                    validationResult.forEach(v -> JOptionPane.showMessageDialog(this, v.getMessage()));
-                    result = false;
+                    Logger.getAnonymousLogger().info("Validation error: " + validationResult.iterator().next().getMessage());
+                    return false;
                 }
             }
         }
-
-        if (!result)
-            return result;
-
 
         fieldController.getElements().stream().filter(el -> el.getFieldValueController() != null).forEach((element) -> {
             try {
@@ -131,7 +126,7 @@ public class TypedAutoPanel<T> extends JPanel {
             }
         }
         listeners.forEach(listener -> listener.valueChanged(data, updateOrInsert));
-        return result;
+        return true;
     }
 
     /**
@@ -208,15 +203,19 @@ public class TypedAutoPanel<T> extends JPanel {
         autoPanelButtons.addExternalComponentToLock(component);
     }
 
-    public void addInsertValidator(ControllerValidator validator) {
+    public void addInsertValidator(ControllerValidator<T> validator) {
         autoPanelButtons.addInsertValidator(validator);
     }
 
-    public void addUpdateValidator(ControllerValidator validator) {
+    public void addUpdateValidator(ControllerValidator<T> validator) {
         autoPanelButtons.addUpdateValidator(validator);
     }
 
-    public void addRemoveValidator(ControllerValidator validator) {
+    public void addRemoveValidator(ControllerValidator<T> validator) {
         autoPanelButtons.addRemoveValidator(validator);
+    }
+
+    public PanelMode getMode() {
+        return autoPanelButtons.getMode();
     }
 }

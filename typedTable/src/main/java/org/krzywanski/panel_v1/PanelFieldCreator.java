@@ -1,17 +1,14 @@
 package org.krzywanski.panel_v1;
 
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
 import org.krzywanski.panel_v1.annot.PanelField;
+import org.krzywanski.panel_v1.autopanel.TypedAutoPanel;
 import org.krzywanski.panel_v1.fields.*;
+import org.krzywanski.panel_v1.validation.RevalidateDocumentListener;
 import org.krzywanski.table.annot.MyTableColumn;
 
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
 import javax.swing.text.NumberFormatter;
-import java.awt.event.FocusAdapter;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
@@ -23,8 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class PanelFieldCreator {
-    final Class<?> dataClass;
+public class PanelFieldCreator<T> {
+    final Class<T> dataClass;
     /**
      * Map of controllers for custom field
      * Key - field name
@@ -32,15 +29,17 @@ public class PanelFieldCreator {
      */
     final Map<String, FieldValueController<?, ?>> fieldControllers = new HashMap<>();
     final boolean useFieldsFromTable;
-
+    final TypedAutoPanel<T> parentPanel;
     List<FieldControllerElement> components;
-    PanelFieldCreator(Class<?> dataClass) {
-        this(dataClass, true);
+
+    PanelFieldCreator(Class<T> dataClass, TypedAutoPanel<T> parentPanel) {
+        this(dataClass, true, parentPanel);
     }
 
-    PanelFieldCreator(Class<?> dataClass, boolean useFieldsFromTable) {
+    PanelFieldCreator(Class<T> dataClass, boolean useFieldsFromTable, TypedAutoPanel<T> parentPanel) {
         this.dataClass = dataClass;
         this.useFieldsFromTable = useFieldsFromTable;
+        this.parentPanel = parentPanel;
     }
 
 
@@ -49,11 +48,21 @@ public class PanelFieldCreator {
              components = Arrays.stream(dataClass.getDeclaredFields())
                      .filter(field -> field.isAnnotationPresent(PanelField.class) || (useFieldsFromTable && field.isAnnotationPresent(MyTableColumn.class)))
                      .map(this::createFieldControllerElement)
+                     .map(this::installDocumentListener)
                      .collect(Collectors.toList());
         }
 
       return components;
 
+    }
+
+    private FieldControllerElement installDocumentListener(FieldControllerElement element) {
+        if (element.getEditorComponent() instanceof JTextComponent) {
+            JTextComponent textComponent = (JTextComponent) element.getSecondComponent();
+            textComponent.getDocument().addDocumentListener(new RevalidateDocumentListener<>((JTextComponent) element.getEditorComponent(), element, dataClass, parentPanel));
+        }
+
+        return element;
     }
 
     private FieldControllerElement createFieldControllerElement(Field field) {
@@ -205,26 +214,8 @@ public class PanelFieldCreator {
         NumberFormatter formatter = new NumberFormatter(format);
         //TODO create a factory for this
         formatter.setValueClass(field.getType());
-        JFormattedTextField formattedTextField = new JFormattedTextField(formatter);
 
-        // Add a tooltip for the formattedTextField
-        formattedTextField.setToolTipText("Enter a valid integer.");
-        formattedTextField.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                try
-                {
-                    KeyEvent ke = new KeyEvent(evt.getComponent(), KeyEvent.KEY_PRESSED,
-                            System.currentTimeMillis(), InputEvent.CTRL_DOWN_MASK,
-                            KeyEvent.VK_F1, KeyEvent.CHAR_UNDEFINED);
-                    evt.getComponent().dispatchEvent(ke);
-                }
-                catch (Throwable e1)
-                {e1.printStackTrace();}
-            }
-        });
-
-        return formattedTextField;
+        return new JFormattedTextField(formatter);
     }
 
     protected  <R> void addDataEditor(String fieldName, Class<R> columnClass, FieldValueController<? ,?> fieldValueController) {

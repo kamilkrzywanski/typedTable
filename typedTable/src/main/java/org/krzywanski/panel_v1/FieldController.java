@@ -1,5 +1,6 @@
 package org.krzywanski.panel_v1;
 
+import org.krzywanski.panel_v1.autopanel.TypedAutoPanel;
 import org.krzywanski.panel_v1.fields.FieldValueController;
 
 import java.util.List;
@@ -13,15 +14,15 @@ import java.util.List;
 public class FieldController<T> {
     final Class<T> dataClass;
 
-    final PanelFieldCreator panelFieldCreator;
+    final PanelFieldCreator<T> panelFieldCreator;
 
     /**
      * Constructor
      * @param dataClass class of data
      */
-    public FieldController(Class<T> dataClass) {
+    public FieldController(Class<T> dataClass, TypedAutoPanel<T> parentPanel) {
         this.dataClass = dataClass;
-        this.panelFieldCreator = new PanelFieldCreator(dataClass);
+        this.panelFieldCreator = new PanelFieldCreator<>(dataClass, parentPanel);
     }
 
     public List<FieldControllerElement> getElements() {

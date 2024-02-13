@@ -1,7 +1,6 @@
 package org.krzywanski.panel_v1.fields;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.function.Function;
 
 public class DefaultFieldProvider<T, R extends JComponent> implements FieldProvider<T>{
@@ -16,7 +15,7 @@ public class DefaultFieldProvider<T, R extends JComponent> implements FieldProvi
     }
 
     @Override
-    public Component getComponent() {
+    public JComponent getComponent() {
         return component;
     }
 

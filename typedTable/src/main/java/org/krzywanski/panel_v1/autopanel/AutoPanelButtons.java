@@ -2,10 +2,10 @@ package org.krzywanski.panel_v1.autopanel;
 
 import net.miginfocom.swing.MigLayout;
 import org.krzywanski.panel_v1.DataAction;
-import org.krzywanski.panel_v1.dataflow.ControllerValidator;
 import org.krzywanski.panel_v1.dataflow.Insert;
 import org.krzywanski.panel_v1.dataflow.Remove;
 import org.krzywanski.panel_v1.dataflow.Update;
+import org.krzywanski.panel_v1.validation.ControllerValidator;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
