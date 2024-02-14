@@ -19,7 +19,7 @@ public class PanelTableController<T> {
         table.addGenericSelectionListener(panel::updateCurrentData);
         panel.addPanelChangeValueListener( (element, action) -> {
 
-            if (action == DataAction.REMOVE) {
+            if (action == DataAction.REMOVE || action == DataAction.INSERT) {
                 table.refreshData();
                 return;
             }

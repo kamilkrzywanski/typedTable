@@ -123,6 +123,11 @@ public class FieldControllerElement {
         getValidationDialog().showIfErrorsPresent();
     }
 
+    public void hideValidationHint() {
+        if (dialog != null)
+            dialog.setVisible(false);
+    }
+
     public TypedAutoPanel<?> getOwner() {
         return owner;
     }

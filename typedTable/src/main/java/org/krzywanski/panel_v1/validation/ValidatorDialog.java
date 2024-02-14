@@ -109,6 +109,12 @@ public class ValidatorDialog<T> {
                 }
             });
 
+            addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mouseClicked(java.awt.event.MouseEvent evt) {
+                    setVisible(false);
+                }
+            });
+
         }
 
         private void computeLocation() {

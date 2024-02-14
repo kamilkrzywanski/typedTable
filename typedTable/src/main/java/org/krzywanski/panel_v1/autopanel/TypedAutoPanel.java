@@ -57,10 +57,11 @@ public class TypedAutoPanel<T> extends JPanel {
      * Fills fields with data from data object
      */
     protected void fillWithData() {
-        if(autoPanelButtons.getMode() == PanelMode.UPDATE || autoPanelButtons.getMode() == PanelMode.ADD)
+        if (autoPanelButtons.getMode() == PanelMode.UPDATE)
             return;
 
         setFieldsEditable(false);
+
 
         //TODO remove filter when all elements will have implemented FieldValueController
         fieldController.getElements().stream().filter(el -> el.getFieldValueController() != null).forEach((element) -> {
@@ -75,6 +76,10 @@ public class TypedAutoPanel<T> extends JPanel {
             });
         });
         autoPanelButtons.validateButtonsState();
+
+//        if (autoPanelButtons.getMode() == PanelMode.ADD) {
+//            SwingUtilities.invokeLater(() -> fieldController.getElements().forEach(FieldControllerElement::hideValidationHint));
+//        }
     }
 
     /**
