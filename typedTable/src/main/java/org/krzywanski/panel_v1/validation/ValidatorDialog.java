@@ -30,7 +30,7 @@ public class ValidatorDialog<T> {
 
 
     public void showErrorWindow(String message) {
-        controller.getFieldValueController().setBorder(BorderFactory.createLineBorder(java.awt.Color.RED, 2));
+        controller.getFieldValueController().setBorder(BorderFactory.createLineBorder(java.awt.Color.RED));
         errorLabel.setText(message);
 
         if (window == null)
