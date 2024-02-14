@@ -30,4 +30,9 @@ public class StringTextFieldValueController implements DefaultTextFieldValueCont
     public void resetBorder() {
         getComponent().setBorder(originalBorder);
     }
+
+    @Override
+    public void setBorder(Border border) {
+        getComponent().setBorder(BorderFactory.createCompoundBorder(border, originalBorder));
+    }
 }

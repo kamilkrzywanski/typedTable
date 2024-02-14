@@ -30,4 +30,9 @@ public class IntegerTextFieldValueController implements DefaultTextFieldValueCon
     public void resetBorder() {
         getComponent().setBorder(originalBorder);
     }
+
+    @Override
+    public void setBorder(Border border) {
+        getComponent().setBorder(BorderFactory.createCompoundBorder(border, originalBorder));
+    }
 }

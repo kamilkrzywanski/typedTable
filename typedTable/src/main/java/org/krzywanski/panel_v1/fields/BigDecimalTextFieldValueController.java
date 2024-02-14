@@ -33,5 +33,10 @@ public class BigDecimalTextFieldValueController implements DefaultTextFieldValue
         getComponent().setBorder(originalBorder);
     }
 
+    @Override
+    public void setBorder(Border border) {
+        getComponent().setBorder(BorderFactory.createCompoundBorder(border, originalBorder));
+    }
+
 
 }
