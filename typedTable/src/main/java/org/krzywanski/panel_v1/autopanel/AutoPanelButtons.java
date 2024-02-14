@@ -250,6 +250,9 @@ public class AutoPanelButtons<T> extends JPanel {
     private boolean validateAndInsertTooltip(List<ControllerValidator<T>> validators, JButton button) {
         AtomicBoolean result = new AtomicBoolean(true);
 
+        if (dataPanel.data == null)
+            return false;
+
         validators.stream().filter(controllerValidator -> !controllerValidator.validate().apply(dataPanel.data)).findFirst().ifPresent(controllerValidator -> {
             result.set(false);
             button.setToolTipText(controllerValidator.getMessage());
