@@ -1,6 +1,7 @@
 package org.krzywanski.panel_v1;
 
 import org.krzywanski.panel_v1.fields.FieldValueController;
+import org.krzywanski.panel_v1.validation.ValidatorDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,6 +33,10 @@ public class FieldControllerElement {
     Component secondComponent;
 
     FieldValueController<Object, JComponent> fieldValueController;
+    /**
+     * Dialog for validation
+     */
+    ValidatorDialog<?> dialog;
 
     /**
      * Constructor
@@ -102,5 +107,13 @@ public class FieldControllerElement {
             return secondComponent;
         else
             return firstComponent;
+    }
+
+    public void setValidationDialog(ValidatorDialog<?> dialog) {
+        this.dialog = dialog;
+    }
+
+    public ValidatorDialog<?> getValidationDialog() {
+        return dialog;
     }
 }

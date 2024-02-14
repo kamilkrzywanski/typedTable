@@ -65,7 +65,7 @@ public class ValidatorDialog<T> extends JWindow {
 
     private void computeLocation() {
         Point loc = component.getLocationOnScreen();
-        setLocation(loc.x + 20, loc.y - 30);
+        setLocation(loc.x + 20, loc.y + 30);
     }
 
     public void showErrorWindow(String message) {
@@ -77,6 +77,6 @@ public class ValidatorDialog<T> extends JWindow {
 
     @Override
     public void setVisible(boolean b) {
-        super.setVisible(b && parentPanel.getMode() == PanelMode.UPDATE);
+        super.setVisible(b && (parentPanel.getMode() == PanelMode.UPDATE || parentPanel.getMode() == PanelMode.ADD));
     }
 }

@@ -19,7 +19,7 @@ public class RevalidateDocumentListener<T> implements DocumentListener {
     FieldValidator<T> validator = new FieldValidator<>();
 
     final TypedAutoPanel<?> typedAutoPanel;
-    ValidatorDialog dialog;
+    ValidatorDialog<T> dialog;
 
     public RevalidateDocumentListener(JTextComponent component, FieldControllerElement element, Class<T> dataClass, TypedAutoPanel<?> typedAutoPanel) {
         this.component = component;
@@ -61,9 +61,10 @@ public class RevalidateDocumentListener<T> implements DocumentListener {
     }
 
 
-    ValidatorDialog getDialog() {
+    ValidatorDialog<T> getDialog() {
         if (dialog == null) {
             dialog = new ValidatorDialog<>(component, typedAutoPanel, this::getValidationResult);
+            element.setValidationDialog(dialog);
         }
         return dialog;
     }

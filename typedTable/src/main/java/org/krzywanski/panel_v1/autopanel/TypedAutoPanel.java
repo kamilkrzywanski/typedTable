@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
-import java.util.logging.Logger;
 
 /**
  * Basic implementation of panel for data with auto generated fields
@@ -93,17 +92,9 @@ public class TypedAutoPanel<T> extends JPanel {
      * Saves changes to data object
      */
     protected boolean saveChanges(DataAction updateOrInsert) {
-        FieldValidator<T> fieldValidator = new FieldValidator<>();
-        for (FieldControllerElement element : fieldController.getElements()) {
-            if (element.getFieldValueController() != null) {
-                Set<ConstraintViolation<T>> validationResult = fieldValidator.validateField(dataClass, element);
 
-                if (!validationResult.isEmpty()) {
-                    Logger.getAnonymousLogger().info("Validation error: " + validationResult.iterator().next().getMessage());
-                    return false;
-                }
-            }
-        }
+        if (!validateChanges())
+            return false;
 
         fieldController.getElements().stream().filter(el -> el.getFieldValueController() != null).forEach((element) -> {
             try {
@@ -129,6 +120,23 @@ public class TypedAutoPanel<T> extends JPanel {
         return true;
     }
 
+
+    private boolean validateChanges() {
+        boolean allFieldsValid = true;
+        FieldValidator<T> fieldValidator = new FieldValidator<>();
+        for (FieldControllerElement element : fieldController.getElements()) {
+            if (element.getFieldValueController() != null) {
+                Set<ConstraintViolation<T>> validationResult = fieldValidator.validateField(dataClass, element);
+
+                if (!validationResult.isEmpty()) {
+                    if (element.getValidationDialog() != null)
+                        element.getValidationDialog().showErrorWindow(validationResult.iterator().next().getMessage());
+                    allFieldsValid = false;
+                }
+            }
+        }
+        return allFieldsValid;
+    }
     /**
      * Sets fields editable
      * @param enabled true if fields should be editable

@@ -116,6 +116,12 @@ public class AutoPanelButtons<T> extends JPanel {
             dataPanel.updateCurrentData(dataPanel.dataSupplier.get());
             dataPanel.fillWithData();
             dataPanel.setFieldsEditable(false);
+
+            dataPanel.fieldController
+                    .getElements()
+                    .stream()
+                    .filter(element -> element.getValidationDialog() != null)
+                    .forEach(element -> element.getValidationDialog().setVisible(false));
         });
 
         addButton.addActionListener(e -> {
@@ -250,9 +256,9 @@ public class AutoPanelButtons<T> extends JPanel {
     private boolean validateAndInsertTooltip(List<ControllerValidator<T>> validators, JButton button) {
         AtomicBoolean result = new AtomicBoolean(true);
 
-        if (dataPanel.data == null)
-            return false;
-
+        if (dataPanel.data == null) {
+            return true;
+        }
         validators.stream().filter(controllerValidator -> !controllerValidator.validate().apply(dataPanel.data)).findFirst().ifPresent(controllerValidator -> {
             result.set(false);
             button.setToolTipText(controllerValidator.getMessage());

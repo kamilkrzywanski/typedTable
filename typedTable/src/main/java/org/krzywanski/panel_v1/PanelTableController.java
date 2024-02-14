@@ -10,7 +10,8 @@ public class PanelTableController<T> {
     public PanelTableController(TypedTable<T> table, TypedAutoPanel<T> panel) {
         this.table = table;
         this.panel = panel;
-        table.setRowSelectionInterval(0, 0);
+        if (table.getRowCount() > 0)
+            table.setRowSelectionInterval(0, 0);
         connectPanelWithTable();
     }
 
@@ -23,6 +24,8 @@ public class PanelTableController<T> {
                 return;
             }
             int selectedRow = table.getSelectedRow();
+
+            selectedRow = Math.max(0, selectedRow);
             table.setDataAt(selectedRow, element);
             table.getSelectionModel().setSelectionInterval(selectedRow, selectedRow);
         });

@@ -191,7 +191,7 @@ public class TypedTable<T> extends JTable {
         });
         revalidate();
 
-        if(selectFirstRow)
+        if (selectFirstRow && !currentData.isEmpty())
             setRowSelectionInterval(0, 0);
 
         if (!currentData.isEmpty())
@@ -522,8 +522,12 @@ public class TypedTable<T> extends JTable {
     }
 
     public void setDataAt(int row, T data){
-        currentData.set(row, data);
-        model.getDataVector().set(row, createDataRow(data));
+        currentData.add(row, data);
+
+        if (model.getDataVector().isEmpty())
+            model.getDataVector().add(createDataRow(data));
+        else
+            model.getDataVector().set(row, createDataRow(data));
         model.fireTableDataChanged();
     }
 
