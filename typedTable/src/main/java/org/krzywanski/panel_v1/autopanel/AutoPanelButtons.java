@@ -125,6 +125,7 @@ public class AutoPanelButtons<T> extends JPanel {
 
         addButton.addActionListener(e -> {
             mode = PanelMode.ADD;
+
             cancelButton.setEnabled(true);
             saveButton.setEnabled(true);
             editButton.setEnabled(false);
