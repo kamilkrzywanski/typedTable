@@ -1,14 +1,15 @@
 package org.krzywanski.panel_v1.fields;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.text.JTextComponent;
-import java.util.function.Supplier;
 
 public class StringTextFieldValueController implements DefaultTextFieldValueController<String>{
     private final JTextField textField;
-
+    private Border originalBorder;
     public StringTextFieldValueController(JTextField textField) {
         this.textField = textField;
+        this.originalBorder = textField.getBorder();
     }
 
     @Override
@@ -23,5 +24,10 @@ public class StringTextFieldValueController implements DefaultTextFieldValueCont
     @Override
     public JTextComponent getComponent() {
         return textField;
+    }
+
+    @Override
+    public void resetBorder() {
+        getComponent().setBorder(originalBorder);
     }
 }

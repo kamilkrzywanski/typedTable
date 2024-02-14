@@ -4,15 +4,17 @@ import org.jdesktop.swingx.JXDatePicker;
 import org.krzywanski.panel_v1.fields.FieldValueController;
 import org.krzywanski.panel_v1.fields.FieldValueSupplier;
 
+import javax.swing.border.Border;
 import java.util.Date;
-import java.util.function.Supplier;
 
 public class DateValueController implements FieldValueController<Date, JXDatePicker> {
 
     JXDatePicker datePicker;
+    private Border originalBorder;
 
     public DateValueController(JXDatePicker datePicker) {
         this.datePicker = datePicker;
+        this.originalBorder = datePicker.getBorder();
     }
 
     @Override
@@ -33,5 +35,15 @@ public class DateValueController implements FieldValueController<Date, JXDatePic
     @Override
     public JXDatePicker getComponent() {
         return datePicker;
+    }
+
+    @Override
+    public void setBorder(Border border) {
+        datePicker.setBorder(border);
+    }
+
+    @Override
+    public void resetBorder() {
+        getComponent().setBorder(originalBorder);
     }
 }

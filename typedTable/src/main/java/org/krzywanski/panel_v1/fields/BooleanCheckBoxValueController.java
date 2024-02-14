@@ -1,14 +1,17 @@
 package org.krzywanski.panel_v1.fields;
 
 import javax.swing.*;
-import java.util.function.Supplier;
+import javax.swing.border.Border;
 
 public class BooleanCheckBoxValueController implements FieldValueController<Boolean, JCheckBox> {
 
     private final JCheckBox checkBox;
 
+    private final Border originalBorder;
+
     public BooleanCheckBoxValueController(JCheckBox checkBox) {
         this.checkBox = checkBox;
+        this.originalBorder = checkBox.getBorder();
     }
 
     @Override
@@ -35,4 +38,13 @@ public class BooleanCheckBoxValueController implements FieldValueController<Bool
         return checkBox;
     }
 
+    @Override
+    public void setBorder(Border border) {
+        getComponent().setBorder(border);
+    }
+
+    @Override
+    public void resetBorder() {
+        getComponent().setBorder(originalBorder);
+    }
 }

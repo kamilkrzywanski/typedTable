@@ -1,6 +1,7 @@
 package org.krzywanski.panel_v1.fields;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 
 public interface FieldValueController<T, R extends JComponent> {
     T getValue();
@@ -8,4 +9,8 @@ public interface FieldValueController<T, R extends JComponent> {
 
     void setEditable(boolean enabled);
     R getComponent();
+
+    void setBorder(Border border);
+
+    void resetBorder();
 }

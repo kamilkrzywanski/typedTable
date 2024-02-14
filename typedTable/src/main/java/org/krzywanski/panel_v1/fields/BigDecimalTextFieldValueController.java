@@ -1,15 +1,17 @@
 package org.krzywanski.panel_v1.fields;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.text.JTextComponent;
 import java.math.BigDecimal;
-import java.util.function.Supplier;
 
 public class BigDecimalTextFieldValueController implements DefaultTextFieldValueController<BigDecimal>{
     private final JFormattedTextField textField;
+    private Border originalBorder;
 
     public BigDecimalTextFieldValueController(JFormattedTextField textField) {
         this.textField = textField;
+        this.originalBorder = textField.getBorder();
     }
 
     @Override
@@ -24,6 +26,11 @@ public class BigDecimalTextFieldValueController implements DefaultTextFieldValue
     @Override
     public JTextComponent getComponent() {
         return textField;
+    }
+
+    @Override
+    public void resetBorder() {
+        getComponent().setBorder(originalBorder);
     }
 
 

@@ -122,6 +122,7 @@ public class AutoPanelButtons<T> extends JPanel {
                     .stream()
                     .filter(element -> element.getValidationDialog() != null)
                     .forEach(element -> element.getValidationDialog().setVisible(false));
+            dataPanel.resetBorder();
         });
 
         addButton.addActionListener(e -> {

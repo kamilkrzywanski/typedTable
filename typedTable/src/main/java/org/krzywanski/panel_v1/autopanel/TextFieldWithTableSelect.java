@@ -74,4 +74,8 @@ public class TextFieldWithTableSelect<T> extends JPanel {
     public T getCurrentValue() {
         return currentValue;
     }
+
+    public JTextField getTextField() {
+        return textField;
+    }
 }

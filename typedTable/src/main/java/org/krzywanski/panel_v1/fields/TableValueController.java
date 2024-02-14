@@ -3,11 +3,15 @@ package org.krzywanski.panel_v1.fields;
 import org.krzywanski.panel_v1.autopanel.TextFieldWithTableSelect;
 import org.krzywanski.table.TypedTablePanel;
 
+import javax.swing.border.Border;
+
 public class TableValueController<T> implements FieldValueController<T, TextFieldWithTableSelect<T>> {
     final TextFieldWithTableSelect<T> table;
+    private Border originalBorder;
 
     public TableValueController(TypedTablePanel<T> table, String dialogTitle) {
         this.table = new TextFieldWithTableSelect<>(table, dialogTitle);
+        this.originalBorder = this.table.getTextField().getBorder();
     }
 
     @Override
@@ -30,7 +34,14 @@ public class TableValueController<T> implements FieldValueController<T, TextFiel
         return table;
     }
 
-    TableValueController<T> builder(){
-        return this;
+    @Override
+    public void setBorder(Border border) {
+        table.getTextField().setBorder(border);
+    }
+
+    @Override
+    public void resetBorder() {
+        table.getTextField().setBorder(originalBorder);
     }
 }
+
