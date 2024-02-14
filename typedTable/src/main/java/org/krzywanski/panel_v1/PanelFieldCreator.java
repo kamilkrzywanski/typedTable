@@ -59,7 +59,7 @@ public class PanelFieldCreator<T> {
     private FieldControllerElement installDocumentListener(FieldControllerElement element) {
         if (element.getEditorComponent() instanceof JTextComponent) {
             JTextComponent textComponent = (JTextComponent) element.getSecondComponent();
-            textComponent.getDocument().addDocumentListener(new RevalidateDocumentListener<>((JTextComponent) element.getEditorComponent(), element, dataClass, parentPanel));
+            textComponent.getDocument().addDocumentListener(new RevalidateDocumentListener(element));
         }
 
         return element;
@@ -67,7 +67,7 @@ public class PanelFieldCreator<T> {
 
     private FieldControllerElement createFieldControllerElement(Field field) {
         try {
-            return createComponent(new FieldControllerElement(field, new PropertyDescriptor(field.getName(), dataClass)));
+            return createComponent(new FieldControllerElement(parentPanel, field, new PropertyDescriptor(field.getName(), dataClass)));
         } catch (IntrospectionException e) {
             throw new RuntimeException(e);
         }

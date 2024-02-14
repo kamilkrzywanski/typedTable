@@ -129,7 +129,6 @@ public class TypedAutoPanel<T> extends JPanel {
                 Set<ConstraintViolation<T>> validationResult = fieldValidator.validateField(dataClass, element);
 
                 if (!validationResult.isEmpty()) {
-                    element.getFieldValueController().setBorder(BorderFactory.createLineBorder(java.awt.Color.RED));
                     if (element.getValidationDialog() != null)
                         element.getValidationDialog().showErrorWindow(validationResult.iterator().next().getMessage());
                     allFieldsValid = false;
@@ -232,5 +231,9 @@ public class TypedAutoPanel<T> extends JPanel {
         fieldController.getElements().forEach((element) -> {
             element.getFieldValueController().resetBorder();
         });
+    }
+
+    public Class<T> getDataClass() {
+        return dataClass;
     }
 }

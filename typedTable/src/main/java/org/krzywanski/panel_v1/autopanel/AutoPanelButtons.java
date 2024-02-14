@@ -119,13 +119,12 @@ public class AutoPanelButtons<T> extends JPanel {
 
             dataPanel.fieldController
                     .getElements()
-                    .stream()
-                    .filter(element -> element.getValidationDialog() != null)
                     .forEach(element -> element.getValidationDialog().setVisible(false));
             dataPanel.resetBorder();
         });
 
         addButton.addActionListener(e -> {
+            mode = PanelMode.ADD;
             cancelButton.setEnabled(true);
             saveButton.setEnabled(true);
             editButton.setEnabled(false);
@@ -142,7 +141,6 @@ public class AutoPanelButtons<T> extends JPanel {
                 return;
             }
             dataPanel.setFieldsEditable(true);
-            mode = PanelMode.ADD;
 
             setAddOrCancelButton(AddOrCancel.CANCEL);
             setRemoveOrSaveButton(RemoveOrSave.SAVE);
