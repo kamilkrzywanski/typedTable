@@ -26,7 +26,7 @@ public class TableValueController<T> implements FieldValueController<T, TextFiel
 
     @Override
     public void setEditable(boolean enabled) {
-        table.setEnabled(enabled);
+        table.getButton().setEnabled(enabled);
     }
 
     @Override

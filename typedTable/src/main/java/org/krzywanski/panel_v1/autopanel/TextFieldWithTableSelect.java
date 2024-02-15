@@ -78,4 +78,8 @@ public class TextFieldWithTableSelect<T> extends JPanel {
     public JTextField getTextField() {
         return textField;
     }
+
+    public JButton getButton() {
+        return button;
+    }
 }
