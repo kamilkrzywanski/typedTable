@@ -91,14 +91,14 @@ public class Main {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("JTable Example");
         frame.setLayout(new MigLayout());
-        TypedTablePanel<TestModelDto> panel = TypedTablePanel.getTableWithProvider(new DefaultDataPrivder<>(10, Main::getData, Main::getSize), TestModelDto.class);
-        panel.addComuptedColumn("Computed column", String.class, value -> value.getColumnA() + " " + value.getColumnB());
-        panel.addGenericSelectionListener(element -> {
+        TypedTablePanel<TestModelDto> table = TypedTablePanel.getTableWithProvider(new DefaultDataPrivder<>(10, Main::getData, Main::getSize), TestModelDto.class);
+        table.addComuptedColumn("Computed column", String.class, value -> value.getColumnA() + " " + value.getColumnB());
+        table.addGenericSelectionListener(element -> {
             if (element != null)
                 System.out.println(element.getColumnA());
         });
         TreeSet<TestModelDto> collection = new TreeSet<>();
-        panel.addMultiSelectColumn("Multi select column", collection);
+        table.addMultiSelectColumn("Multi select column", collection);
 
 //        panel.addCustomFormatter(TestFormatClass.class, new Format() {
 //            @Override
@@ -111,17 +111,17 @@ public class Main {
 //                return null;
 //            }
 //        });
-        TypedAutoPanel<TestModelDto> autoPanel = new TypedAutoPanel<>(() -> panel.getSelectedItem(), TestModelDto.class);
+        TypedAutoPanel<TestModelDto> autoPanel = new TypedAutoPanel<>(() -> table.getSelectedItem(), TestModelDto.class);
         autoPanel.setDataFlowAdapter(new TestModelService());
         TypedTablePanel<TestFormatClass> selectPanel = TypedTablePanel.getTableWithData(List.of(new TestFormatClass("A"), new TestFormatClass("B")), TestFormatClass.class);
         autoPanel.addDataEditor("testFormatClass", TestFormatClass.class, new TableValueController<>(selectPanel, "Select format class"));
 
-        new PanelTableController<>(panel.table, autoPanel);
+        new PanelTableController<>(table.table, autoPanel);
         autoPanel.addInsertValidator(new DefaultControllerValidator<>((r) -> !"M".equals(r.getColumnA()), () -> "ERROR"));
 
         frame.add(autoPanel.buildPanel(), "wrap");
 
-        frame.add(panel, "grow,push");
+        frame.add(table, "grow,push");
         frame.setVisible(true);
         frame.setPreferredSize(new Dimension(1500, 600));
         frame.pack();

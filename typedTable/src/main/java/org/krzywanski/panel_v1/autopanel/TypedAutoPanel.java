@@ -45,7 +45,7 @@ public class TypedAutoPanel<T> extends JPanel {
         this.dataClass = dataClass;
         this.fieldController = new FieldController<>(dataClass, this);
         this.autoPanelButtons = new AutoPanelButtons<>(this, () -> insertRepository, () -> removeRepository, () -> updateRepository);
-        setLayout(new MigLayout());
+        setLayout(new MigLayout("fill"));
     }
     public TypedAutoPanel<T> buildPanel(){
         addFields();
@@ -89,9 +89,9 @@ public class TypedAutoPanel<T> extends JPanel {
      */
     private void addFields() {
         fieldController.getElements().forEach((element) -> {
-            add(element.getFirstComponent(), element.getSecondComponent() != null ? "grow" : "grow, span 2, wrap");
+            add(element.getFirstComponent(), element.getSecondComponent() != null ? "" : "span 2, wrap");
             if(element.getSecondComponent() != null)
-                add(element.getSecondComponent(), "grow, wrap");
+                add(element.getSecondComponent(), "grow, push, wrap");
         });
     }
 
