@@ -1,6 +1,7 @@
 package org.krzywanski.panel_v1;
 
 import org.krzywanski.panel_v1.annot.PanelField;
+import org.krzywanski.panel_v1.autopanel.ToolBoxPopupMenu;
 import org.krzywanski.panel_v1.autopanel.TypedAutoPanel;
 import org.krzywanski.panel_v1.fields.*;
 import org.krzywanski.panel_v1.validation.RevalidateDocumentListener;
@@ -9,10 +10,12 @@ import org.krzywanski.table.annot.MyTableColumn;
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.NumberFormatter;
+import javax.swing.undo.UndoManager;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Arrays;
@@ -132,7 +135,7 @@ public class PanelFieldCreator<T> {
     }
 
     private FieldControllerElement createBigDecimalTextField(FieldControllerElement field) {
-        return createLabelAndInstallControllerForTextField(field, createFieldWithFormatter(NumberFormat.getNumberInstance(), field));
+        return createLabelAndInstallControllerForTextField(field, createFieldWithFormatter(new DecimalFormat(), field));
     }
 
     private FieldControllerElement createShortTextField(FieldControllerElement field) {
@@ -203,6 +206,7 @@ public class PanelFieldCreator<T> {
                 break;
         }
 
+        installFieldManager(component);
         return field;
     }
 
@@ -223,6 +227,7 @@ public class PanelFieldCreator<T> {
             }
         };
         //TODO create a factory for this
+//        formatter.setAllowsInvalid(false);
         formatter.setValueClass(field.getType());
         return new JFormattedTextField(formatter);
     }
@@ -242,5 +247,22 @@ public class PanelFieldCreator<T> {
                                 "Field type {" + field.getType() + "} is not compatible with column type {" + columnClass + "} of class {" + dataClass.getName() + "}");
                     }
                 });
+    }
+
+    private void installFieldManager(JFormattedTextField component) {
+        component.setComponentPopupMenu(new ToolBoxPopupMenu());
+        UndoManager undoManager = new UndoManager();
+        component.getDocument().addUndoableEditListener(undoManager);
+        component.registerKeyboardAction(e -> {
+            if (undoManager.canUndo()) {
+                undoManager.undo();
+            }
+        }, KeyStroke.getKeyStroke("control Z"), JComponent.WHEN_FOCUSED);
+
+        component.registerKeyboardAction(e -> {
+            if (undoManager.canRedo()) {
+                undoManager.redo();
+            }
+        }, KeyStroke.getKeyStroke("control Y"), JComponent.WHEN_FOCUSED);
     }
 }
