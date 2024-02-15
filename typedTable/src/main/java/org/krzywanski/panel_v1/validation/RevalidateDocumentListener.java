@@ -28,7 +28,8 @@ public class RevalidateDocumentListener implements DocumentListener {
     }
 
     public void insertUpdateAdapter() {
-        element.validate();
+        if (element.getEditorComponent().hasFocus())
+            element.validate();
     }
 
 
