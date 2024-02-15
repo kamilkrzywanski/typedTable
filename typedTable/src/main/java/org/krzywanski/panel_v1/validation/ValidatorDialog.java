@@ -41,13 +41,15 @@ public class ValidatorDialog<T> {
     }
 
     public void showIfErrorsPresent() {
-        if (!getValidationResult().isEmpty()) {
-            showErrorWindow(getValidationResult().iterator().next().getMessage());
-        } else {
-            controller.getFieldValueController().resetBorder();
+        if(parentPanel.getMode() == PanelMode.ADD || parentPanel.getMode() == PanelMode.UPDATE) {
+            if (!getValidationResult().isEmpty()) {
+                showErrorWindow(getValidationResult().iterator().next().getMessage());
+            } else {
+                controller.getFieldValueController().resetBorder();
 
-            if (window != null)
-                window.setVisible(false);
+                if (window != null)
+                    window.setVisible(false);
+            }
         }
     }
 
