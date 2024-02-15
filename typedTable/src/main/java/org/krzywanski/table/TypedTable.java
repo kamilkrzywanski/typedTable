@@ -393,7 +393,7 @@ public class TypedTable<T> extends JTable {
     public void addGenericSelectionListener(GenericSelectionListener<T> listener) {
         listeners.add(listener);
         getSelectionModel().addListSelectionListener(e -> {
-            if (!e.getValueIsAdjusting()) {
+            if (e.getValueIsAdjusting()) {
                 listener.getSelectedItem(getSelectedItem());
             }
         });
@@ -522,7 +522,10 @@ public class TypedTable<T> extends JTable {
     }
 
     public void setDataAt(int row, T data){
-        currentData.add(row, data);
+        if (currentData.size() <= row)
+            currentData.add(row, data);
+        else
+            currentData.set(row, data);
 
         if (model.getDataVector().isEmpty())
             model.getDataVector().add(createDataRow(data));
