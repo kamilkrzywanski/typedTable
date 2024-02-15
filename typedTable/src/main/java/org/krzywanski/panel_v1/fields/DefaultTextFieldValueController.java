@@ -1,6 +1,5 @@
 package org.krzywanski.panel_v1.fields;
 
-import javax.swing.border.Border;
 import javax.swing.text.JTextComponent;
 
 public interface DefaultTextFieldValueController<T> extends FieldValueController<T, JTextComponent> {
@@ -14,7 +13,7 @@ public interface DefaultTextFieldValueController<T> extends FieldValueController
     }
 
     @Override
-    public default void setBorder(Border border) {
+    public default void errorBorder() {
         getComponent().putClientProperty("JComponent.outline", "error");
     }
 }

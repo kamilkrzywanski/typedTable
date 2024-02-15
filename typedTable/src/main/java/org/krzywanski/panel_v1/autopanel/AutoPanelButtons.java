@@ -100,6 +100,8 @@ public class AutoPanelButtons<T> extends JPanel {
             setRemoveOrSaveButton(RemoveOrSave.SAVE);
 
             dataPanel.setFieldsEditable(true);
+
+            dataPanel.fieldController.getElements().forEach(element -> element.validate());
         });
 
         cancelButton.addActionListener(e -> {

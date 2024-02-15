@@ -38,12 +38,12 @@ public class DateValueController implements FieldValueController<Date, JXDatePic
     }
 
     @Override
-    public void setBorder(Border border) {
-        datePicker.setBorder(border);
+    public void errorBorder() {
+        datePicker.putClientProperty("JComponent.outline", "error");
     }
 
     @Override
     public void resetBorder() {
-        getComponent().setBorder(originalBorder);
+        getComponent().putClientProperty("JComponent.outline", null);
     }
 }

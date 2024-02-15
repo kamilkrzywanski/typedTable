@@ -35,7 +35,7 @@ public class TableValueController<T> implements FieldValueController<T, TextFiel
     }
 
     @Override
-    public void setBorder(Border border) {
+    public void errorBorder() {
         table.getTextField().putClientProperty("JComponent.outline", "error");
     }
 

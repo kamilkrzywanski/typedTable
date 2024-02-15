@@ -1,7 +1,6 @@
 package org.krzywanski.panel_v1.fields;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 
 public class ComboBoxValueController<T> implements FieldValueController<T, JComboBox<T>> {
 
@@ -32,7 +31,7 @@ public class ComboBoxValueController<T> implements FieldValueController<T, JComb
     }
 
     @Override
-    public void setBorder(Border border) {
+    public void errorBorder() {
         getComponent().putClientProperty("JComponent.outline", "error");
     }
 

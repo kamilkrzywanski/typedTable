@@ -1,7 +1,6 @@
 package org.krzywanski.panel_v1.fields;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 
 public class BooleanCheckBoxValueController implements FieldValueController<Boolean, JCheckBox> {
 
@@ -37,7 +36,7 @@ public class BooleanCheckBoxValueController implements FieldValueController<Bool
     }
 
     @Override
-    public void setBorder(Border border) {
+    public void errorBorder() {
         getComponent().putClientProperty("JComponent.outline", "error");
     }
 
