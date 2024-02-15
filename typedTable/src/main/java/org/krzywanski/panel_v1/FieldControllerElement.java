@@ -125,7 +125,7 @@ public class FieldControllerElement {
 
     public void hideValidationHint() {
         if (dialog != null)
-            dialog.setVisible(false);
+            dialog.dispose();
     }
 
     public TypedAutoPanel<?> getOwner() {
