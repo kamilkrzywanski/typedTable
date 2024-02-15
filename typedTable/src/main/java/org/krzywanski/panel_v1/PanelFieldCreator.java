@@ -191,13 +191,15 @@ public class PanelFieldCreator<T> {
 
         switch (field.getType().getSimpleName()) {
             case "Integer":
-                field.setFieldValueController(new IntegerTextFieldValueController(component));
+            case "BigDecimal":
+            case "Double":
+            case "Float":
+            case "Long":
+            case "Short":
+                field.setFieldValueController(new NumberTextFieldValueController(component));
                 break;
             case "String":
                 field.setFieldValueController(new StringTextFieldValueController(component));
-                break;
-            case "BigDecimal":
-                field.setFieldValueController(new BigDecimalTextFieldValueController(component));
                 break;
         }
 
