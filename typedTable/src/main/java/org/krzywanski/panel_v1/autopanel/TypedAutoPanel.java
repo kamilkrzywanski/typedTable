@@ -79,9 +79,6 @@ public class TypedAutoPanel<T> extends JPanel {
         });
         autoPanelButtons.validateButtonsState();
 
-//        if (autoPanelButtons.getMode() == PanelMode.ADD) {
-//            SwingUtilities.invokeLater(() -> fieldController.getElements().forEach(FieldControllerElement::hideValidationHint));
-//        }
     }
 
     /**
