@@ -1,4 +1,4 @@
-package org.krzywanski.panel_v1.autopanel;
+package org.krzywanski.panel_v1;
 
 import javax.swing.*;
 import javax.swing.text.DefaultEditorKit;

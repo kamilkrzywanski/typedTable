@@ -1,7 +1,5 @@
 package org.krzywanski.panel_v1;
 
-import org.krzywanski.panel_v1.autopanel.ToolBoxPopupMenu;
-
 import javax.swing.*;
 import javax.swing.undo.UndoManager;
 
@@ -9,7 +7,6 @@ public class FieldToolKit {
 
     public static void installDefaultEditorKit(JTextField component) {
         component.setComponentPopupMenu(new ToolBoxPopupMenu());
-
         UndoManager undoManager = new UndoManager();
         component.getDocument().addUndoableEditListener(undoManager);
         component.registerKeyboardAction(e -> {
