@@ -10,6 +10,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 import org.jdesktop.swingx.JXDatePicker;
+import org.krzywanski.TypedFrameworkConfiguration;
 import org.krzywanski.panel_v1.PanelTableController;
 import org.krzywanski.panel_v1.TypedPanelFields;
 import org.krzywanski.panel_v1.autopanel.TypedAutoPanel;
@@ -34,7 +35,6 @@ import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -47,10 +47,11 @@ public class Main {
      * ONLY FOR TEST USING CLASS
      */
     public static void main(String[] args) {
+        Locale.setDefault(new Locale("pl", "PL"));
+        TypedFrameworkConfiguration.addResourceBundle("Messages");
+
 
         try {
-            System.out.println(Paths.get("").toAbsolutePath());
-
             InputStream resourceAsStream = Main.class.getClassLoader().getResourceAsStream("h2_fill_tables.sql");
             String sql = new String(Objects.requireNonNull(resourceAsStream).readAllBytes(), StandardCharsets.UTF_8);
             Session session = sessionFactory.openSession();

@@ -27,19 +27,19 @@ public class TestModelDto implements Comparable<TestModelDto>, Serializable {
     @MyTableColumn(label = "Boolean value")
     private Boolean booleanValue = true;
 
-    @NotEmpty(message = "Mobile Number can not be a null or empty")
-    @Pattern(regexp = "(^$|[0-9]{10})", message = "Mobile Number must be 10 digits")
+    @NotEmpty(message = "{field.not.empty}")
+    @Pattern(regexp = "(^$|[0-9]{10})", message = "{mobile.number.10.digits}")
     @MyTableColumn(label = "Mobile number", width = 200, sortable = true)
     private String columnA;
 
-    @DecimalMin(value = "10.00", message = "Decimal column must be greater than {value}")
-    @DecimalMax(value = "11111.00", message = "Decimal column must be less than {value}")
-    @Digits(fraction = 2, integer = 3, message = "Decimal column must have {integer} integer and {fraction} fraction digits")
-    @NotNull(message = "Decimal column cannot be null")
+    @DecimalMin(value = "10.00", message = "{decimal.column.greater.than}")
+    @DecimalMax(value = "11111.00", message = "{decimal.column.less.than}")
+    @Digits(fraction = 2, integer = 3, message = "{decimal.column.must.have}")
+    @NotNull(message = "{field.not.empty}")
     @MyTableColumn(label = "Decimal column", format = "0.00$", sortable = true)
     private BigDecimal columnB;
-    @NotEmpty(message = "Test label cannot be empty")
-    @Email
+    @NotEmpty(message = "{valid.emial.required}")
+    @Email(message = "{valid.emial.required}")
     @MyTableColumn(label = "E-mail")
     private String columnC;
 

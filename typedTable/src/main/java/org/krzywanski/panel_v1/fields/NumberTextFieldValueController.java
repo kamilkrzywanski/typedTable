@@ -2,8 +2,13 @@ package org.krzywanski.panel_v1.fields;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class NumberTextFieldValueController implements DefaultTextFieldValueController<Number> {
+
+    ResourceBundle rb = ResourceBundle.getBundle("Messages", Locale.getDefault());
+
     private final JFormattedTextField textField;
 
     public NumberTextFieldValueController(JFormattedTextField textField) {
@@ -30,7 +35,7 @@ public class NumberTextFieldValueController implements DefaultTextFieldValueCont
         try {
             return (Number) textField.getFormatter().stringToValue(textField.getText());
         } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid number format");
+            throw new IllegalArgumentException(rb.getString("number.format.error"));
         }
     }
 }
