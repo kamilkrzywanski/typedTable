@@ -2,6 +2,7 @@ package org.krzywanski.panel_v1.autopanel;
 
 import net.miginfocom.swing.MigLayout;
 import org.krzywanski.panel_v1.DataAction;
+import org.krzywanski.panel_v1.ErrorDialog;
 import org.krzywanski.panel_v1.FieldController;
 import org.krzywanski.panel_v1.FieldControllerElement;
 import org.krzywanski.panel_v1.autopanel.buttons.AutoPanelButtons;
@@ -113,13 +114,23 @@ public class TypedAutoPanel<T> extends JPanel {
         if (data != null) {
             switch (updateOrInsert){
                 case UPDATE:
-                    if (updateRepository != null && updateRepository.update(data) != null)
-                        setFieldsEditable(false);
-                    break;
+                    try {
+                        if (updateRepository != null && updateRepository.update(data) != null)
+                            setFieldsEditable(false);
+                        break;
+                    }catch (Exception e){
+                        ErrorDialog.showErrorDialog(this, e.getMessage(), e);
+                       return false;
+                    }
                 case INSERT:
-                    if (insertRepository != null && insertRepository.insert(data) != null)
-                        setFieldsEditable(false);
-                    break;
+                    try {
+                        if (insertRepository != null && insertRepository.insert(data) != null)
+                            setFieldsEditable(false);
+                        break;
+                    }catch (Exception e){
+                        ErrorDialog.showErrorDialog(this, e.getMessage(), e);
+                        return false;
+                    }
             }
         }
         listeners.forEach(listener -> listener.valueChanged(data, updateOrInsert));
@@ -178,7 +189,12 @@ public class TypedAutoPanel<T> extends JPanel {
      */
     public void removeCurrentData() {
         if (data != null && removeRepository != null) {
-            removeRepository.remove(data);
+            try {
+                removeRepository.remove(data);
+            }catch (Exception e){
+                ErrorDialog.showErrorDialog(this, e.getMessage(), e);
+                return;
+            }
             listeners.forEach(listener -> listener.valueChanged(null, DataAction.REMOVE));
         }
     }

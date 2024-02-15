@@ -1,5 +1,5 @@
 package org.krzywanski.panel_v1.dataflow;
 
 public interface Remove<T> {
-    void remove(T data);
+    void remove(T data) throws Exception;
 }

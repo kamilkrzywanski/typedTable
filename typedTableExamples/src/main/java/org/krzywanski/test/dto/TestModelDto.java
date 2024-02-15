@@ -33,8 +33,8 @@ public class TestModelDto implements Comparable<TestModelDto>, Serializable {
     private String columnA;
 
     @DecimalMin(value = "10.00", message = "{decimal.column.greater.than}")
-    @DecimalMax(value = "11111.00", message = "{decimal.column.less.than}")
-    @Digits(fraction = 2, integer = 3, message = "{decimal.column.must.have}")
+//    @DecimalMax(value = "11111.00", message = "{decimal.column.less.than}")
+    @Digits(fraction = 2, integer = 10, message = "{decimal.column.must.have}")
     @NotNull(message = "{field.not.empty}")
     @MyTableColumn(label = "decimal.column", format = "0.00$", sortable = true)
     private BigDecimal columnB;
