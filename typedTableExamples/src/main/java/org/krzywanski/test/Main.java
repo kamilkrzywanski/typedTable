@@ -49,6 +49,7 @@ public class Main {
     public static void main(String[] args) {
         Locale.setDefault(new Locale("pl", "PL"));
         TypedFrameworkConfiguration.addResourceBundle("Messages");
+        TypedFrameworkConfiguration.addResourceBundle("TestModelDto");
 
 
         try {

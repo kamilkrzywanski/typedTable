@@ -15,7 +15,7 @@ import java.util.Date;
 
 @ReflectionSort
 @TableFilter(type = String.class, name = "columnA")
-@TableFilter(type = Double.class, name = "columnB", label = "Decimal column")
+@TableFilter(type = Double.class, name = "columnB", label = "decimal.column")
 @TableFilter(type = TestEnum.class, name = "testEnum", label = "Test enum")
 @TableFilter(type = Boolean.class, name = "testFormatClass", label = "Boolean value")
 @Entity
@@ -36,7 +36,7 @@ public class TestModelDto implements Comparable<TestModelDto>, Serializable {
     @DecimalMax(value = "11111.00", message = "{decimal.column.less.than}")
     @Digits(fraction = 2, integer = 3, message = "{decimal.column.must.have}")
     @NotNull(message = "{field.not.empty}")
-    @MyTableColumn(label = "Decimal column", format = "0.00$", sortable = true)
+    @MyTableColumn(label = "decimal.column", format = "0.00$", sortable = true)
     private BigDecimal columnB;
     @NotEmpty(message = "{valid.emial.required}")
     @Email(message = "{valid.emial.required}")

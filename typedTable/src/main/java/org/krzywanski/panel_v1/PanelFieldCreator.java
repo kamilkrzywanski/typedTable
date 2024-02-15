@@ -1,5 +1,7 @@
 package org.krzywanski.panel_v1;
 
+import org.krzywanski.BundleTranslator;
+import org.krzywanski.TypedFrameworkConfiguration;
 import org.krzywanski.panel_v1.annot.PanelField;
 import org.krzywanski.panel_v1.autopanel.TypedAutoPanel;
 import org.krzywanski.panel_v1.fields.*;
@@ -16,13 +18,15 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class PanelFieldCreator<T> {
+    /**
+     * Translator for resource bundles if some has been defined
+     */
+    BundleTranslator bundleTranslator = new BundleTranslator(Locale.getDefault(), TypedFrameworkConfiguration.resourceBundles);
+
     final Class<T> dataClass;
     /**
      * Map of controllers for custom field
@@ -174,7 +178,7 @@ public class PanelFieldCreator<T> {
             MyTableColumn panelField = field.getField().getAnnotation(MyTableColumn.class);
 
             if(!panelField.label().isEmpty()) {
-                return panelField.label();
+                return bundleTranslator.getTranslation(panelField.label());
             }
         }
 

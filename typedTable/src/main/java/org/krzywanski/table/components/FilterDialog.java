@@ -1,6 +1,8 @@
 package org.krzywanski.table.components;
 
 import net.miginfocom.swing.MigLayout;
+import org.krzywanski.BundleTranslator;
+import org.krzywanski.TypedFrameworkConfiguration;
 import org.krzywanski.table.TypedTable;
 import org.krzywanski.table.TypedTablePanel;
 import org.krzywanski.table.annot.TableFilter;
@@ -19,6 +21,7 @@ import java.util.ResourceBundle;
 
 public class FilterDialog extends JDialog {
     ResourceBundle resourceBundle = ResourceBundle.getBundle("TableBundle", Locale.getDefault());
+    BundleTranslator bundleTranslator = new BundleTranslator(Locale.getDefault(), TypedFrameworkConfiguration.resourceBundles);
     public static final Map<Class<?>, IFilterComponent> customFilterComponents = new HashMap<>();
     final ActionListener firstPageAction;
     final Class<?> typeClass;
@@ -148,7 +151,7 @@ public class FilterDialog extends JDialog {
         });
     }
     String getFilterLabel(TableFilter filter){
-        return filter.label().isEmpty() ? filter.name() : filter.label();
+        return filter.label().isEmpty() ? filter.name() : bundleTranslator.getTranslation(filter.label());
     }
     private JComboBox<?> addEnumFilter(TableFilter filter) {
         JLabel label = new JLabel(getFilterLabel(filter));

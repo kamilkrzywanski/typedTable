@@ -1,5 +1,7 @@
 package org.krzywanski.table;
 
+import org.krzywanski.BundleTranslator;
+import org.krzywanski.TypedFrameworkConfiguration;
 import org.krzywanski.table.annot.MyTableColumn;
 import org.krzywanski.table.providers.TableWidthProvider;
 import org.krzywanski.table.utils.FieldMock;
@@ -20,6 +22,7 @@ public class ColumnCreator {
     /**
      * Map of table columns with property descriptors
      */
+    BundleTranslator bundleTranslator = new BundleTranslator(Locale.getDefault(), TypedFrameworkConfiguration.resourceBundles);
     final List<FieldMock> tableColumns = new LinkedList<>();
 
     public ColumnCreator(Class<?> classType, long id) {
@@ -63,7 +66,7 @@ public class ColumnCreator {
             MyTableColumn annotation = field.getAnnotation(MyTableColumn.class);
             String tableLabel;
             if (annotation != null) {
-                if (!annotation.label().isEmpty()) tableLabel = annotation.label();
+                if (!annotation.label().isEmpty()) tableLabel = bundleTranslator.getTranslation(annotation.label());
                 else tableLabel = field.getName();
                 int tableWidth = columns.getOrDefault(field.getName(), annotation.width());
 
