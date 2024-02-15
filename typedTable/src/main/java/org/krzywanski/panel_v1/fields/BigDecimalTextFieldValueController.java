@@ -7,11 +7,8 @@ import java.math.BigDecimal;
 
 public class BigDecimalTextFieldValueController implements DefaultTextFieldValueController<BigDecimal>{
     private final JFormattedTextField textField;
-    private Border originalBorder;
-
     public BigDecimalTextFieldValueController(JFormattedTextField textField) {
         this.textField = textField;
-        this.originalBorder = textField.getBorder();
     }
 
     @Override
@@ -30,12 +27,12 @@ public class BigDecimalTextFieldValueController implements DefaultTextFieldValue
 
     @Override
     public void resetBorder() {
-        getComponent().setBorder(originalBorder);
+        getComponent().putClientProperty("JComponent.outline", null);
     }
 
     @Override
     public void setBorder(Border border) {
-        getComponent().setBorder(BorderFactory.createCompoundBorder(border, originalBorder));
+        getComponent().putClientProperty("JComponent.outline", "error");
     }
 
 

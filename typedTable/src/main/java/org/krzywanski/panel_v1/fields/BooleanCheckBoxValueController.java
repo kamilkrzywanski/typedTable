@@ -7,11 +7,9 @@ public class BooleanCheckBoxValueController implements FieldValueController<Bool
 
     private final JCheckBox checkBox;
 
-    private final Border originalBorder;
 
     public BooleanCheckBoxValueController(JCheckBox checkBox) {
         this.checkBox = checkBox;
-        this.originalBorder = checkBox.getBorder();
     }
 
     @Override
@@ -40,11 +38,11 @@ public class BooleanCheckBoxValueController implements FieldValueController<Bool
 
     @Override
     public void setBorder(Border border) {
-        getComponent().setBorder(border);
+        getComponent().putClientProperty("JComponent.outline", "error");
     }
 
     @Override
     public void resetBorder() {
-        getComponent().setBorder(originalBorder);
+        getComponent().putClientProperty("JComponent.outline", null);
     }
 }

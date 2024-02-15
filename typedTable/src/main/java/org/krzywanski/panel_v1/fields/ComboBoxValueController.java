@@ -7,11 +7,9 @@ public class ComboBoxValueController<T> implements FieldValueController<T, JComb
 
     JComboBox<T> comboBox;
 
-    Border originalBorder;
 
     public ComboBoxValueController(JComboBox<T> comboBox) {
         this.comboBox = comboBox;
-        this.originalBorder = comboBox.getBorder();
     }
     @Override
     public T getValue() {
@@ -35,12 +33,12 @@ public class ComboBoxValueController<T> implements FieldValueController<T, JComb
 
     @Override
     public void setBorder(Border border) {
-        getComponent().setBorder(border);
+        getComponent().putClientProperty("JComponent.outline", "error");
     }
 
     @Override
     public void resetBorder() {
-        getComponent().setBorder(originalBorder);
+        getComponent().putClientProperty("JComponent.outline", null);
     }
 
 
