@@ -11,8 +11,12 @@ public class BigDecimalTextFieldValueController implements DefaultTextFieldValue
     }
 
     @Override
-    public BigDecimal getValue() {
-        return (BigDecimal) textField.getValue();
+    public BigDecimal getValue() throws NumberFormatException {
+        try {
+            return (BigDecimal) textField.getFormatter().stringToValue(textField.getText());
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override

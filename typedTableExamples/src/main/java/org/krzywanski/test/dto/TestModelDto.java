@@ -35,6 +35,7 @@ public class TestModelDto implements Comparable<TestModelDto>, Serializable {
     @DecimalMin(value = "0.00", message = "Decimal column must be greater than {value}")
     @DecimalMax(value = "100.00", message = "Decimal column must be less than {value}")
     @MyTableColumn(label = "Decimal column", format = "0.00$", sortable = true)
+    @NotNull(message = "Decimal column cannot be null")
     private BigDecimal columnB;
     @NotEmpty(message = "Test label cannot be empty")
     @Email

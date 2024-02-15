@@ -14,6 +14,7 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -211,10 +212,16 @@ public class PanelFieldCreator<T> {
     }
 
     private static JFormattedTextField createFieldWithFormatter(NumberFormat format, FieldControllerElement field) {
-        NumberFormatter formatter = new NumberFormatter(format);
+        NumberFormatter formatter = new NumberFormatter(format) {
+            @Override
+            public Object stringToValue(String text) throws ParseException {
+                if (text.isEmpty())
+                    return null;
+                return super.stringToValue(text);
+            }
+        };
         //TODO create a factory for this
         formatter.setValueClass(field.getType());
-
         return new JFormattedTextField(formatter);
     }
 
