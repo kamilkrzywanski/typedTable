@@ -2,6 +2,7 @@ package org.krzywanski.panel_v1.autopanel;
 
 import net.miginfocom.swing.MigLayout;
 import org.krzywanski.panel_v1.DataAction;
+import org.krzywanski.panel_v1.FieldControllerElement;
 import org.krzywanski.panel_v1.dataflow.Insert;
 import org.krzywanski.panel_v1.dataflow.Remove;
 import org.krzywanski.panel_v1.dataflow.Update;
@@ -119,7 +120,7 @@ public class AutoPanelButtons<T> extends JPanel {
 
             dataPanel.fieldController
                     .getElements()
-                    .forEach(element -> element.getValidationDialog().setVisible(false));
+                    .forEach(FieldControllerElement::hideValidationHint);
             dataPanel.resetBorder();
         });
 
