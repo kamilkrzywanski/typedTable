@@ -19,7 +19,7 @@ import java.util.Date;
 import java.util.Objects;
 
 public class TypedTableRenderer extends DefaultTableCellRenderer {
-    ColumnCreator columnCreator;
+    final ColumnCreator columnCreator;
 
     public TypedTableRenderer(ColumnCreator columnCreator) {
         this.columnCreator = columnCreator;

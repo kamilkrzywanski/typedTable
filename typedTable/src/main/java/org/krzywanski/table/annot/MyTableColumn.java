@@ -15,17 +15,17 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface MyTableColumn {
 
-    final int defaultWidth = 50;
+    int defaultWidth = 50;
 
     /**
-     * if you not passed this param then labell will be a field name
-     * @return
+     * if you are not passed this param then labell will be a field name
+     * @return  label for column
      */
     String label() default "";
 
     /**
      * width for column
-     * @return
+     * @return width
      */
     int width() default defaultWidth;
 

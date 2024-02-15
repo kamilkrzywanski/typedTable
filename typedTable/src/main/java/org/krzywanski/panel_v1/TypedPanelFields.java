@@ -1,17 +1,15 @@
 package org.krzywanski.panel_v1;
 
 import org.krzywanski.panel_v1.fields.FieldProvider;
-import org.krzywanski.panel_v1.fields.FieldValueController;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
  * Class for rgeistering custom fields in panel
  */
 public class TypedPanelFields {
-    public static Map<Class<?>, FieldProvider<?>> fields = new HashMap<>();
+    public final static Map<Class<?>, FieldProvider<?>> fields = new HashMap<>();
 
     /**
      * Register field
@@ -27,6 +25,7 @@ public class TypedPanelFields {
      * @param dataClass class of data
      * @return field controller
      */
+    @SuppressWarnings("unchecked")
     public static <T> FieldProvider<T> getField(Class<T> dataClass) {
         return (FieldProvider<T>) fields.get(dataClass);
     }

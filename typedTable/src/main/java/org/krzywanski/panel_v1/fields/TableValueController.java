@@ -2,15 +2,10 @@ package org.krzywanski.panel_v1.fields;
 
 import org.krzywanski.table.TypedTablePanel;
 
-import javax.swing.border.Border;
-
 public class TableValueController<T> implements FieldValueController<T, TextFieldWithTableSelect<T>> {
     final TextFieldWithTableSelect<T> table;
-    private Border originalBorder;
-
     public TableValueController(TypedTablePanel<T> table, String dialogTitle) {
         this.table = new TextFieldWithTableSelect<>(table, dialogTitle);
-        this.originalBorder = this.table.getTextField().getBorder();
     }
 
     @Override

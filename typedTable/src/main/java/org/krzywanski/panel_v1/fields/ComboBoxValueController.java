@@ -4,7 +4,7 @@ import javax.swing.*;
 
 public class ComboBoxValueController<T> implements FieldValueController<T, JComboBox<T>> {
 
-    JComboBox<T> comboBox;
+    final JComboBox<T> comboBox;
 
 
     public ComboBoxValueController(JComboBox<T> comboBox) {
@@ -12,7 +12,7 @@ public class ComboBoxValueController<T> implements FieldValueController<T, JComb
     }
     @Override
     public T getValue() {
-        return (T) comboBox.getSelectedItem();
+        return comboBox.getItemAt(comboBox.getSelectedIndex());
     }
 
     @Override

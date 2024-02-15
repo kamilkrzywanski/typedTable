@@ -7,7 +7,7 @@ import java.util.ResourceBundle;
 
 public class NumberTextFieldValueController implements DefaultTextFieldValueController<Number> {
 
-    ResourceBundle rb = ResourceBundle.getBundle("Messages", Locale.getDefault());
+    final ResourceBundle rb = ResourceBundle.getBundle("Messages", Locale.getDefault());
 
     private final JFormattedTextField textField;
 

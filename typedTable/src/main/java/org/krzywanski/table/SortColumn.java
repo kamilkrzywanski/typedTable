@@ -9,7 +9,7 @@ public class SortColumn {
         this.sortOrder = sortOrder;
     }
 
-    String columnName;
+    final String columnName;
     SortOrder sortOrder;
 
     public String getColumnName() {

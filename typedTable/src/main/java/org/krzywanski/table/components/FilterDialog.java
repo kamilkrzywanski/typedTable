@@ -20,15 +20,15 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 public class FilterDialog extends JDialog {
-    ResourceBundle resourceBundle = ResourceBundle.getBundle("TableBundle", Locale.getDefault());
-    BundleTranslator bundleTranslator = new BundleTranslator(Locale.getDefault(), TypedFrameworkConfiguration.resourceBundles);
+    final ResourceBundle resourceBundle = ResourceBundle.getBundle("TableBundle", Locale.getDefault());
+    final BundleTranslator bundleTranslator = new BundleTranslator(Locale.getDefault(), TypedFrameworkConfiguration.resourceBundles);
     public static final Map<Class<?>, IFilterComponent> customFilterComponents = new HashMap<>();
     final ActionListener firstPageAction;
     final Class<?> typeClass;
     final TypedTablePanel<?> parentPanel;
     final TypedTable<?> table;
 
-    JPanel filterPanel = new JPanel(new MigLayout());
+    final JPanel filterPanel = new JPanel(new MigLayout());
 
     public FilterDialog(ActionListener firstPageAction, TypedTable<?> typedTable, TypedTablePanel<?> parentPanel) {
         super(SwingUtilities.getWindowAncestor(parentPanel));
@@ -83,9 +83,10 @@ public class FilterDialog extends JDialog {
 
     void okAction(ActionEvent e) {
         filterComponents.keySet().forEach(table::removeExtraParam);
-        filterComponents.entrySet().stream().filter(pair -> !getComponentValue(pair.getValue()).isEmpty()).forEach(pair -> {
-            table.addExtraParam(pair.getKey(), getComponentValue(pair.getValue()));
-        });
+        filterComponents.entrySet()
+                .stream()
+                .filter(pair -> !getComponentValue(pair.getValue()).isEmpty())
+                .forEach(pair -> table.addExtraParam(pair.getKey(), getComponentValue(pair.getValue())));
         firstPageAction.actionPerformed(e);
         setVisible(false);
     }
@@ -122,7 +123,7 @@ public class FilterDialog extends JDialog {
         if (typeClass.isAnnotationPresent(TableFilters.class)) {
             TableFilter[] filters = typeClass.getAnnotation(TableFilters.class).value();
             for (TableFilter filter : filters) {
-                Component component = null;
+                Component component;
                 if (customFilterComponents.containsKey(filter.type())) {
                     addCustomFilter(filter, customFilterComponents.get(filter.type()));
                     filterPanel.add(customFilterComponents.get(filter.type()).getComponent(), "growx, wrap");
@@ -154,7 +155,6 @@ public class FilterDialog extends JDialog {
         return filter.label().isEmpty() ? filter.name() : bundleTranslator.getTranslation(filter.label());
     }
     private JComboBox<?> addEnumFilter(TableFilter filter) {
-        JLabel label = new JLabel(getFilterLabel(filter));
         JComboBox<Object> comboBox = new JComboBox<>();
         comboBox.addItem(null);
         for(Object enumValue : filter.type().getEnumConstants()){
@@ -217,7 +217,7 @@ public class FilterDialog extends JDialog {
     /**
      * Map of filter components
      */
-    Map<String, Object> filterComponents = new HashMap<>();
+    final Map<String, Object> filterComponents = new HashMap<>();
 
     /**
      * Add custom filter component for current instance

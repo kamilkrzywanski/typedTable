@@ -8,7 +8,7 @@ import java.util.Map;
  * This class is responsible for translating the resource bundles for labels and other properties
  */
 public class BundleTranslator {
-    Map<String, String> bundleMap;
+    final Map<String, String> bundleMap;
 
     public BundleTranslator(Locale locale, List<String> resourceBundles) {
         bundleMap = new java.util.HashMap<>();

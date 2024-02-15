@@ -27,16 +27,16 @@ import java.util.function.Supplier;
  */
 public class TypedAutoPanel<T> extends JPanel {
 
-    List<PanelChangeValueListener<T>> listeners = new ArrayList<>();
+    final List<PanelChangeValueListener<T>> listeners = new ArrayList<>();
 
     protected T data;
-    protected Supplier<T> dataSupplier;
+    final protected Supplier<T> dataSupplier;
     protected Insert<T> insertRepository;
     protected Remove<T> removeRepository;
     protected Update<T> updateRepository;
     final Class<T> dataClass;
 
-    FieldController<T> fieldController;
+    final FieldController<T> fieldController;
     final AutoPanelButtons<T> autoPanelButtons;
 
     public TypedAutoPanel(Supplier<T> dataSupplier, Class<T> dataClass) {
@@ -66,17 +66,16 @@ public class TypedAutoPanel<T> extends JPanel {
 
 
         //TODO remove filter when all elements will have implemented FieldValueController
-        fieldController.getElements().stream().filter(el -> el.getFieldValueController() != null).forEach((element) -> {
-            element.getFieldValueController().setValue(() -> {
-                try {
-                    if(data != null)
-                        return element.getPropertyDescriptor().getReadMethod().invoke(data);
-                    return null;
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-        });
+        fieldController.getElements().stream().filter(el -> el.getFieldValueController() != null)
+                .forEach((element) -> element.getFieldValueController().setValue(() -> {
+                    try {
+                        if (data != null)
+                            return element.getPropertyDescriptor().getReadMethod().invoke(data);
+                        return null;
+                    } catch (IllegalAccessException | InvocationTargetException e) {
+                        throw new RuntimeException(e);
+                    }
+                }));
         autoPanelButtons.validateButtonsState();
 
     }
@@ -156,9 +155,11 @@ public class TypedAutoPanel<T> extends JPanel {
      * @param enabled true if fields should be editable
      */
     public void setFieldsEditable(boolean enabled) {
-        fieldController.getElements().stream().filter(el -> el.getFieldValueController() != null).forEach((element) -> {
-            element.getFieldValueController().setEditable(enabled);
-        });
+        fieldController
+                .getElements()
+                .stream()
+                .filter(el -> el.getFieldValueController() != null)
+                .forEach((element) -> element.getFieldValueController().setEditable(enabled));
     }
 
     /**
@@ -247,9 +248,7 @@ public class TypedAutoPanel<T> extends JPanel {
     }
 
     public void resetBorder() {
-        fieldController.getElements().forEach((element) -> {
-            element.getFieldValueController().resetBorder();
-        });
+        fieldController.getElements().forEach((element) -> element.getFieldValueController().resetBorder());
     }
 
     public Class<T> getDataClass() {

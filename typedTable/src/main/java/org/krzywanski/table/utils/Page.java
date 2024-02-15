@@ -7,9 +7,9 @@ public class Page {
         this.totalElements = totalElements;
     }
 
-    int currentPage;
-    int totalPages;
-    int totalElements;
+    final int currentPage;
+    final int totalPages;
+    final int totalElements;
 
 
     public int getCurrentPage() {

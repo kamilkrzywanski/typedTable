@@ -10,7 +10,7 @@ public class ReflectionUtils {
      * Returns a String which capitalizes the first letter of the string.
      */
     public static String capitalize(String name) {
-        if (name == null || name.length() == 0) {
+        if (name == null || name.isEmpty()) {
             return name;
         }
         return name.substring(0, 1).toUpperCase(ENGLISH) + name.substring(1);
