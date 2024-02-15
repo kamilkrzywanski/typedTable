@@ -5,6 +5,7 @@ import org.krzywanski.panel_v1.autopanel.PanelMode;
 import org.krzywanski.panel_v1.autopanel.TypedAutoPanel;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -14,7 +15,6 @@ import java.util.Set;
 
 public class ValidatorDialog<T> {
 
-    JLabel errorLabel = new JLabel();
     FieldControllerElement controller;
     final TypedAutoPanel<T> parentPanel;
     FieldValidator<T> validator = new FieldValidator<>();
@@ -30,11 +30,11 @@ public class ValidatorDialog<T> {
 
     public void showErrorWindow(String message) {
         controller.getFieldValueController().errorBorder();
-        errorLabel.setText(message);
 
         if (window == null)
             window = new WindowDelegate(SwingUtilities.getWindowAncestor(controller.getEditorComponent()));
 
+        window.setLabel(message);
         window.pack();
         window.setVisible(true);
     }
@@ -65,9 +65,12 @@ public class ValidatorDialog<T> {
 
     private class WindowDelegate extends JWindow {
 
+        final JLabel errorLabel;
 
         public WindowDelegate(Window parent) {
             super(parent);
+            errorLabel = new JLabel();
+            errorLabel.setBorder(new LineBorder(Color.RED, 1));
             buildUI();
         }
 
@@ -123,6 +126,10 @@ public class ValidatorDialog<T> {
             } catch (IllegalComponentStateException e) {
                 //do nothing
             }
+        }
+
+        protected void setLabel(String message) {
+            errorLabel.setText(message);
         }
     }
 }
