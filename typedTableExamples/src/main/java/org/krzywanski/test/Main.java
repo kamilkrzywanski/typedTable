@@ -56,7 +56,7 @@ public class Main {
             String sql = new String(Objects.requireNonNull(resourceAsStream).readAllBytes(), StandardCharsets.UTF_8);
             Session session = sessionFactory.openSession();
             session.beginTransaction();
-            Query query = session.createNativeQuery(sql + ";");
+            Query<Boolean> query = session.createNativeQuery(sql + ";", Boolean.class);
             query.executeUpdate();
             session.getTransaction().commit();
         } catch (IOException e) {
