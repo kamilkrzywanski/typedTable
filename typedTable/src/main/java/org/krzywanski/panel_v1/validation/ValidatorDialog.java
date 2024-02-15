@@ -47,7 +47,7 @@ public class ValidatorDialog<T> {
                 controller.getFieldValueController().resetBorder();
 
                 if (window != null)
-                    window.setVisible(false);
+                    window.dispose();
             }
         }
     }
@@ -57,11 +57,9 @@ public class ValidatorDialog<T> {
         return validator.validateField(parentPanel.getDataClass(), controller);
     }
 
-
-    public void setVisible(boolean b) {
-        if (window == null)
-            window = new WindowDelegate(SwingUtilities.getWindowAncestor(controller.getEditorComponent()));
-        window.setVisible(b);
+    public void dispose() {
+        if (window != null)
+            window.dispose();
     }
 
 
@@ -74,7 +72,7 @@ public class ValidatorDialog<T> {
         }
 
         @Override
-        public void setVisible(boolean b) {
+        public synchronized void setVisible(boolean b) {
             super.setVisible(b && (parentPanel.getMode() == PanelMode.UPDATE || parentPanel.getMode() == PanelMode.ADD));
         }
 
