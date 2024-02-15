@@ -24,4 +24,13 @@ public class NumberTextFieldValueController implements DefaultTextFieldValueCont
     public JTextComponent getComponent() {
         return textField;
     }
+
+    @Override
+    public Number getValueForValidation() throws IllegalArgumentException {
+        try {
+            return (Number) textField.getFormatter().stringToValue(textField.getText());
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid number format");
+        }
+    }
 }

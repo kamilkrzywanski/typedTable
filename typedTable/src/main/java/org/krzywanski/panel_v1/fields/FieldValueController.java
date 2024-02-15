@@ -12,4 +12,13 @@ public interface FieldValueController<T, R extends JComponent> {
     void errorBorder();
 
     void resetBorder();
+
+    /**
+     * This method is used to get value for validation
+     *
+     * @return value for validation
+     */
+    default T getValueForValidation() throws IllegalArgumentException {
+        return getValue();
+    }
 }

@@ -13,10 +13,14 @@ public class FieldValidator<T> {
     Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     public Set<String> validateField(Class<T> dataClass, FieldControllerElement element) {
-        return validator.validateValue(dataClass, element.getField().getName(), element.getFieldValueController().getValue())
-                .stream()
-                .map(ConstraintViolation::getMessage)
-                .collect(Collectors.toSet());
+        try {
+            return validator.validateValue(dataClass, element.getField().getName(), element.getFieldValueController().getValueForValidation())
+                    .stream()
+                    .map(ConstraintViolation::getMessage)
+                    .collect(Collectors.toSet());
+        } catch (IllegalArgumentException e) {
+            return Set.of(e.getMessage());
+        }
     }
 
 }
