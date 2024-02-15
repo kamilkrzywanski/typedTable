@@ -5,6 +5,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 import net.miginfocom.swing.MigLayout;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
@@ -30,6 +31,10 @@ import org.krzywanski.test.service.TestModelService;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -42,6 +47,21 @@ public class Main {
      * ONLY FOR TEST USING CLASS
      */
     public static void main(String[] args) {
+
+        try {
+            System.out.println(Paths.get("").toAbsolutePath());
+            String sql = Files.readString(new File("h2_fill_tables.sql").toPath());
+            Session session = sessionFactory.openSession();
+            session.beginTransaction();
+            Query query = session.createNativeQuery(sql + ";");
+            query.executeUpdate();
+            session.getTransaction().commit();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+
         TypedPanelFields.registerField(Date.class, new DefaultFieldProvider<>(new JXDatePicker(), component -> new DateValueController(component)));
         FlatLightLaf.setup();
         UIManager.put("Table.showVerticalLines", true);

@@ -29,7 +29,7 @@ public class TestModelDto implements Comparable<TestModelDto>, Serializable {
 
     @NotEmpty(message = "Mobile Number can not be a null or empty")
     @Pattern(regexp = "(^$|[0-9]{10})", message = "Mobile Number must be 10 digits")
-    @MyTableColumn(label = "XXX", width = 200, sortable = true)
+    @MyTableColumn(label = "Mobile number", width = 200, sortable = true)
     private String columnA;
 
     @DecimalMin(value = "10.00", message = "Decimal column must be greater than {value}")
@@ -40,13 +40,13 @@ public class TestModelDto implements Comparable<TestModelDto>, Serializable {
     private BigDecimal columnB;
     @NotEmpty(message = "Test label cannot be empty")
     @Email
-    @MyTableColumn(label = "Test label")
+    @MyTableColumn(label = "E-mail")
     private String columnC;
 
-    @MyTableColumn(label = "DataLable", format = "dd-MM-yyyy", alignment = Alignment.CENTER)
+    @MyTableColumn(label = "User date", format = "dd-MM-yyyy", alignment = Alignment.CENTER)
     private Date date = new Date();
 
-    @MyTableColumn(label = "Test enum")
+    @MyTableColumn(label = "Priority")
     private TestEnum testEnum = TestEnum.MEDIUM;
 
     @MyTableColumn(label = "customFormatter")
