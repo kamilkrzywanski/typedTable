@@ -31,9 +31,9 @@ import org.krzywanski.test.service.TestModelService;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.*;
@@ -50,7 +50,9 @@ public class Main {
 
         try {
             System.out.println(Paths.get("").toAbsolutePath());
-            String sql = Files.readString(new File("h2_fill_tables.sql").toPath());
+
+            InputStream resourceAsStream = Main.class.getClassLoader().getResourceAsStream("h2_fill_tables.sql");
+            String sql = new String(Objects.requireNonNull(resourceAsStream).readAllBytes(), StandardCharsets.UTF_8);
             Session session = sessionFactory.openSession();
             session.beginTransaction();
             Query query = session.createNativeQuery(sql + ";");
