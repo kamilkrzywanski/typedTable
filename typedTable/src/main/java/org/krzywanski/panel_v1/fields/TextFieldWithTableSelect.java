@@ -1,4 +1,4 @@
-package org.krzywanski.panel_v1.autopanel;
+package org.krzywanski.panel_v1.fields;
 
 import net.miginfocom.swing.MigLayout;
 import org.krzywanski.table.TypedTablePanel;

@@ -1,12 +1,12 @@
-package org.krzywanski.panel_v1.autopanel;
+package org.krzywanski.panel_v1.autopanel.buttons;
 
 import net.miginfocom.swing.MigLayout;
 import org.krzywanski.panel_v1.DataAction;
-import org.krzywanski.panel_v1.FieldControllerElement;
+import org.krzywanski.panel_v1.autopanel.PanelMode;
+import org.krzywanski.panel_v1.autopanel.TypedAutoPanel;
 import org.krzywanski.panel_v1.dataflow.Insert;
 import org.krzywanski.panel_v1.dataflow.Remove;
 import org.krzywanski.panel_v1.dataflow.Update;
-import org.krzywanski.panel_v1.validation.ControllerValidator;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
@@ -101,7 +101,7 @@ public class AutoPanelButtons<T> extends JPanel {
 
             dataPanel.setFieldsEditable(true);
 
-            dataPanel.fieldController.getElements().forEach(element -> element.validate());
+            dataPanel.validateFields();
         });
 
         cancelButton.addActionListener(e -> {
@@ -116,13 +116,10 @@ public class AutoPanelButtons<T> extends JPanel {
             setAddOrCancelButton(AddOrCancel.ADD);
             setRemoveOrSaveButton(RemoveOrSave.REMOVE);
 
-            dataPanel.updateCurrentData(dataPanel.dataSupplier.get());
+            dataPanel.updateCurrentData(dataPanel.getDataSupplier().get());
             dataPanel.fillWithData();
             dataPanel.setFieldsEditable(false);
-
-            dataPanel.fieldController
-                    .getElements()
-                    .forEach(FieldControllerElement::hideValidationHint);
+            dataPanel.hideValidationHints();
             dataPanel.resetBorder();
         });
 
@@ -134,7 +131,7 @@ public class AutoPanelButtons<T> extends JPanel {
             editButton.setEnabled(false);
             lockExternalComponents(false);
             try {
-                dataPanel.updateCurrentData(dataPanel.dataClass.getDeclaredConstructor().newInstance());
+                dataPanel.updateCurrentData(dataPanel.getDataClass().getDeclaredConstructor().newInstance());
             } catch (InvocationTargetException | InstantiationException | IllegalAccessException |
                      NoSuchMethodException ex) {
                 restorePanel();
@@ -159,7 +156,7 @@ public class AutoPanelButtons<T> extends JPanel {
     }
 
     private void restorePanel() {
-        dataPanel.updateCurrentData(dataPanel.dataSupplier.get());
+        dataPanel.updateCurrentData(dataPanel.getDataSupplier().get());
         dataPanel.fillWithData();
         cancelButton.setEnabled(false);
         saveButton.setEnabled(false);
@@ -259,10 +256,10 @@ public class AutoPanelButtons<T> extends JPanel {
     private boolean validateAndInsertTooltip(List<ControllerValidator<T>> validators, JButton button) {
         AtomicBoolean result = new AtomicBoolean(true);
 
-        if (dataPanel.data == null) {
+        if (dataPanel.getData() == null) {
             return true;
         }
-        validators.stream().filter(controllerValidator -> !controllerValidator.validate().apply(dataPanel.data)).findFirst().ifPresent(controllerValidator -> {
+        validators.stream().filter(controllerValidator -> !controllerValidator.validate().apply(dataPanel.getData())).findFirst().ifPresent(controllerValidator -> {
             result.set(false);
             button.setToolTipText(controllerValidator.getMessage());
         });

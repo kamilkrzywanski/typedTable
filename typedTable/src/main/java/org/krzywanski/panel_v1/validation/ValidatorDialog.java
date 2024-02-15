@@ -55,7 +55,7 @@ public class ValidatorDialog<T> {
 
 
     public Set<ConstraintViolation<T>> getValidationResult() {
-        return validator.validateValue(parentPanel.getDataClass(), controller.getField().getName(), controller.getFieldValueController().getValue());
+        return validator.validateField(parentPanel.getDataClass(), controller);
     }
 
 

@@ -1,4 +1,4 @@
-package org.krzywanski.panel_v1.validation;
+package org.krzywanski.panel_v1.autopanel.buttons;
 
 import java.util.function.Function;
 import java.util.function.Supplier;

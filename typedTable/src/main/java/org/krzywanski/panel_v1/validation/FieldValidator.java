@@ -15,9 +15,4 @@ public class FieldValidator<T> {
         return validator.validateValue(dataClass, element.getField().getName(), element.getFieldValueController().getValue());
     }
 
-    public Set<ConstraintViolation<T>> validateValue(Class<T> dataClass, String propertyName, Object value) {
-        return validator.validateValue(dataClass, propertyName, value);
-    }
-
-
 }

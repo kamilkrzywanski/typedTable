@@ -1,6 +1,5 @@
 package org.krzywanski.panel_v1.fields;
 
-import org.krzywanski.panel_v1.autopanel.TextFieldWithTableSelect;
 import org.krzywanski.table.TypedTablePanel;
 
 import javax.swing.border.Border;

@@ -5,12 +5,13 @@ import net.miginfocom.swing.MigLayout;
 import org.krzywanski.panel_v1.DataAction;
 import org.krzywanski.panel_v1.FieldController;
 import org.krzywanski.panel_v1.FieldControllerElement;
+import org.krzywanski.panel_v1.autopanel.buttons.AutoPanelButtons;
+import org.krzywanski.panel_v1.autopanel.buttons.ControllerValidator;
 import org.krzywanski.panel_v1.dataflow.DataFlowAdapter;
 import org.krzywanski.panel_v1.dataflow.Insert;
 import org.krzywanski.panel_v1.dataflow.Remove;
 import org.krzywanski.panel_v1.dataflow.Update;
 import org.krzywanski.panel_v1.fields.FieldValueController;
-import org.krzywanski.panel_v1.validation.ControllerValidator;
 import org.krzywanski.panel_v1.validation.FieldValidator;
 
 import javax.swing.*;
@@ -27,6 +28,7 @@ import java.util.function.Supplier;
 public class TypedAutoPanel<T> extends JPanel {
 
     List<PanelChangeValueListener<T>> listeners = new ArrayList<>();
+
     protected T data;
     protected Supplier<T> dataSupplier;
     protected Insert<T> insertRepository;
@@ -56,7 +58,7 @@ public class TypedAutoPanel<T> extends JPanel {
     /**
      * Fills fields with data from data object
      */
-    protected void fillWithData() {
+    public void fillWithData() {
         if (autoPanelButtons.getMode() == PanelMode.UPDATE)
             return;
 
@@ -96,7 +98,7 @@ public class TypedAutoPanel<T> extends JPanel {
     /**
      * Saves changes to data object
      */
-    protected boolean saveChanges(DataAction updateOrInsert) {
+    public boolean saveChanges(DataAction updateOrInsert) {
 
         if (!validateChanges())
             return false;
@@ -146,7 +148,7 @@ public class TypedAutoPanel<T> extends JPanel {
      * Sets fields editable
      * @param enabled true if fields should be editable
      */
-    protected void setFieldsEditable(boolean enabled) {
+    public void setFieldsEditable(boolean enabled) {
         fieldController.getElements().stream().filter(el -> el.getFieldValueController() != null).forEach((element) -> {
             element.getFieldValueController().setEditable(enabled);
         });
@@ -240,5 +242,21 @@ public class TypedAutoPanel<T> extends JPanel {
 
     public Class<T> getDataClass() {
         return dataClass;
+    }
+
+    public Supplier<T> getDataSupplier() {
+        return dataSupplier;
+    }
+
+    public void hideValidationHints() {
+        fieldController.getElements().forEach(FieldControllerElement::hideValidationHint);
+    }
+
+    public void validateFields() {
+        fieldController.getElements().forEach(FieldControllerElement::validate);
+    }
+
+    public T getData() {
+        return data;
     }
 }
