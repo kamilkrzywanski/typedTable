@@ -27,6 +27,8 @@ public class PanelTableController<T> {
 
             selectedRow = Math.max(0, selectedRow);
             table.setDataAt(selectedRow, element);
+            table.getSelectionModel().setSelectionInterval(selectedRow, selectedRow);
+
         });
     }
 }
