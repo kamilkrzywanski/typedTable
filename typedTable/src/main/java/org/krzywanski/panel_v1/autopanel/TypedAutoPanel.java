@@ -1,6 +1,5 @@
 package org.krzywanski.panel_v1.autopanel;
 
-import jakarta.validation.ConstraintViolation;
 import net.miginfocom.swing.MigLayout;
 import org.krzywanski.panel_v1.DataAction;
 import org.krzywanski.panel_v1.FieldController;
@@ -133,11 +132,11 @@ public class TypedAutoPanel<T> extends JPanel {
         FieldValidator<T> fieldValidator = new FieldValidator<>();
         for (FieldControllerElement element : fieldController.getElements()) {
             if (element.getFieldValueController() != null) {
-                Set<ConstraintViolation<T>> validationResult = fieldValidator.validateField(dataClass, element);
+                Set<String> validationResult = fieldValidator.validateField(dataClass, element);
 
                 if (!validationResult.isEmpty()) {
                     if (element.getValidationDialog() != null)
-                        element.getValidationDialog().showErrorWindow(validationResult.iterator().next().getMessage());
+                        element.getValidationDialog().showErrorWindow(validationResult.iterator().next());
                     allFieldsValid = false;
                 }
             }

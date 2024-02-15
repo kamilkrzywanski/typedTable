@@ -1,6 +1,5 @@
 package org.krzywanski.panel_v1.validation;
 
-import jakarta.validation.ConstraintViolation;
 import org.krzywanski.panel_v1.FieldControllerElement;
 import org.krzywanski.panel_v1.autopanel.PanelMode;
 import org.krzywanski.panel_v1.autopanel.TypedAutoPanel;
@@ -43,7 +42,7 @@ public class ValidatorDialog<T> {
     public void showIfErrorsPresent() {
         if(parentPanel.getMode() == PanelMode.ADD || parentPanel.getMode() == PanelMode.UPDATE) {
             if (!getValidationResult().isEmpty()) {
-                showErrorWindow(getValidationResult().iterator().next().getMessage());
+                showErrorWindow(getValidationResult().iterator().next());
             } else {
                 controller.getFieldValueController().resetBorder();
 
@@ -54,7 +53,7 @@ public class ValidatorDialog<T> {
     }
 
 
-    public Set<ConstraintViolation<T>> getValidationResult() {
+    public Set<String> getValidationResult() {
         return validator.validateField(parentPanel.getDataClass(), controller);
     }
 
