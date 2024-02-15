@@ -33,8 +33,9 @@ public class TestModelDto implements Comparable<TestModelDto>, Serializable {
     private String columnA;
 
     @DecimalMin(value = "0.00", message = "Decimal column must be greater than {value}")
-    @DecimalMax(value = "100.00", message = "Decimal column must be less than {value}")
+    @DecimalMax(value = "11111.00", message = "Decimal column must be less than {value}")
     @MyTableColumn(label = "Decimal column", format = "0.00$", sortable = true)
+    @Digits(fraction = 2, integer = 3, message = "Decimal column must have 3 integer and 2 fraction digits")
     @NotNull(message = "Decimal column cannot be null")
     private BigDecimal columnB;
     @NotEmpty(message = "Test label cannot be empty")
