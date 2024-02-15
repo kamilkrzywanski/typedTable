@@ -1,5 +1,6 @@
 package org.krzywanski.test.dto;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.*;
 import org.krzywanski.table.annot.MyTableColumn;
@@ -34,9 +35,10 @@ public class TestModelDto implements Comparable<TestModelDto>, Serializable {
 
     @DecimalMin(value = "10.00", message = "{decimal.column.greater.than}")
 //    @DecimalMax(value = "11111.00", message = "{decimal.column.less.than}")
-    @Digits(fraction = 2, integer = 10, message = "{decimal.column.must.have}")
+    @Digits(fraction = 2, integer = 8, message = "{decimal.column.must.have}")
     @NotNull(message = "{field.not.empty}")
     @MyTableColumn(label = "decimal.column", format = "0.00$", sortable = true)
+    @Column(precision = 10, scale = 2)
     private BigDecimal columnB;
     @NotEmpty(message = "{valid.emial.required}")
     @Email(message = "{valid.emial.required}")
