@@ -1,7 +1,6 @@
 package org.krzywanski.panel_v1;
 
 import org.krzywanski.panel_v1.annot.PanelField;
-import org.krzywanski.panel_v1.autopanel.ToolBoxPopupMenu;
 import org.krzywanski.panel_v1.autopanel.TypedAutoPanel;
 import org.krzywanski.panel_v1.fields.*;
 import org.krzywanski.panel_v1.validation.RevalidateDocumentListener;
@@ -10,7 +9,6 @@ import org.krzywanski.table.annot.MyTableColumn;
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.NumberFormatter;
-import javax.swing.undo.UndoManager;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
@@ -205,8 +203,7 @@ public class PanelFieldCreator<T> {
                 field.setFieldValueController(new StringTextFieldValueController(component));
                 break;
         }
-
-        installFieldManager(component);
+        FieldToolKit.installDefaultEditorKit(component);
         return field;
     }
 
@@ -247,22 +244,5 @@ public class PanelFieldCreator<T> {
                                 "Field type {" + field.getType() + "} is not compatible with column type {" + columnClass + "} of class {" + dataClass.getName() + "}");
                     }
                 });
-    }
-
-    private void installFieldManager(JFormattedTextField component) {
-        component.setComponentPopupMenu(new ToolBoxPopupMenu());
-        UndoManager undoManager = new UndoManager();
-        component.getDocument().addUndoableEditListener(undoManager);
-        component.registerKeyboardAction(e -> {
-            if (undoManager.canUndo()) {
-                undoManager.undo();
-            }
-        }, KeyStroke.getKeyStroke("control Z"), JComponent.WHEN_FOCUSED);
-
-        component.registerKeyboardAction(e -> {
-            if (undoManager.canRedo()) {
-                undoManager.redo();
-            }
-        }, KeyStroke.getKeyStroke("control Y"), JComponent.WHEN_FOCUSED);
     }
 }
