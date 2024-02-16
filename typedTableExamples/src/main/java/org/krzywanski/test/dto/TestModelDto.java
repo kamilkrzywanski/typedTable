@@ -1,6 +1,5 @@
 package org.krzywanski.test.dto;
 
-import org.krzywanski.table.annot.CustomRenderer;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.Email;
@@ -32,7 +31,7 @@ public class TestModelDto implements Comparable<TestModelDto>, Serializable {
 
     Integer id;
 
-    //    @CustomRenderer(renderer = BooleanIconRenderer.class)
+    //        @CustomRenderer(renderer = BooleanIconRenderer.class)
     @MyTableColumn(label = "Boolean value")
     private Boolean booleanValue = true;
 
@@ -61,10 +60,6 @@ public class TestModelDto implements Comparable<TestModelDto>, Serializable {
 
     @MyTableColumn(label = "customFormatter")
     TestFormatClass testFormatClass = new TestFormatClass("X");
-
-    @CustomRenderer(renderer = BooleanIconRenderer.class)
-    @MyTableColumn(label = "Boolean value")
-    private Boolean booleanValue = true;
 
     public Integer getId() {
         return id;
