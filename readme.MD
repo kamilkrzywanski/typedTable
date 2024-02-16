@@ -4,7 +4,7 @@ Simple tool to map Entity to jtable in java
 -Add filters, custom filters -> [filters](typedTable/features/filters/filters.md) <br>
 -Export to excel, csv <br>
 -Define sortables columns -> [sorting](typedTable/features/sorting/sorting.md) <br>
--Simlplify add custom formatters <br>
+-Simlplify add custom formatters -> [formatters](typedTable/features/customFormatters/customFormatters.md) <br>
 -Autosave of columns visibility and width <br>
 -Custom renderers for field with annotations <br>
 -Add computed columns (functional style) <br>
