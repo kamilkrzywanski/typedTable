@@ -11,12 +11,10 @@ By this function you can create computed columns for the table with functional s
 To create computed column you need to provide the name of the column, class of column, the function that will compute
 the value.
 
-```java
-        panel.addComuptedColumn("Computed column",String .class, value ->value.
-
-getColumnA() +" "+value.
-
-getColumnB());
+```java 
+public static String {
+    panel.addComuptedColumn("Computed column", String.class, value -> value.getColumnA() + " " + value.getColumnB());
+}
 ```
 
 ![img.png](img.png)
