@@ -36,7 +36,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.*;
+import java.util.Map;
+import java.util.Objects;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -69,9 +71,8 @@ public class Main {
         FlatLightLaf.setup();
         UIManager.put("Table.showVerticalLines", true);
         UIManager.put("Table.showHorizontalLines", true);
-        FilterDialog.registerCustomFilterComponent(Boolean.class, new IFilterComponent() {
-            final JCheckBox checkBox = new JCheckBox();
-
+        FilterDialog.registerCustomFilterComponent(Boolean.class, () -> new IFilterComponent() {
+            private final JCheckBox checkBox = new JCheckBox();
             @Override
             public String getFilterValue() {
                 return checkBox.isSelected() ? "true" : "false";

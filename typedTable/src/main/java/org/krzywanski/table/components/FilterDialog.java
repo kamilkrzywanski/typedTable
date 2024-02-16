@@ -18,11 +18,12 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.function.Supplier;
 
 public class FilterDialog extends JDialog {
     final ResourceBundle resourceBundle = ResourceBundle.getBundle("TableBundle", Locale.getDefault());
     final BundleTranslator bundleTranslator = new BundleTranslator(Locale.getDefault(), TypedFrameworkConfiguration.resourceBundles);
-    public static final Map<Class<?>, IFilterComponent> customFilterComponents = new HashMap<>();
+    public static final Map<Class<?>, Supplier<IFilterComponent>> customFilterComponents = new HashMap<>();
     final ActionListener firstPageAction;
     final Class<?> typeClass;
     final TypedTablePanel<?> parentPanel;
@@ -125,9 +126,9 @@ public class FilterDialog extends JDialog {
             for (TableFilter filter : filters) {
                 Component component;
                 if (customFilterComponents.containsKey(filter.type())) {
-                    addCustomFilter(filter, customFilterComponents.get(filter.type()));
-                    filterPanel.add(customFilterComponents.get(filter.type()).getComponent(), "growx, wrap");
-                    installLiseners(customFilterComponents.get(filter.type()).getComponent());
+                    IFilterComponent filterComponent = customFilterComponents.get(filter.type()).get();
+                    addCustomFilter(filter, filterComponent);
+                    installLiseners(filterComponent.getComponent());
                     return;
                 } else if (filter.type().isEnum())
                     component = addEnumFilter(filter);
@@ -235,7 +236,7 @@ public class FilterDialog extends JDialog {
      * @param typeClass - type of column
      * @param component - component to add
      */
-    public static void registerCustomFilterComponent(Class<?> typeClass, IFilterComponent component){
+    public static void registerCustomFilterComponent(Class<?> typeClass, Supplier<IFilterComponent> component) {
         customFilterComponents.put(typeClass, component);
     }
 }
