@@ -107,6 +107,15 @@ public class TypedAutoPanel<T> extends JPanel {
             }
         });
 
+
+        FieldValidator<T> fieldValidator = new FieldValidator<>();
+        Set<String> validationResult = fieldValidator.validateBean(data);
+        if (!validationResult.isEmpty()) {
+            JOptionPane.showMessageDialog(this, validationResult.iterator().next(), "Validation error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+
         if (data != null) {
             switch (updateOrInsert){
                 case UPDATE:

@@ -13,6 +13,7 @@ import org.krzywanski.table.constraints.Alignment;
 import org.krzywanski.test.model.TestEnum;
 import org.krzywanski.test.model.TestFormatClass;
 import org.krzywanski.test.validation.BetweenValidator;
+import org.krzywanski.test.validation.TestModelDtoValidator;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -24,6 +25,8 @@ import java.util.Date;
 @TableFilter(type = TestEnum.class, name = "testEnum", label = "Test enum")
 @TableFilter(type = Boolean.class, name = "testFormatClass", label = "Boolean value")
 @Entity
+
+@TestModelDtoValidator
 public class TestModelDto implements Comparable<TestModelDto>, Serializable {
 
     Integer id;

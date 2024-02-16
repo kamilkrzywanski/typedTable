@@ -28,4 +28,9 @@ public class FieldValidator<T> {
         }
     }
 
+
+    public Set<String> validateBean(T bean) {
+        return validator.validate(bean).stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet());
+    }
+
 }
