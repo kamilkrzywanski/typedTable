@@ -1,13 +1,17 @@
 package org.krzywanski.test.dto;
 
 import jakarta.persistence.Entity;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import org.krzywanski.table.annot.MyTableColumn;
 import org.krzywanski.table.annot.ReflectionSort;
 import org.krzywanski.table.annot.TableFilter;
 import org.krzywanski.table.constraints.Alignment;
 import org.krzywanski.test.model.TestEnum;
 import org.krzywanski.test.model.TestFormatClass;
+import org.krzywanski.test.validation.BetweenValidator;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -32,9 +36,9 @@ public class TestModelDto implements Comparable<TestModelDto>, Serializable {
     @MyTableColumn(label = "Mobile number", width = 200, sortable = true)
     private String columnA;
 
-    @DecimalMin(value = "10.00", message = "{decimal.column.greater.than}")
-    @DecimalMax(value = "11111.00", message = "{decimal.column.less.than}")
-    @Digits(fraction = 2, integer = 3, message = "{decimal.column.must.have}")
+    //    @DecimalMin(value = "10.00", message = "{decimal.column.greater.than}")
+//    @DecimalMax(value = "11111.00", message = "{decimal.column.less.than}")
+    @BetweenValidator(min = "10.00", max = "11111.00")
     @NotNull(message = "{field.not.empty}")
     @MyTableColumn(label = "decimal.column", format = "0.00$", sortable = true)
     private BigDecimal columnB;
