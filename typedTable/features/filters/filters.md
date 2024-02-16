@@ -28,7 +28,7 @@ You can register custom filters by 2 ways:
 2. Local registration of filter for some column - for only one instance
     - Create a class that implements IFilterComponent
     - Use method: TypedTablePanel::addCustomFilterComponent(String label, String filterName, IFilterComponent
-      iFilterComponent)
+      IFilterComponent)
 
 ## Example
 
