@@ -6,8 +6,9 @@ Simple tool to map Entity to jtable in java
 -Define sortables columns <br>
 -Simlplify add custom formatters <br>
 -Autosave of columns visibility and width <br>
--Add computed columns
--Add column with multiselect
+-Custom renderers for field with annotations <br>
+-Add computed columns (functional style) <br>
+-Add column with multiselect for selecting rows (objects<T>) - pagination friendly <br>
 
 Examples of usage yuo can find in:
 https://github.com/kamilkrzywanski/typedTableIntegration
@@ -19,7 +20,7 @@ like there with export to CSV, EXCEL, Sort mechanism:
 With default constructor you can provide data from list of entities
 ![img.png](typedTable/images/img_6.png)
 Effect of this opperation will be: <br>
-![img_4.png](typedTable/images/img_4.png)
+![img_2.png](typedTable/images/img_2.png)
 Custom formatter for objects example:
 ![img.png](typedTable/images/img.png)
 
