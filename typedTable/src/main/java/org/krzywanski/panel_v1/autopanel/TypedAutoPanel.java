@@ -40,13 +40,15 @@ public class TypedAutoPanel<T> extends JPanel {
     final FieldController<T> fieldController;
     final AutoPanelButtons<T> autoPanelButtons;
 
+    final JPanel fieldsPanel = new JPanel(new MigLayout());
+
     public TypedAutoPanel(Supplier<T> dataSupplier, Class<T> dataClass) {
         this.data = dataSupplier.get();
         this.dataSupplier = dataSupplier;
         this.dataClass = dataClass;
         this.fieldController = new FieldController<>(dataClass, this);
         this.autoPanelButtons = new AutoPanelButtons<>(this, () -> insertRepository, () -> removeRepository, () -> updateRepository);
-        setLayout(new MigLayout("fill"));
+        setLayout(new MigLayout("debug, fill"));
     }
 
     public TypedAutoPanel<T> buildPanel(){
@@ -55,8 +57,9 @@ public class TypedAutoPanel<T> extends JPanel {
 
     public TypedAutoPanel<T> buildPanel(int rows) {
         addFields(rows);
-        add(new JLabel());
-        add(autoPanelButtons, "grow");
+        add(fieldsPanel, "grow");
+        add(new JLabel(), "wrap");
+        add(autoPanelButtons, "right");
         fillWithData();
         return this;
     }
@@ -94,9 +97,9 @@ public class TypedAutoPanel<T> extends JPanel {
         fieldController.getElements().forEach((element) -> {
             final boolean isWrap = atomicInteger.getAndIncrement() % rows == 0;
 
-            add(element.getFirstComponent(), element.getSecondComponent() != null ? "" : "span 2" + (isWrap ? ",wrap" : ""));
+            fieldsPanel.add(element.getFirstComponent(), element.getSecondComponent() != null ? "" : "span 2" + (isWrap ? ",wrap" : ""));
             if(element.getSecondComponent() != null)
-                add(element.getSecondComponent(), "grow, push" + (isWrap ? ",wrap" : ""));
+                fieldsPanel.add(element.getSecondComponent(), "grow, push" + (isWrap ? ",wrap" : ""));
         });
     }
 
