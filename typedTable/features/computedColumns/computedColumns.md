@@ -12,7 +12,7 @@ To create computed column you need to provide the name of the column, class of c
 the value.
 
 ```java 
-public static String {
+static {
     panel.addComuptedColumn("Computed column", String.class, value -> value.getColumnA() + " " + value.getColumnB());
 }
 ```
