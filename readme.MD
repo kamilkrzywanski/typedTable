@@ -1,5 +1,9 @@
 Simple tool to map Entity to jtable in java 
 @Author Kamil Krzywanski <br>
+
+Examples of usage yuo can find in:
+directory: [typedTableExamples](typedTableExamples)
+
 -Autosave of columns visibility and width -> [autoSave](typedTable/features/autosave/autosave.md)
 -You can hide columns -> [hideColumn](typedTable/features/hideColumn/hideColumn.md) <br>
 -Add filters, custom filters -> [filters](typedTable/features/filters/filters.md) <br>
@@ -12,9 +16,6 @@ annotation -> [customRenderers](typedTable/features/customRenderers/customRender
 style) -> [computedColumns](typedTable/features/computedColumns/computedColumns.md) <br>
 -Add column with multiselect for selecting rows (objects<T>) - pagination
 friendly -> [multiSelect](typedTable/features/multiSelect/multiSelect.md) <br>
-
-Examples of usage yuo can find in:
-directory: [typedTableExamples](typedTableExamples)
 
 It's olny idea at the moment but by annotations you can create simple table
 like there with export to CSV, EXCEL, Sort mechanism: 
