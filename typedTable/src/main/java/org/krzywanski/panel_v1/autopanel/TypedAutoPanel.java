@@ -19,6 +19,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 /**
@@ -47,8 +48,13 @@ public class TypedAutoPanel<T> extends JPanel {
         this.autoPanelButtons = new AutoPanelButtons<>(this, () -> insertRepository, () -> removeRepository, () -> updateRepository);
         setLayout(new MigLayout("fill"));
     }
+
     public TypedAutoPanel<T> buildPanel(){
-        addFields();
+        return buildPanel(1);
+    }
+
+    public TypedAutoPanel<T> buildPanel(int rows) {
+        addFields(rows);
         add(new JLabel());
         add(autoPanelButtons, "grow");
         fillWithData();
@@ -83,11 +89,14 @@ public class TypedAutoPanel<T> extends JPanel {
     /**
      * Adds fields to panel
      */
-    private void addFields() {
+    private void addFields(int rows) {
+        AtomicInteger atomicInteger = new AtomicInteger(1);
         fieldController.getElements().forEach((element) -> {
-            add(element.getFirstComponent(), element.getSecondComponent() != null ? "" : "span 2, wrap");
+            final boolean isWrap = atomicInteger.getAndIncrement() % rows == 0;
+
+            add(element.getFirstComponent(), element.getSecondComponent() != null ? "" : "span 2" + (isWrap ? ",wrap" : ""));
             if(element.getSecondComponent() != null)
-                add(element.getSecondComponent(), "grow, push, wrap");
+                add(element.getSecondComponent(), "grow, push" + (isWrap ? ",wrap" : ""));
         });
     }
 
