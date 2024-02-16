@@ -1,5 +1,6 @@
 package org.krzywanski.test.dto;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -41,6 +42,7 @@ public class TestModelDto implements Comparable<TestModelDto>, Serializable {
     @BetweenValidator(min = "10.00", max = "11111.00")
     @NotNull(message = "{field.not.empty}")
     @MyTableColumn(label = "decimal.column", format = "0.00$", sortable = true)
+    @Column(precision = 10, scale = 2)
     private BigDecimal columnB;
     @NotEmpty(message = "{valid.emial.required}")
     @Email(message = "{valid.emial.required}")

@@ -15,9 +15,9 @@ import java.util.Set;
 
 public class ValidatorDialog<T> {
 
-    FieldControllerElement controller;
+    final FieldControllerElement controller;
     final TypedAutoPanel<T> parentPanel;
-    FieldValidator<T> validator = new FieldValidator<>();
+    final FieldValidator<T> validator = new FieldValidator<>();
 
     WindowDelegate window = null;
 

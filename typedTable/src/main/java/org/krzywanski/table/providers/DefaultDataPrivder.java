@@ -3,9 +3,6 @@ package org.krzywanski.table.providers;
 
 import org.krzywanski.table.SortColumn;
 import org.krzywanski.table.constraints.ActionType;
-import org.krzywanski.table.providers.DataProviderInterface;
-import org.krzywanski.table.providers.SizeSupplier;
-import org.krzywanski.table.providers.TableDataProvider;
 
 import java.util.List;
 import java.util.Map;
@@ -16,9 +13,8 @@ import java.util.Map;
  */
 public class DefaultDataPrivder<T> implements TableDataProvider<T> {
 
-    int limit;
-    int limitCache;
-    DataProviderInterface<T> dataProviderInterface;
+    final int limit;
+    final DataProviderInterface<T> dataProviderInterface;
     final SizeSupplier sizeSupplier;
 
     public DefaultDataPrivder(int limit, DataProviderInterface<T> dataProviderInterface, SizeSupplier sizeSupplier) {

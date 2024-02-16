@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 public class FieldValidator<T> {
 
-    Validator validator = Validation.byDefaultProvider().configure().messageInterpolator(
+    final Validator validator = Validation.byDefaultProvider().configure().messageInterpolator(
             new ResourceBundleMessageInterpolator(
                     new AggregateResourceBundleLocator(TypedFrameworkConfiguration.resourceBundles))
     ).buildValidatorFactory().getValidator();

@@ -12,8 +12,6 @@ import java.util.List;
  * Get data from panel
  */
 public class FieldController<T> {
-    final Class<T> dataClass;
-
     final PanelFieldCreator<T> panelFieldCreator;
 
     /**
@@ -21,7 +19,6 @@ public class FieldController<T> {
      * @param dataClass class of data
      */
     public FieldController(Class<T> dataClass, TypedAutoPanel<T> parentPanel) {
-        this.dataClass = dataClass;
         this.panelFieldCreator = new PanelFieldCreator<>(dataClass, parentPanel);
     }
 

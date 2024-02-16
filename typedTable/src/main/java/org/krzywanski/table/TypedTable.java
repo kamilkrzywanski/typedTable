@@ -37,7 +37,7 @@ public class TypedTable<T> extends JTable {
         TableWidthProvider.setProvider(new DefaultTableWidthProvider());
     }
 
-    List<GenericSelectionListener<T>> listeners = new ArrayList<>();
+    final List<GenericSelectionListener<T>> listeners = new ArrayList<>();
 
     /**
      * Map of extra params to send with request
@@ -46,7 +46,7 @@ public class TypedTable<T> extends JTable {
     /**
      * List of ilsteners to execute when requested is change page by table
      */
-    List<ActionListener> changePageListeners = new ArrayList<>();
+    final List<ActionListener> changePageListeners = new ArrayList<>();
     /**
      * List of columns to sort data
      */
@@ -186,9 +186,7 @@ public class TypedTable<T> extends JTable {
         if (!getSortColumns().isEmpty() && getSortColumns().get(0) != null && typeClass.isAnnotationPresent(ReflectionSort.class))
             sortData(currentData, getSortColumns().get(0).getColumnName(), getSortColumns().get(0).getSortOrder());
 
-        currentData.forEach(t -> {
-            model.addRow(createDataRow(t));
-        });
+        currentData.forEach(t -> model.addRow(createDataRow(t)));
         revalidate();
 
         if (selectFirstRow && !currentData.isEmpty())
@@ -478,7 +476,7 @@ public class TypedTable<T> extends JTable {
         if (resultList.comparator() == null && !Comparable.class.isAssignableFrom(typeClass))
             throw new RuntimeException("TypeClass needs to implement Comparable interface if you use TreeSet without comparator");
 
-        addColumn(columnName, Boolean.class, t -> resultList.contains(t));
+        addColumn(columnName, Boolean.class, resultList::contains);
         getModel().addTableModelListener(e -> {
             if (e.getType() == TableModelEvent.UPDATE && getColumnModel().getColumnIndex(columnName) == e.getColumn()) {
                 if ((Boolean) getValueAt(e.getFirstRow(), e.getColumn()))

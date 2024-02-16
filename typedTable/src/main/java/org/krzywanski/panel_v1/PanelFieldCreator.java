@@ -25,7 +25,7 @@ public class PanelFieldCreator<T> {
     /**
      * Translator for resource bundles if some has been defined
      */
-    BundleTranslator bundleTranslator = new BundleTranslator(Locale.getDefault(), TypedFrameworkConfiguration.resourceBundles);
+    final BundleTranslator bundleTranslator = new BundleTranslator(Locale.getDefault(), TypedFrameworkConfiguration.resourceBundles);
 
     final Class<T> dataClass;
     /**

@@ -2,6 +2,7 @@ package org.krzywanski.panel_v1.autopanel;
 
 import net.miginfocom.swing.MigLayout;
 import org.krzywanski.panel_v1.DataAction;
+import org.krzywanski.panel_v1.ErrorDialog;
 import org.krzywanski.panel_v1.FieldController;
 import org.krzywanski.panel_v1.FieldControllerElement;
 import org.krzywanski.panel_v1.autopanel.buttons.AutoPanelButtons;
@@ -26,16 +27,16 @@ import java.util.function.Supplier;
  */
 public class TypedAutoPanel<T> extends JPanel {
 
-    List<PanelChangeValueListener<T>> listeners = new ArrayList<>();
+    final List<PanelChangeValueListener<T>> listeners = new ArrayList<>();
 
     protected T data;
-    protected Supplier<T> dataSupplier;
+    final protected Supplier<T> dataSupplier;
     protected Insert<T> insertRepository;
     protected Remove<T> removeRepository;
     protected Update<T> updateRepository;
     final Class<T> dataClass;
 
-    FieldController<T> fieldController;
+    final FieldController<T> fieldController;
     final AutoPanelButtons<T> autoPanelButtons;
 
     public TypedAutoPanel(Supplier<T> dataSupplier, Class<T> dataClass) {
@@ -44,7 +45,7 @@ public class TypedAutoPanel<T> extends JPanel {
         this.dataClass = dataClass;
         this.fieldController = new FieldController<>(dataClass, this);
         this.autoPanelButtons = new AutoPanelButtons<>(this, () -> insertRepository, () -> removeRepository, () -> updateRepository);
-        setLayout(new MigLayout());
+        setLayout(new MigLayout("fill"));
     }
     public TypedAutoPanel<T> buildPanel(){
         addFields();
@@ -65,22 +66,18 @@ public class TypedAutoPanel<T> extends JPanel {
 
 
         //TODO remove filter when all elements will have implemented FieldValueController
-        fieldController.getElements().stream().filter(el -> el.getFieldValueController() != null).forEach((element) -> {
-            element.getFieldValueController().setValue(() -> {
-                try {
-                    if(data != null)
-                        return element.getPropertyDescriptor().getReadMethod().invoke(data);
-                    return null;
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-        });
+        fieldController.getElements().stream().filter(el -> el.getFieldValueController() != null)
+                .forEach((element) -> element.getFieldValueController().setValue(() -> {
+                    try {
+                        if (data != null)
+                            return element.getPropertyDescriptor().getReadMethod().invoke(data);
+                        return null;
+                    } catch (IllegalAccessException | InvocationTargetException e) {
+                        throw new RuntimeException(e);
+                    }
+                }));
         autoPanelButtons.validateButtonsState();
 
-//        if (autoPanelButtons.getMode() == PanelMode.ADD) {
-//            SwingUtilities.invokeLater(() -> fieldController.getElements().forEach(FieldControllerElement::hideValidationHint));
-//        }
     }
 
     /**
@@ -88,9 +85,9 @@ public class TypedAutoPanel<T> extends JPanel {
      */
     private void addFields() {
         fieldController.getElements().forEach((element) -> {
-            add(element.getFirstComponent(), element.getSecondComponent() != null ? "grow" : "grow, span 2, wrap");
+            add(element.getFirstComponent(), element.getSecondComponent() != null ? "" : "span 2, wrap");
             if(element.getSecondComponent() != null)
-                add(element.getSecondComponent(), "grow, wrap");
+                add(element.getSecondComponent(), "grow, push, wrap");
         });
     }
 
@@ -113,13 +110,23 @@ public class TypedAutoPanel<T> extends JPanel {
         if (data != null) {
             switch (updateOrInsert){
                 case UPDATE:
-                    if (updateRepository != null && updateRepository.update(data) != null)
-                        setFieldsEditable(false);
-                    break;
+                    try {
+                        if (updateRepository != null && updateRepository.update(data) != null)
+                            setFieldsEditable(false);
+                        break;
+                    }catch (Exception e){
+                        ErrorDialog.showErrorDialog(this, e.getMessage(), e);
+                       return false;
+                    }
                 case INSERT:
-                    if (insertRepository != null && insertRepository.insert(data) != null)
-                        setFieldsEditable(false);
-                    break;
+                    try {
+                        if (insertRepository != null && insertRepository.insert(data) != null)
+                            setFieldsEditable(false);
+                        break;
+                    }catch (Exception e){
+                        ErrorDialog.showErrorDialog(this, e.getMessage(), e);
+                        return false;
+                    }
             }
         }
         listeners.forEach(listener -> listener.valueChanged(data, updateOrInsert));
@@ -148,9 +155,11 @@ public class TypedAutoPanel<T> extends JPanel {
      * @param enabled true if fields should be editable
      */
     public void setFieldsEditable(boolean enabled) {
-        fieldController.getElements().stream().filter(el -> el.getFieldValueController() != null).forEach((element) -> {
-            element.getFieldValueController().setEditable(enabled);
-        });
+        fieldController
+                .getElements()
+                .stream()
+                .filter(el -> el.getFieldValueController() != null)
+                .forEach((element) -> element.getFieldValueController().setEditable(enabled));
     }
 
     /**
@@ -178,7 +187,12 @@ public class TypedAutoPanel<T> extends JPanel {
      */
     public void removeCurrentData() {
         if (data != null && removeRepository != null) {
-            removeRepository.remove(data);
+            try {
+                removeRepository.remove(data);
+            }catch (Exception e){
+                ErrorDialog.showErrorDialog(this, e.getMessage(), e);
+                return;
+            }
             listeners.forEach(listener -> listener.valueChanged(null, DataAction.REMOVE));
         }
     }
@@ -234,9 +248,7 @@ public class TypedAutoPanel<T> extends JPanel {
     }
 
     public void resetBorder() {
-        fieldController.getElements().forEach((element) -> {
-            element.getFieldValueController().resetBorder();
-        });
+        fieldController.getElements().forEach((element) -> element.getFieldValueController().resetBorder());
     }
 
     public Class<T> getDataClass() {

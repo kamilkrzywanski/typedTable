@@ -59,10 +59,6 @@ public class FieldControllerElement {
         return type;
     }
 
-    public void setType(Class<?> type) {
-        this.type = type;
-    }
-
     public PropertyDescriptor getPropertyDescriptor() {
         return propertyDescriptor;
     }
@@ -126,9 +122,5 @@ public class FieldControllerElement {
     public void hideValidationHint() {
         if (dialog != null)
             dialog.dispose();
-    }
-
-    public TypedAutoPanel<?> getOwner() {
-        return owner;
     }
 }

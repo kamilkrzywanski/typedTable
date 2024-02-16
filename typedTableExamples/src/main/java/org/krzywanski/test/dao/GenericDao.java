@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public interface GenericDao<T extends Serializable, Id extends Serializable> {
     T findById(Id id);
-    void remove(T data);
-    T insert(T data);
-    T update(T data);
+    void remove(T data) throws Exception;
+    T insert(T data) throws Exception;
+    T update(T data) throws Exception;
 }

@@ -30,15 +30,14 @@ public abstract class GenericDaoImpl<T extends Serializable, Id extends Serializ
             session.persist(entity);
             transaction.commit();
         } catch (Exception x) {
-            x.printStackTrace();
             if (transaction != null) transaction.rollback();
-            System.out.println("Error while inserting data");
+            throw new RuntimeException("Error while inserting data", x);
         }
         return entity;
     }
 
     @Override
-    public void remove(T data) {
+    public void remove(T data) throws Exception {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()){
             transaction = session.beginTransaction();
@@ -46,7 +45,7 @@ public abstract class GenericDaoImpl<T extends Serializable, Id extends Serializ
             transaction.commit();
         } catch (Exception x) {
             if (transaction != null) transaction.rollback();
-            System.out.println("Error while removing data");
+            throw new RuntimeException("Error while removing data", x);
         }
     }
 
@@ -58,9 +57,8 @@ public abstract class GenericDaoImpl<T extends Serializable, Id extends Serializ
             session.merge(data);
             transaction.commit();
         } catch (Exception x) {
-            x.printStackTrace();
             if (transaction != null) transaction.rollback();
-            System.out.println("Error while updating data");
+            throw new RuntimeException("Error while updating data", x);
         }
         return data;
     }

@@ -18,7 +18,7 @@ import java.util.*;
  * and once mouse is released new defintions of columns are saved
  */
 class TableOrderColumnsMouseAdapter extends MouseAdapter {
-    ResourceBundle resourceBundle = ResourceBundle.getBundle("TableBundle", Locale.getDefault());
+    final ResourceBundle resourceBundle = ResourceBundle.getBundle("TableBundle", Locale.getDefault());
     final TypedTable<?> table;
 
     final TableWidthTool instance;
@@ -158,7 +158,7 @@ class TableOrderColumnsMouseAdapter extends MouseAdapter {
 
         int column = table.columnAtPoint(e.getPoint());
 
-        String sortString = "";
+        String sortString;
         FieldMock field = table.columnCreator.getFieldByName(table.getColumnModel().getColumn(column).getHeaderValue());
         if (field == null) return;
         MyTableColumn annotation = field.getAnnotation(MyTableColumn.class);

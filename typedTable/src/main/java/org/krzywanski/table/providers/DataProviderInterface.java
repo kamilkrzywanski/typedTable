@@ -15,7 +15,7 @@ public interface DataProviderInterface<T> {
      * @param searchString - search string
      * @param actionType - action type
      * @param extraParams - extra params
-     * @return
+     * @return list of objects
      */
     List<T> getData(int limit, int offest, List<SortColumn> sortOrder, String searchString, ActionType actionType, Map<String, String> extraParams);
 

@@ -7,9 +7,9 @@ import java.util.ResourceBundle;
 public class ToolBoxPopupMenu extends JPopupMenu {
 
     static final ResourceBundle rb = ResourceBundle.getBundle("ToolBoxPopupMenu");
-    JMenuItem cutMenuItem = new JMenuItem();
-    JMenuItem copyMenuItem = new JMenuItem();
-    JMenuItem pasteMenuItem = new JMenuItem();
+    final JMenuItem cutMenuItem = new JMenuItem();
+    final JMenuItem copyMenuItem = new JMenuItem();
+    final JMenuItem pasteMenuItem = new JMenuItem();
 
     public ToolBoxPopupMenu() {
         cutMenuItem.setText(rb.getString("cut"));

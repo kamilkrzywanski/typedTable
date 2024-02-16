@@ -11,13 +11,13 @@ public class TestModelService implements DataFlowAdapter<TestModelDto> {
     TestModelDao testModelDao = new TestModelDao(Main.sessionFactory);
 
     @Override
-    public void remove(TestModelDto data) {
+    public void remove(TestModelDto data) throws Exception{
         TestModel testModel = TestModelMapper.mapTestModelDto(data, new TestModel());
         testModelDao.remove(testModel);
     }
 
     @Override
-    public TestModelDto insert(TestModelDto data) {
+    public TestModelDto insert(TestModelDto data) throws Exception{
         TestModel testModel = TestModelMapper.mapTestModelDto(data, new TestModel());
         testModel = testModelDao.insert(testModel);
 
@@ -25,7 +25,7 @@ public class TestModelService implements DataFlowAdapter<TestModelDto> {
     }
 
     @Override
-    public TestModelDto update(TestModelDto data) {
+    public TestModelDto update(TestModelDto data) throws Exception{
         TestModel testModel = TestModelMapper.mapTestModelDto(data, new TestModel());
         testModel = testModelDao.update(testModel);
         return TestModelMapper.mapTestModelToDto(testModel, new TestModelDto());

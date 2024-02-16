@@ -22,7 +22,7 @@ public class ColumnCreator {
     /**
      * Map of table columns with property descriptors
      */
-    BundleTranslator bundleTranslator = new BundleTranslator(Locale.getDefault(), TypedFrameworkConfiguration.resourceBundles);
+    final BundleTranslator bundleTranslator = new BundleTranslator(Locale.getDefault(), TypedFrameworkConfiguration.resourceBundles);
     final List<FieldMock> tableColumns = new LinkedList<>();
 
     public ColumnCreator(Class<?> classType, long id) {
@@ -53,7 +53,7 @@ public class ColumnCreator {
             fields.sort(Comparator.comparing(item -> columnsNamesOrdered.indexOf(item.getField().getName())));
         }
 
-        if(fields.stream().filter(fieldMock -> fieldMock.getField().isAnnotationPresent(MyTableColumn.class)).count() == 0){
+        if(fields.stream().noneMatch(fieldMock -> fieldMock.getField().isAnnotationPresent(MyTableColumn.class))){
             throw new RuntimeException("No fields with MyTableColumn annotation at class " + classType.getCanonicalName());
         }
 
