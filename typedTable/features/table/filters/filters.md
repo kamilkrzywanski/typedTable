@@ -1,4 +1,4 @@
-[Back to readme](../../../readme.MD)
+[Back to readme](../../../../readme.MD)
 
 # Filrers
 
@@ -14,7 +14,7 @@ With these annotations TypedTable will create filters panel with input fields fo
 
 When you click on the filter button, the table will be filtered by the values you entered the input fields.
 Filter values will be passed by Map<String, String> extraParams
-from [DataProviderInterface](../../../typedTable/src/main/java/org/krzywanski/table/providers/DataProviderInterface.java)
+from [DataProviderInterface](../../../src/main/java/org/krzywanski/table/providers/DataProviderInterface.java)
 
 ##Custom filters
 You can register custom filters by 2 ways:

@@ -1,4 +1,4 @@
-[Back to readme](../../../readme.MD)
+[Back to readme](../../../../readme.MD)
 
 # Sorting
 
@@ -19,7 +19,7 @@ private BigDecimal columnB;
 When you click on the column header, the table will be sorted by the values of the column you clicked.
 To change the direction of sorting, click on the column header again.
 To implement sorting you need to honor the contract
-of [DataProviderInterface](../../../typedTable/src/main/java/org/krzywanski/table/providers/DataProviderInterface.java)
+of [DataProviderInterface](../../../src/main/java/org/krzywanski/table/providers/DataProviderInterface.java)
 List<SortColumn> sortOrder.
 This list contains the columns that are sorted and the direction of sorting.
 

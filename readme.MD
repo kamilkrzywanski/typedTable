@@ -4,18 +4,18 @@ Simple tool to map Entity to jtable in java
 Examples of usage yuo can find in:
 directory: [typedTableExamples](typedTableExamples)
 
--Autosave of columns visibility and width -> [autoSave](typedTable/features/autosave/autosave.md)
--You can hide columns -> [hideColumn](typedTable/features/hideColumn/hideColumn.md) <br>
--Add filters, custom filters -> [filters](typedTable/features/filters/filters.md) <br>
+-Autosave of columns visibility and width -> [autoSave](typedTable/features/table/autosave/autosave.md)
+-You can hide columns -> [hideColumn](typedTable/features/table/hideColumn/hideColumn.md) <br>
+-Add filters, custom filters -> [filters](typedTable/features/table/filters/filters.md) <br>
 -Export to excel, csv <br>
--Define sortables columns -> [sorting](typedTable/features/sorting/sorting.md) <br>
--Simlplify add custom formatters -> [formatters](typedTable/features/customFormatters/customFormatters.md) <br>
+-Define sortables columns -> [sorting](typedTable/features/table/sorting/sorting.md) <br>
+-Simlplify add custom formatters -> [formatters](typedTable/features/table/customFormatters/customFormatters.md) <br>
 -Custom renderers for fields with
-annotation -> [customRenderers](typedTable/features/customRenderers/customRenderers.md) <br>
+annotation -> [customRenderers](typedTable/features/table/customRenderers/customRenderers.md) <br>
 -Add computed columns (functional
-style) -> [computedColumns](typedTable/features/computedColumns/computedColumns.md) <br>
+style) -> [computedColumns](typedTable/features/table/computedColumns/computedColumns.md) <br>
 -Add column with multiselect for selecting rows (objects<T>) - pagination
-friendly -> [multiSelect](typedTable/features/multiSelect/multiSelect.md) <br>
+friendly -> [multiSelect](typedTable/features/table/multiSelect/multiSelect.md) <br>
 
 It's olny idea at the moment but by annotations you can create simple table
 like there with export to CSV, EXCEL, Sort mechanism: 
