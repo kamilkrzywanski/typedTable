@@ -26,7 +26,8 @@ Default implemented are:
 - User defined objects with table select [TableSelect](tableselect/tableselect.md)
   //Date and other Time related fields are not implemented because of lack of default components for them.
 
-Implementation of own fields is possible by providing custom editor for your field. Example of usage:
+Implementation of own fields is possible by providing custom editor for your
+field. [Custom fields](customfields/customfields.md)
 
 ### Example of usage
 ```java

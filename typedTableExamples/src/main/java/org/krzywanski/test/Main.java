@@ -64,7 +64,6 @@ public class Main {
         }
 
 
-
         TypedPanelFields.registerField(Date.class, new DefaultFieldProvider<>(new JXDatePicker(), component -> new DateValueController(component)));
         FlatLightLaf.setup();
         UIManager.put("Table.showVerticalLines", true);
