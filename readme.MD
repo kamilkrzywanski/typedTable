@@ -41,3 +41,9 @@ Test environment:
 - application is located in typedTable directory
 - example of usage is located in typedTableExamples directory
 
+## TypedPanel
+
+Simple tool for map your entity to panel with CRUD operations. --> See
+more [TypedPanel](typedTable/features/panel/readme.MD)
+
+![img.png](img.png)
