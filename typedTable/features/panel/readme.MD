@@ -8,7 +8,8 @@ Simple tool for map your entity to panel with CRUD operations.
 
 ### Basic usage
 
--Add custom fields to panel [Custom fields](customfields/customfields.md)
+- Add custom fields to panel [Custom fields](customfields/customfields.md)
+- Validation of fields with Jakarta Validation API [Validation](validation/validation.md)
 
 Default panel have implemented basic fields for your entity. You can also provide custom fields.
 Default implemented are:
