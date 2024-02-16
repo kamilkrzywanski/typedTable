@@ -42,6 +42,10 @@ public class TypedAutoPanel<T> extends JPanel {
 
     final JPanel fieldsPanel = new JPanel(new MigLayout());
 
+    /**
+     * @param dataSupplier - supplier of data for panel
+     * @param dataClass    - class of data
+     */
     public TypedAutoPanel(Supplier<T> dataSupplier, Class<T> dataClass) {
         this.data = dataSupplier.get();
         this.dataSupplier = dataSupplier;
