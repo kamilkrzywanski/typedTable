@@ -12,6 +12,7 @@ Simple tool for map your entity to panel with CRUD operations.
 - Validation of fields with Jakarta Validation API [Validation](validation/validation.md)
 - Validators for allows CRUD operations (Can insert, delete,
   edit) [OperationsValidator](operationsValidator/operationsValidator.md)
+- Connect panel with Table [TablePanelController](tablepanelcontroller/tablepanelcontroller.md)
 
 Default panel have implemented basic fields for your entity. You can also provide custom fields.
 Default implemented are:
@@ -60,7 +61,7 @@ For this code you will get panel like on screen below:
 
 #### Change data for panel
 
-To change current data for you panel you can invoke method:
+- To change current data for you panel you can invoke method:
 
 ```java
 static {

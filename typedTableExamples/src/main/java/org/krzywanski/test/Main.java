@@ -90,6 +90,7 @@ public class Main {
         frame.setTitle("JTable Example");
         frame.setLayout(new MigLayout());
         TypedTablePanel<TestModelDto> table = TypedTablePanel.getTableWithProvider(new DefaultDataPrivder<>(10, Main::getData, Main::getSize), TestModelDto.class);
+        TypedTablePanel<TestModelDto> panel2 = TypedTablePanel.getTableWithData(Main.getAllData(), TestModelDto.class, 3);
         table.addComuptedColumn("Computed column", String.class, value -> value.getColumnA() + " " + value.getColumnB());
         table.addGenericSelectionListener(element -> {
             if (element != null)
@@ -123,6 +124,7 @@ public class Main {
         frame.add(autoPanel.buildPanel(2), "wrap");
 
         frame.add(table, "grow,push");
+        frame.add(panel2, "grow,push");
         frame.setVisible(true);
         frame.setPreferredSize(new Dimension(1500, 600));
         frame.pack();
