@@ -1,6 +1,5 @@
 package org.krzywanski.test.dto;
 
-import jakarta.persistence.Entity;
 import org.krzywanski.table.annot.MyTableColumn;
 import org.krzywanski.table.annot.ReflectionSort;
 import org.krzywanski.table.annot.TableFilter;
@@ -15,8 +14,7 @@ import java.util.Date;
 @TableFilter(type = String.class, name = "columnA")
 @TableFilter(type = Double.class, name = "columnB", label = "Decimal column")
 @TableFilter(type = TestEnum.class, name = "testEnum", label = "Test enum")
-@TableFilter(type = Boolean.class, name = "testFormatClass", label = "Boolean value")
-@Entity
+@TableFilter(type = Boolean.class, name = "Boolean filter", label = "Boolean value")
 public class TestModelDto implements Comparable<TestModelDto>{
 
     @MyTableColumn(label = "XXX", width = 200, sortable = true)
