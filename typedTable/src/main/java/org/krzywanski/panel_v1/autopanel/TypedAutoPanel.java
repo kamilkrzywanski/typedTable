@@ -98,7 +98,7 @@ public class TypedAutoPanel<T> extends JPanel {
 
             fieldsPanel.add(element.getFirstComponent(), element.getSecondComponent() != null ? "" : "span 2" + (isWrap ? ",wrap" : ""));
             if(element.getSecondComponent() != null)
-                fieldsPanel.add(element.getSecondComponent(), "grow, push" + (isWrap ? ",wrap" : ""));
+                fieldsPanel.add(element.getSecondComponent(), "pushx, grow" + (isWrap ? ",wrap" : ""));
         });
     }
 

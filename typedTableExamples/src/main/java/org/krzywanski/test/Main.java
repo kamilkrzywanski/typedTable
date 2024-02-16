@@ -118,7 +118,8 @@ public class Main {
         new PanelTableController<>(table.table, autoPanel);
         autoPanel.addInsertValidator(new DefaultControllerValidator<>((r) -> !"M".equals(r.getColumnA()), () -> "ERROR"));
 
-        frame.add(autoPanel.buildPanel(2), "grow, wrap");
+        autoPanel.setPreferredSize(new Dimension(600, 300));
+        frame.add(autoPanel.buildPanel(2), "wrap");
 
         frame.add(table, "grow,push");
         frame.setVisible(true);
