@@ -1,11 +1,13 @@
 package org.krzywanski.test.dto;
 
+import org.krzywanski.table.annot.CustomRenderer;
 import org.krzywanski.table.annot.MyTableColumn;
 import org.krzywanski.table.annot.ReflectionSort;
 import org.krzywanski.table.annot.TableFilter;
 import org.krzywanski.table.constraints.Alignment;
 import org.krzywanski.test.model.TestEnum;
 import org.krzywanski.test.model.TestFormatClass;
+import org.krzywanski.test.renderer.BooleanIconRenderer;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -35,7 +37,7 @@ public class TestModelDto implements Comparable<TestModelDto>{
     @MyTableColumn(label = "customFormatter")
     TestFormatClass testFormatClass = new TestFormatClass();
 
-    //    @CustomRenderer(renderer = BooleanIconRenderer.class)
+    @CustomRenderer(renderer = BooleanIconRenderer.class)
     @MyTableColumn(label = "Boolean value")
     private Boolean booleanValue = true;
 
