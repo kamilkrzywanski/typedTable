@@ -100,7 +100,10 @@ public class TestModelDto implements Comparable<TestModelDto>{
 
     @Override
     public int compareTo(TestModelDto o) {
-        return columnB.compareTo(o.columnB);
+        if (o == null)
+            return 1;
+        return this.columnA.compareTo(o.columnA);
+
     }
 
 

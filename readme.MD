@@ -10,7 +10,8 @@ Simple tool to map Entity to jtable in java
 annotation -> [customRenderers](typedTable/features/customRenderers/customRenderers.md) <br>
 -Add computed columns (functional
 style) -> [computedColumns](typedTable/features/computedColumns/computedColumns.md) <br>
--Add column with multiselect for selecting rows (objects<T>) - pagination friendly <br>
+-Add column with multiselect for selecting rows (objects<T>) - pagination
+friendly -> [multiSelect](typedTable/features/multiSelect/multiSelect.md) <br>
 
 Examples of usage yuo can find in:
 directory: [typedTableExamples](typedTableExamples)
