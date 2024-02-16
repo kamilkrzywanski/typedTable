@@ -57,8 +57,7 @@ public class TypedAutoPanel<T> extends JPanel {
 
     public TypedAutoPanel<T> buildPanel(int rows) {
         addFields(rows);
-        add(fieldsPanel, "grow");
-        add(new JLabel(), "wrap");
+        add(fieldsPanel, "grow, wrap");
         add(autoPanelButtons, "right");
         fillWithData();
         return this;
