@@ -19,6 +19,7 @@ To add custom formatter yun need to use method: TypedTablePanel::addCustomFormat
 
     @Override
     public Object parseObject (String source, ParsePosition pos){
+        //Not used
         return null;
     }
 });
