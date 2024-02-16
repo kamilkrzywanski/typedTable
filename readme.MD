@@ -16,6 +16,7 @@ annotation -> [customRenderers](typedTable/features/table/customRenderers/custom
 style) -> [computedColumns](typedTable/features/table/computedColumns/computedColumns.md) <br>
 -Add column with multiselect for selecting rows (objects<T>) - pagination
 friendly -> [multiSelect](typedTable/features/table/multiSelect/multiSelect.md) <br>
+-Add translation for columns -> [translation](typedTable/features/table/translation/translation.md) <br>
 
 It's olny idea at the moment but by annotations you can create simple table
 like there with export to CSV, EXCEL, Sort mechanism: 

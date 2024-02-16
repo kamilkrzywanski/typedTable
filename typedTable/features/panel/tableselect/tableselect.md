@@ -4,7 +4,8 @@
 
 ## Description
 
-Table select is a component that allows you to select an object from a list of objects. It is used in the Typed Panel to
+Table select is a component that allows you to select an object from a table of objects. It is used in the Typed Panel
+to
 select an object from a list of objects.
 
 ### Basic usage
