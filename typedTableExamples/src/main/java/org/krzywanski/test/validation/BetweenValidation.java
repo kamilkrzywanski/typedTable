@@ -5,7 +5,7 @@ import jakarta.validation.ConstraintValidatorContext;
 
 import java.math.BigDecimal;
 
-public class BetweenValidation implements ConstraintValidator<BetweenValidator, BigDecimal> {
+public class BetweenValidation implements ConstraintValidator<BetweenValidator, Number> {
     String min;
     String max;
 
@@ -17,12 +17,12 @@ public class BetweenValidation implements ConstraintValidator<BetweenValidator, 
     }
 
     @Override
-    public boolean isValid(BigDecimal value, ConstraintValidatorContext context) {
+    public boolean isValid(Number value, ConstraintValidatorContext context) {
         if (value == null) {
             return true;
         }
 
-        return new BigDecimal(min).compareTo(value) <= 0
-                && new BigDecimal(max).compareTo(value) >= 0;
+        return new BigDecimal(min).compareTo(new BigDecimal(value.toString())) <= 0
+                && new BigDecimal(max).compareTo(new BigDecimal(value.toString())) >= 0;
     }
 }
