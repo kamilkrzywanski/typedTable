@@ -21,12 +21,19 @@ friendly -> [multiSelect](typedTable/features/table/multiSelect/multiSelect.md) 
 It's olny idea at the moment but by annotations you can create simple table
 like there with export to CSV, EXCEL, Sort mechanism: 
 @annotation @MyTableColumn make entity "table-friendly"
+
 ![img_3.png](typedTable/images/img_3.png)
+
 With default constructor you can provide data from list of entities
+
 ![img.png](typedTable/images/img_6.png)
+
 Effect of this opperation will be: <br>
+
 ![img_2.png](typedTable/images/img_2.png)
+
 Custom formatter for objects example:
+
 ![img.png](typedTable/images/img.png)
 
 Incoming features:
