@@ -2,11 +2,9 @@ package org.krzywanski.panel_v1;
 
 import org.krzywanski.BundleTranslator;
 import org.krzywanski.TypedFrameworkConfiguration;
-import org.krzywanski.panel_v1.annot.PanelField;
 import org.krzywanski.panel_v1.autopanel.TypedAutoPanel;
 import org.krzywanski.panel_v1.fields.*;
 import org.krzywanski.panel_v1.validation.RevalidateDocumentListener;
-import org.krzywanski.table.annot.MyTableColumn;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -35,14 +33,11 @@ public class PanelFieldCreator<T> {
      */
     final Map<String, FieldValueController<?, ?>> fieldControllers = new HashMap<>();
 
-    //TODO add field resolver insead of boolean to allow user to define custom field resolver
-    final boolean useFieldsFromTable;
     final TypedAutoPanel<T> parentPanel;
     List<FieldControllerElement> components;
 
-    PanelFieldCreator(Class<T> dataClass, boolean useFieldsFromTable, TypedAutoPanel<T> parentPanel) {
+    PanelFieldCreator(Class<T> dataClass, TypedAutoPanel<T> parentPanel) {
         this.dataClass = dataClass;
-        this.useFieldsFromTable = useFieldsFromTable;
         this.parentPanel = parentPanel;
     }
 
@@ -50,7 +45,7 @@ public class PanelFieldCreator<T> {
     List<FieldControllerElement> getComponents() {
         if(components == null) {
              components = Arrays.stream(dataClass.getDeclaredFields())
-                     .filter(field -> field.isAnnotationPresent(PanelField.class) || (useFieldsFromTable && field.isAnnotationPresent(MyTableColumn.class)))
+                     .filter(field -> findLabel(field) != null)
                      .map(this::createFieldControllerElement)
                      .map(this::installDocumentListener)
                      .collect(Collectors.toList());
@@ -171,20 +166,16 @@ public class PanelFieldCreator<T> {
     }
 
     private String findLabel(FieldControllerElement field) {
+        return findLabel(field.getField());
 
-        if(useFieldsFromTable && field.getField().isAnnotationPresent(MyTableColumn.class) && !field.getField().isAnnotationPresent(PanelField.class)) {
-            MyTableColumn panelField = field.getField().getAnnotation(MyTableColumn.class);
+    }
 
-            if(!panelField.label().isEmpty()) {
-                return bundleTranslator.getTranslation(panelField.label());
-            }
-        }
+    private String findLabel(Field field) {
+        return TypedFrameworkConfiguration.fieldResolvers.stream()
+                .filter(Objects::nonNull)
+                .map(resolver -> resolver.apply(field))
+                .filter(Objects::nonNull).findFirst().map(bundleTranslator::getTranslation).orElse(null);
 
-        if(field.getField().isAnnotationPresent(PanelField.class)) {
-            PanelField panelField = field.getField().getAnnotation(PanelField.class);
-            return panelField.label();
-        }
-        return field.getField().getName();
     }
 
 

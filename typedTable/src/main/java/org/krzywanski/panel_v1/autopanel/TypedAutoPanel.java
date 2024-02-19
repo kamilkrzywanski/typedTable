@@ -1,6 +1,7 @@
 package org.krzywanski.panel_v1.autopanel;
 
 import net.miginfocom.swing.MigLayout;
+import org.krzywanski.TypedFrameworkConfiguration;
 import org.krzywanski.panel_v1.DataAction;
 import org.krzywanski.panel_v1.ErrorDialog;
 import org.krzywanski.panel_v1.FieldController;
@@ -28,6 +29,11 @@ import java.util.function.Supplier;
  */
 public class TypedAutoPanel<T> extends JPanel {
 
+    static {
+        TypedFrameworkConfiguration.addFieldResolver(new PanelFieldAnnotationResolver()::resolveField);
+        TypedFrameworkConfiguration.addFieldResolver(new MyTableColumnAnnotationResolver()::resolveField);
+    }
+
     final List<PanelChangeValueListener<T>> listeners = new ArrayList<>();
 
     protected T data;
@@ -46,11 +52,11 @@ public class TypedAutoPanel<T> extends JPanel {
      * @param dataSupplier - supplier of data for panel
      * @param dataClass    - class of data
      */
-    public TypedAutoPanel(Supplier<T> dataSupplier, Class<T> dataClass, boolean useTableAnnotations) {
+    public TypedAutoPanel(Supplier<T> dataSupplier, Class<T> dataClass) {
         this.data = dataSupplier.get();
         this.dataSupplier = dataSupplier;
         this.dataClass = dataClass;
-        this.fieldController = new FieldController<>(dataClass, this, true);
+        this.fieldController = new FieldController<>(dataClass, this);
         this.autoPanelButtons = new AutoPanelButtons<>(this, () -> insertRepository, () -> removeRepository, () -> updateRepository);
         setLayout(new MigLayout("fill"));
     }

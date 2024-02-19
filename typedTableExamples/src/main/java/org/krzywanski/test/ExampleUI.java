@@ -39,7 +39,7 @@ public class ExampleUI extends JFrame {
         TreeSet<TestModelDto> collection = new TreeSet<>();
         table.addMultiSelectColumn("Multi select column", collection);
 
-        TypedAutoPanel<TestModelDto> autoPanel = new TypedAutoPanel<>(() -> table.getSelectedItem(), TestModelDto.class, true);
+        TypedAutoPanel<TestModelDto> autoPanel = new TypedAutoPanel<>(() -> table.getSelectedItem(), TestModelDto.class);
         autoPanel.setDataFlowAdapter(new TestModelService());
 
         TypedTablePanel<TestFormatClass> selectPanel = TypedTablePanel.getTableWithData(List.of(new TestFormatClass("A"), new TestFormatClass("B")), TestFormatClass.class);
