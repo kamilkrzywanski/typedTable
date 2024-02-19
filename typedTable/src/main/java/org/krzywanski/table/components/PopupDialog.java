@@ -19,6 +19,7 @@ public class PopupDialog extends JDialog {
     public PopupDialog(ActionListener firstPageAction) {
         super();
         setUndecorated(true);
+        setBackground(new Color(0, 0, 0, 0));
         this.firstPageAction = firstPageAction;
         textField.setPreferredSize(new Dimension(100, 20));
         setLayout(new MigLayout("insets 0"));
