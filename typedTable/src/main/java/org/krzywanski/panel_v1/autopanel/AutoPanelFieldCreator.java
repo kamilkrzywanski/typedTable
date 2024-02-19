@@ -20,7 +20,7 @@ import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class PanelFieldCreator<T> implements FieldBuilder<T> {
+public class AutoPanelFieldCreator<T> implements FieldBuilder<T> {
     /**
      * Translator for resource bundles if some has been defined
      */
@@ -37,7 +37,7 @@ public class PanelFieldCreator<T> implements FieldBuilder<T> {
     final TypedAutoPanel<T> parentPanel;
     List<FieldControllerElement> components;
 
-    public PanelFieldCreator(Class<T> dataClass, TypedAutoPanel<T> parentPanel) {
+    public AutoPanelFieldCreator(Class<T> dataClass, TypedAutoPanel<T> parentPanel) {
         this.dataClass = dataClass;
         this.parentPanel = parentPanel;
     }

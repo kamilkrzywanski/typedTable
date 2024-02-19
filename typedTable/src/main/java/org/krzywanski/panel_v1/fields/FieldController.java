@@ -11,21 +11,21 @@ import java.util.List;
  * Get data from panel
  */
 public class FieldController<T> {
-    final FieldBuilder<T> panelFieldCreator;
+    final FieldBuilder<T> fieldBuilder;
 
     /**
      * Constructor
      * @param dataClass class of data
      */
     public FieldController(Class<T> dataClass, TypedAutoPanel<T> parentPanel, FieldBuilder<T> panelFieldCreator) {
-        this.panelFieldCreator = panelFieldCreator;
+        this.fieldBuilder = panelFieldCreator;
     }
 
     public List<FieldControllerElement> getElements() {
-        return panelFieldCreator.getComponents();
+        return fieldBuilder.getComponents();
     }
 
     public <R> void addDataEditor(String fieldName, Class<R> columnClass, FieldValueController<? extends R,?> fieldValueController) {
-        panelFieldCreator.addDataEditor(fieldName, columnClass, fieldValueController);
+        fieldBuilder.addDataEditor(fieldName, columnClass, fieldValueController);
     }
 }
