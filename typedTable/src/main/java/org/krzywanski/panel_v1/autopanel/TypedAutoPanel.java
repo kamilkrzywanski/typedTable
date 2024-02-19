@@ -10,7 +10,7 @@ import org.krzywanski.panel_v1.dataflow.DataFlowAdapter;
 import org.krzywanski.panel_v1.dataflow.Insert;
 import org.krzywanski.panel_v1.dataflow.Remove;
 import org.krzywanski.panel_v1.dataflow.Update;
-import org.krzywanski.panel_v1.fields.FieldController;
+import org.krzywanski.panel_v1.fields.FieldBuilder;
 import org.krzywanski.panel_v1.fields.FieldControllerElement;
 import org.krzywanski.panel_v1.fields.FieldValueController;
 import org.krzywanski.panel_v1.validation.FieldValidator;
@@ -43,7 +43,7 @@ public class TypedAutoPanel<T> extends JPanel {
     protected Update<T> updateRepository;
     final Class<T> dataClass;
 
-    final FieldController<T> fieldController;
+    final FieldBuilder<T> fieldController;
     final AutoPanelButtons<T> autoPanelButtons;
 
     final JPanel fieldsPanel = new JPanel(new MigLayout());
@@ -56,7 +56,7 @@ public class TypedAutoPanel<T> extends JPanel {
         this.data = dataSupplier.get();
         this.dataSupplier = dataSupplier;
         this.dataClass = dataClass;
-        this.fieldController = new FieldController<>(new AutoPanelFieldCreator<>(dataClass, this));
+        this.fieldController = new AutoPanelFieldCreator<>(dataClass, this);
         this.autoPanelButtons = new AutoPanelButtons<>(this, () -> insertRepository, () -> removeRepository, () -> updateRepository);
         setLayout(new MigLayout("fill"));
     }
@@ -90,7 +90,7 @@ public class TypedAutoPanel<T> extends JPanel {
 
 
         //TODO remove filter when all elements will have implemented FieldValueController
-        fieldController.getElements().stream().filter(el -> el.getFieldValueController() != null)
+        fieldController.getComponents().stream().filter(el -> el.getFieldValueController() != null)
                 .forEach((element) -> element.getFieldValueController().setValue(() -> {
                     try {
                         if (data != null)
@@ -109,7 +109,7 @@ public class TypedAutoPanel<T> extends JPanel {
      */
     private void addFields(int rows) {
         AtomicInteger atomicInteger = new AtomicInteger(1);
-        fieldController.getElements().forEach((element) -> {
+        fieldController.getComponents().forEach((element) -> {
             final boolean isWrap = atomicInteger.getAndIncrement() % rows == 0;
 
             fieldsPanel.add(element.getFirstComponent(), element.getSecondComponent() != null ? "" : "span 2" + (isWrap ? ",wrap" : ""));
@@ -126,7 +126,7 @@ public class TypedAutoPanel<T> extends JPanel {
         if (!validateChanges())
             return false;
 
-        fieldController.getElements().stream().filter(el -> el.getFieldValueController() != null).forEach((element) -> {
+        fieldController.getComponents().stream().filter(el -> el.getFieldValueController() != null).forEach((element) -> {
             try {
                 element.getPropertyDescriptor().getWriteMethod().invoke(data, element.getFieldValueController().getValue());
             } catch (IllegalAccessException | InvocationTargetException ex) {
@@ -173,7 +173,7 @@ public class TypedAutoPanel<T> extends JPanel {
     private boolean validateChanges() {
         boolean allFieldsValid = true;
         FieldValidator<T> fieldValidator = new FieldValidator<>();
-        for (FieldControllerElement element : fieldController.getElements()) {
+        for (FieldControllerElement element : fieldController.getComponents()) {
             if (element.getFieldValueController() != null) {
                 Set<String> validationResult = fieldValidator.validateField(dataClass, element);
 
@@ -192,7 +192,7 @@ public class TypedAutoPanel<T> extends JPanel {
      */
     public void setFieldsEditable(boolean enabled) {
         fieldController
-                .getElements()
+                .getComponents()
                 .stream()
                 .filter(el -> el.getFieldValueController() != null)
                 .forEach((element) -> element.getFieldValueController().setEditable(enabled));
@@ -284,7 +284,7 @@ public class TypedAutoPanel<T> extends JPanel {
     }
 
     public void resetBorder() {
-        fieldController.getElements().forEach((element) -> element.getFieldValueController().resetBorder());
+        fieldController.getComponents().forEach((element) -> element.getFieldValueController().resetBorder());
     }
 
     public Class<T> getDataClass() {
@@ -296,11 +296,11 @@ public class TypedAutoPanel<T> extends JPanel {
     }
 
     public void hideValidationHints() {
-        fieldController.getElements().forEach(FieldControllerElement::hideValidationHint);
+        fieldController.getComponents().forEach(FieldControllerElement::hideValidationHint);
     }
 
     public void validateFields() {
-        fieldController.getElements().forEach(FieldControllerElement::validate);
+        fieldController.getComponents().forEach(FieldControllerElement::validate);
     }
 
     public T getData() {
