@@ -46,11 +46,11 @@ public class TypedAutoPanel<T> extends JPanel {
      * @param dataSupplier - supplier of data for panel
      * @param dataClass    - class of data
      */
-    public TypedAutoPanel(Supplier<T> dataSupplier, Class<T> dataClass) {
+    public TypedAutoPanel(Supplier<T> dataSupplier, Class<T> dataClass, boolean useTableAnnotations) {
         this.data = dataSupplier.get();
         this.dataSupplier = dataSupplier;
         this.dataClass = dataClass;
-        this.fieldController = new FieldController<>(dataClass, this);
+        this.fieldController = new FieldController<>(dataClass, this, true);
         this.autoPanelButtons = new AutoPanelButtons<>(this, () -> insertRepository, () -> removeRepository, () -> updateRepository);
         setLayout(new MigLayout("fill"));
     }
@@ -59,6 +59,12 @@ public class TypedAutoPanel<T> extends JPanel {
         return buildPanel(1);
     }
 
+    /**
+     * Builds panel with fields
+     *
+     * @param rows - number of rows in panel
+     * @return - this
+     */
     public TypedAutoPanel<T> buildPanel(int rows) {
         addFields(rows);
         add(fieldsPanel, "grow, wrap");

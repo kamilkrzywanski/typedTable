@@ -18,8 +18,8 @@ public class FieldController<T> {
      * Constructor
      * @param dataClass class of data
      */
-    public FieldController(Class<T> dataClass, TypedAutoPanel<T> parentPanel) {
-        this.panelFieldCreator = new PanelFieldCreator<>(dataClass, parentPanel);
+    public FieldController(Class<T> dataClass, TypedAutoPanel<T> parentPanel, boolean useTableAnnotations) {
+        this.panelFieldCreator = new PanelFieldCreator<>(dataClass, useTableAnnotations, parentPanel);
     }
 
     public List<FieldControllerElement> getElements() {

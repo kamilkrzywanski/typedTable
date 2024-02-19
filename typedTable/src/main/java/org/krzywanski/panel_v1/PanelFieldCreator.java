@@ -34,13 +34,11 @@ public class PanelFieldCreator<T> {
      * Value - field controller
      */
     final Map<String, FieldValueController<?, ?>> fieldControllers = new HashMap<>();
+
+    //TODO add field resolver insead of boolean to allow user to define custom field resolver
     final boolean useFieldsFromTable;
     final TypedAutoPanel<T> parentPanel;
     List<FieldControllerElement> components;
-
-    PanelFieldCreator(Class<T> dataClass, TypedAutoPanel<T> parentPanel) {
-        this(dataClass, true, parentPanel);
-    }
 
     PanelFieldCreator(Class<T> dataClass, boolean useFieldsFromTable, TypedAutoPanel<T> parentPanel) {
         this.dataClass = dataClass;
