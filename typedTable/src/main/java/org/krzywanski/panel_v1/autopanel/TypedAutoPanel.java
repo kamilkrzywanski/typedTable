@@ -2,10 +2,7 @@ package org.krzywanski.panel_v1.autopanel;
 
 import net.miginfocom.swing.MigLayout;
 import org.krzywanski.TypedFrameworkConfiguration;
-import org.krzywanski.panel_v1.DataAction;
-import org.krzywanski.panel_v1.ErrorDialog;
-import org.krzywanski.panel_v1.FieldController;
-import org.krzywanski.panel_v1.FieldControllerElement;
+import org.krzywanski.panel_v1.*;
 import org.krzywanski.panel_v1.autopanel.buttons.AutoPanelButtons;
 import org.krzywanski.panel_v1.autopanel.buttons.ControllerValidator;
 import org.krzywanski.panel_v1.dataflow.DataFlowAdapter;
@@ -56,7 +53,7 @@ public class TypedAutoPanel<T> extends JPanel {
         this.data = dataSupplier.get();
         this.dataSupplier = dataSupplier;
         this.dataClass = dataClass;
-        this.fieldController = new FieldController<>(dataClass, this);
+        this.fieldController = new FieldController<>(dataClass, this, new PanelFieldCreator<T>(dataClass, this));
         this.autoPanelButtons = new AutoPanelButtons<>(this, () -> insertRepository, () -> removeRepository, () -> updateRepository);
         setLayout(new MigLayout("fill"));
     }

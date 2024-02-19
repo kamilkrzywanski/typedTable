@@ -36,7 +36,7 @@ public class PanelFieldCreator<T> {
     final TypedAutoPanel<T> parentPanel;
     List<FieldControllerElement> components;
 
-    PanelFieldCreator(Class<T> dataClass, TypedAutoPanel<T> parentPanel) {
+    public PanelFieldCreator(Class<T> dataClass, TypedAutoPanel<T> parentPanel) {
         this.dataClass = dataClass;
         this.parentPanel = parentPanel;
     }
