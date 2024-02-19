@@ -2,13 +2,17 @@ package org.krzywanski.panel_v1.autopanel;
 
 import net.miginfocom.swing.MigLayout;
 import org.krzywanski.TypedFrameworkConfiguration;
-import org.krzywanski.panel_v1.*;
+import org.krzywanski.panel_v1.DataAction;
+import org.krzywanski.panel_v1.ErrorDialog;
+import org.krzywanski.panel_v1.PanelFieldCreator;
 import org.krzywanski.panel_v1.autopanel.buttons.AutoPanelButtons;
 import org.krzywanski.panel_v1.autopanel.buttons.ControllerValidator;
 import org.krzywanski.panel_v1.dataflow.DataFlowAdapter;
 import org.krzywanski.panel_v1.dataflow.Insert;
 import org.krzywanski.panel_v1.dataflow.Remove;
 import org.krzywanski.panel_v1.dataflow.Update;
+import org.krzywanski.panel_v1.fields.FieldController;
+import org.krzywanski.panel_v1.fields.FieldControllerElement;
 import org.krzywanski.panel_v1.fields.FieldValueController;
 import org.krzywanski.panel_v1.validation.FieldValidator;
 

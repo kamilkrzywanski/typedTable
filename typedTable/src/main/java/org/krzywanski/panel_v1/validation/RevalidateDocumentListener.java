@@ -1,6 +1,6 @@
 package org.krzywanski.panel_v1.validation;
 
-import org.krzywanski.panel_v1.FieldControllerElement;
+import org.krzywanski.panel_v1.fields.FieldControllerElement;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;

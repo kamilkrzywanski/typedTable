@@ -6,7 +6,7 @@ import jakarta.validation.Validator;
 import org.hibernate.validator.messageinterpolation.ResourceBundleMessageInterpolator;
 import org.hibernate.validator.resourceloading.AggregateResourceBundleLocator;
 import org.krzywanski.TypedFrameworkConfiguration;
-import org.krzywanski.panel_v1.FieldControllerElement;
+import org.krzywanski.panel_v1.fields.FieldControllerElement;
 
 import java.util.Set;
 import java.util.stream.Collectors;

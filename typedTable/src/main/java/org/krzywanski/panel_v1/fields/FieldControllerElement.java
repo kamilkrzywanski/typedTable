@@ -1,7 +1,6 @@
-package org.krzywanski.panel_v1;
+package org.krzywanski.panel_v1.fields;
 
 import org.krzywanski.panel_v1.autopanel.TypedAutoPanel;
-import org.krzywanski.panel_v1.fields.FieldValueController;
 import org.krzywanski.panel_v1.validation.ValidatorDialog;
 
 import javax.swing.*;

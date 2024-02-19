@@ -1,7 +1,5 @@
 package org.krzywanski.panel_v1.fields;
 
-import org.krzywanski.panel_v1.FieldControllerElement;
-
 import java.util.List;
 
 public interface FieldBuilder<T> {

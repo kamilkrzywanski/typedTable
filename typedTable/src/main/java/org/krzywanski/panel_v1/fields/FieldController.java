@@ -1,8 +1,6 @@
-package org.krzywanski.panel_v1;
+package org.krzywanski.panel_v1.fields;
 
 import org.krzywanski.panel_v1.autopanel.TypedAutoPanel;
-import org.krzywanski.panel_v1.fields.FieldBuilder;
-import org.krzywanski.panel_v1.fields.FieldValueController;
 
 import java.util.List;
 
