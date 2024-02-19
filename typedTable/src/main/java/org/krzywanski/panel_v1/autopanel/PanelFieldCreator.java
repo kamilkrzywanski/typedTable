@@ -1,8 +1,9 @@
-package org.krzywanski.panel_v1;
+package org.krzywanski.panel_v1.autopanel;
 
 import org.krzywanski.BundleTranslator;
 import org.krzywanski.TypedFrameworkConfiguration;
-import org.krzywanski.panel_v1.autopanel.TypedAutoPanel;
+import org.krzywanski.panel_v1.FieldToolKit;
+import org.krzywanski.panel_v1.TypedPanelFields;
 import org.krzywanski.panel_v1.fields.*;
 import org.krzywanski.panel_v1.validation.RevalidateDocumentListener;
 

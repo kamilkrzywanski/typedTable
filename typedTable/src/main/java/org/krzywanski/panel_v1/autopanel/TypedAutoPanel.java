@@ -4,7 +4,6 @@ import net.miginfocom.swing.MigLayout;
 import org.krzywanski.TypedFrameworkConfiguration;
 import org.krzywanski.panel_v1.DataAction;
 import org.krzywanski.panel_v1.ErrorDialog;
-import org.krzywanski.panel_v1.PanelFieldCreator;
 import org.krzywanski.panel_v1.autopanel.buttons.AutoPanelButtons;
 import org.krzywanski.panel_v1.autopanel.buttons.ControllerValidator;
 import org.krzywanski.panel_v1.dataflow.DataFlowAdapter;
