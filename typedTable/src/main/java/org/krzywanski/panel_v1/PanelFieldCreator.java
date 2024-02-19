@@ -2,6 +2,7 @@ package org.krzywanski.panel_v1;
 
 import org.krzywanski.BundleTranslator;
 import org.krzywanski.TypedFrameworkConfiguration;
+import org.krzywanski.panel_v1.autopanel.FieldBuilder;
 import org.krzywanski.panel_v1.autopanel.TypedAutoPanel;
 import org.krzywanski.panel_v1.fields.*;
 import org.krzywanski.panel_v1.validation.RevalidateDocumentListener;
@@ -19,7 +20,7 @@ import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class PanelFieldCreator<T> {
+public class PanelFieldCreator<T> implements FieldBuilder<T> {
     /**
      * Translator for resource bundles if some has been defined
      */
@@ -42,7 +43,8 @@ public class PanelFieldCreator<T> {
     }
 
 
-    List<FieldControllerElement> getComponents() {
+    @Override
+    public List<FieldControllerElement> getComponents() {
         if(components == null) {
              components = Arrays.stream(dataClass.getDeclaredFields())
                      .filter(field -> findLabel(field) != null)
@@ -222,7 +224,7 @@ public class PanelFieldCreator<T> {
         return new JFormattedTextField(formatter);
     }
 
-    protected  <R> void addDataEditor(String fieldName, Class<R> columnClass, FieldValueController<? ,?> fieldValueController) {
+    public <R> void addDataEditor(String fieldName, Class<R> columnClass, FieldValueController<? extends R, ?> fieldValueController) {
         validateEditor(fieldName, columnClass);
         fieldControllers.put(fieldName, fieldValueController);
     }
