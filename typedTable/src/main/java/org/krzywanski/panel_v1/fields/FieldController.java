@@ -1,7 +1,5 @@
 package org.krzywanski.panel_v1.fields;
 
-import org.krzywanski.panel_v1.autopanel.TypedAutoPanel;
-
 import java.util.List;
 
 /**
@@ -15,9 +13,8 @@ public class FieldController<T> {
 
     /**
      * Constructor
-     * @param dataClass class of data
      */
-    public FieldController(Class<T> dataClass, TypedAutoPanel<T> parentPanel, FieldBuilder<T> panelFieldCreator) {
+    public FieldController(FieldBuilder<T> panelFieldCreator) {
         this.fieldBuilder = panelFieldCreator;
     }
 
