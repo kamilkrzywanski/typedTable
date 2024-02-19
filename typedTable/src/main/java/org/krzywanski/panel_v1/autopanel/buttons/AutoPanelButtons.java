@@ -50,20 +50,11 @@ public class AutoPanelButtons<T> extends JPanel {
 
     private void addControllButtons() {
 
-        cancelButton.setEnabled(false);
-//        addOrCancelPanel.add(addButton, "grow");
-
         setAddOrCancelButton(AddOrCancel.ADD);
+        setRemoveOrSaveButton(RemoveOrSave.REMOVE);
 
         add(addOrCancelPanel, "grow");
-
-
-
         add(editButton, "grow");
-
-        cancelButton.setEnabled(false);
-
-        setRemoveOrSaveButton(RemoveOrSave.REMOVE);
         add(removeOrSavePanel, "grow, span 3");
 
         installListeners();
