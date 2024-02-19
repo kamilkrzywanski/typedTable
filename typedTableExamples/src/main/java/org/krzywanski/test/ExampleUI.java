@@ -30,6 +30,9 @@ public class ExampleUI extends JFrame {
     }
 
     public void buildLeftPanel() {
+        JPanel leftPanel = new JPanel(new MigLayout());
+
+
         TypedTablePanel<TestModelDto> table = TypedTablePanel.getTableWithProvider(new DefaultDataPrivder<>(10, Main::getData, Main::getSize), TestModelDto.class);
         table.addComuptedColumn("Computed column", String.class, value -> value.getColumnA() + " " + value.getColumnB());
         table.addGenericSelectionListener(element -> {
@@ -50,15 +53,31 @@ public class ExampleUI extends JFrame {
 
         new PanelTableController<>(table.table, autoPanel);
 
-        add(autoPanel.buildPanel(2), "wrap");
-        add(table, "grow,push");
+        leftPanel.add(autoPanel.buildPanel(2), "wrap");
+        leftPanel.add(table, "grow,push");
+        add(leftPanel, "grow,push");
 
     }
 
     private void buildRightPanel() {
-        TypedTablePanel<TestModelDto> panel2 = TypedTablePanel.getTableWithData(Main.getAllData(), TestModelDto.class, 3);
+        JPanel rightPanel = new JPanel(new MigLayout());
 
-        add(panel2, "grow,push");
+
+        JPanel controllPanel = new JPanel(new MigLayout());
+
+        JTextField textField = new JFormattedTextField();
+
+        controllPanel.add(new JLabel("ColumnA"));
+        controllPanel.add(textField);
+
+
+        TypedTablePanel<TestModelDto> table = TypedTablePanel.getTableWithData(Main.getAllData(), TestModelDto.class, 3);
+
+        rightPanel.add(controllPanel, "wrap");
+        rightPanel.add(table, "grow,push");
+
+
+        add(rightPanel, "grow,push");
         setVisible(true);
         setPreferredSize(new Dimension(1500, 600));
         pack();
