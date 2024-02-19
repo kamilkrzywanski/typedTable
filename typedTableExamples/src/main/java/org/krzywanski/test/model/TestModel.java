@@ -1,20 +1,19 @@
 package org.krzywanski.test.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import org.krzywanski.table.annot.MyTableColumn;
-import org.krzywanski.table.annot.ReflectionSort;
-import org.krzywanski.table.annot.TableFilter;
-import org.krzywanski.table.constraints.Alignment;
+import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
-public class TestModel implements Comparable<TestModel>{
+public class TestModel implements Comparable<TestModel>, Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String columnA;
+
+    @Column(precision = 10, scale = 2)
     private BigDecimal columnB;
     private String columnC;
     private Date myDate = new Date();

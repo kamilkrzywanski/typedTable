@@ -1,45 +1,73 @@
 package org.krzywanski.test.dto;
 
-import org.krzywanski.table.annot.CustomRenderer;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import org.krzywanski.table.annot.MyTableColumn;
 import org.krzywanski.table.annot.ReflectionSort;
 import org.krzywanski.table.annot.TableFilter;
 import org.krzywanski.table.constraints.Alignment;
 import org.krzywanski.test.model.TestEnum;
 import org.krzywanski.test.model.TestFormatClass;
-import org.krzywanski.test.renderer.BooleanIconRenderer;
+import org.krzywanski.test.validation.BetweenValidator;
+import org.krzywanski.test.validation.TestModelDtoValidator;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
 @ReflectionSort
 @TableFilter(type = String.class, name = "columnA")
-@TableFilter(type = Double.class, name = "columnB", label = "Decimal column")
+@TableFilter(type = Double.class, name = "columnB", label = "decimal.column")
 @TableFilter(type = TestEnum.class, name = "testEnum", label = "Test enum")
-@TableFilter(type = Boolean.class, name = "Boolean filter", label = "Boolean value")
-public class TestModelDto implements Comparable<TestModelDto>{
+@TableFilter(type = Boolean.class, name = "testFormatClass", label = "Boolean value")
+@Entity
 
-    @MyTableColumn(label = "XXX", width = 200, sortable = true)
+@TestModelDtoValidator
+public class TestModelDto implements Comparable<TestModelDto>, Serializable {
+
+    Integer id;
+
+    //        @CustomRenderer(renderer = BooleanIconRenderer.class)
+    @MyTableColumn(label = "Boolean value")
+    private Boolean booleanValue = true;
+
+    @NotEmpty(message = "{field.not.empty}")
+    @Pattern(regexp = "(^$|[0-9]{10})", message = "{mobile.number.10.digits}")
+    @MyTableColumn(label = "Mobile number", width = 200, sortable = true)
     private String columnA;
 
-    @MyTableColumn(label = "Decimal column", format = "0.00$", sortable = true)
+    //    @DecimalMin(value = "10.00", message = "{decimal.column.greater.than}")
+//    @DecimalMax(value = "11111.00", message = "{decimal.column.less.than}")
+    @BetweenValidator(min = "10.00", max = "11111.00")
+    @NotNull(message = "{field.not.empty}")
+    @MyTableColumn(label = "decimal.column", format = "0.00$", sortable = true)
+    @Column(precision = 10, scale = 2)
     private BigDecimal columnB;
-
-    @MyTableColumn(label = "Test label")
+    @NotEmpty(message = "{valid.emial.required}")
+    @Email(message = "{valid.emial.required}")
+    @MyTableColumn(label = "E-mail")
     private String columnC;
 
-    @MyTableColumn(label = "DataLable", format = "YYYY", alignment = Alignment.CENTER)
+    @MyTableColumn(label = "User date", format = "dd-MM-yyyy", alignment = Alignment.CENTER)
     private Date date = new Date();
 
-    @MyTableColumn(label = "Test enum")
+    @MyTableColumn(label = "Priority")
     private TestEnum testEnum = TestEnum.MEDIUM;
 
     @MyTableColumn(label = "customFormatter")
-    TestFormatClass testFormatClass = new TestFormatClass();
+    TestFormatClass testFormatClass = new TestFormatClass("X");
 
-    @CustomRenderer(renderer = BooleanIconRenderer.class)
-    @MyTableColumn(label = "Boolean value")
-    private Boolean booleanValue = true;
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public Boolean getBooleanValue() {
         return booleanValue;

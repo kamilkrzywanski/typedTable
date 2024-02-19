@@ -3,7 +3,7 @@ package org.krzywanski.table;
 import javax.swing.table.DefaultTableModel;
 
 public class TypedTableModel extends DefaultTableModel {
-    ColumnCreator columnCreator;
+    final ColumnCreator columnCreator;
     TypedTableModel(ColumnCreator columnCreator){
         super(columnCreator.getColumnsNames(), 0);
         this.columnCreator = columnCreator;

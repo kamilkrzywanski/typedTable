@@ -10,8 +10,8 @@ import java.util.Objects;
 
 public class PaginationUtils {
 
-    TableDataProvider<?> provider;
-    TypedTable<?> tTypedTable;
+    final TableDataProvider<?> provider;
+    final TypedTable<?> tTypedTable;
     int offset = 0;
     int limit = 0;
     public <T> PaginationUtils(TableDataProvider<T> provider, TypedTable<T> tTypedTable) {

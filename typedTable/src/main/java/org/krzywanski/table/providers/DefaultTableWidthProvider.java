@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  * you can set your own global prowider with method {@link  TableWidthProvider#setProvider(TableWidthTool)}
  */
 public class DefaultTableWidthProvider implements TableWidthTool {
-    Path saveDirectory = Paths.get(Objects.requireNonNullElse(System.getenv("LOCALAPPDATA"),System.getProperty("user.home")) , "typedTable");
+    final Path saveDirectory = Paths.get(Objects.requireNonNullElse(System.getenv("LOCALAPPDATA"),System.getProperty("user.home")) , "typedTable");
 
     @Override
     @SuppressWarnings("unchecked")

@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS TestModel (
-    id serial PRIMARY KEY,
+    id serial PRIMARY KEY NOT NULL,
     columnA VARCHAR(255),
     columnB DECIMAL,
     columnC VARCHAR(255),

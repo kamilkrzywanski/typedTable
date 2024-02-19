@@ -32,7 +32,7 @@ public class DefaultBooleanRenderer extends JCheckBox implements TableCellRender
             setForeground(table.getForeground());
             setBackground(table.getBackground());
         }
-        setSelected((value != null && ((Boolean)value).booleanValue()));
+        setSelected((value != null && (Boolean) value));
 
         if (hasFocus) {
             setBorder(UIManager.getBorder("Table.focusCellHighlightBorder"));

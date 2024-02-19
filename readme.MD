@@ -16,16 +16,24 @@ annotation -> [customRenderers](typedTable/features/table/customRenderers/custom
 style) -> [computedColumns](typedTable/features/table/computedColumns/computedColumns.md) <br>
 -Add column with multiselect for selecting rows (objects<T>) - pagination
 friendly -> [multiSelect](typedTable/features/table/multiSelect/multiSelect.md) <br>
+-Add translation for columns -> [translation](typedTable/features/table/translation/translation.md) <br>
 
 It's olny idea at the moment but by annotations you can create simple table
 like there with export to CSV, EXCEL, Sort mechanism: 
 @annotation @MyTableColumn make entity "table-friendly"
+
 ![img_3.png](typedTable/images/img_3.png)
+
 With default constructor you can provide data from list of entities
+
 ![img.png](typedTable/images/img_6.png)
+
 Effect of this opperation will be: <br>
+
 ![img_2.png](typedTable/images/img_2.png)
+
 Custom formatter for objects example:
+
 ![img.png](typedTable/images/img.png)
 
 Incoming features:
@@ -40,3 +48,9 @@ Test environment:
 - application is located in typedTable directory
 - example of usage is located in typedTableExamples directory
 
+## TypedPanel
+
+Simple tool for map your entity to panel with CRUD operations. --> See
+more [TypedPanel](typedTable/features/panel/readme.MD)
+
+![img.png](img.png)
