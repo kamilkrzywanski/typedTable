@@ -2,6 +2,7 @@ package org.krzywanski.panel_v1.autopanel;
 
 import org.krzywanski.BundleTranslator;
 import org.krzywanski.TypedFrameworkConfiguration;
+import org.krzywanski.panel_v1.AbstractTypedPanel;
 import org.krzywanski.panel_v1.FieldToolKit;
 import org.krzywanski.panel_v1.TypedPanelFields;
 import org.krzywanski.panel_v1.fields.*;
@@ -34,7 +35,7 @@ public class AutoPanelFieldCreator<T> implements FieldBuilder<T> {
      */
     final Map<String, FieldValueController<?, ?>> fieldControllers = new HashMap<>();
 
-    final TypedAutoPanel<T> parentPanel;
+    final AbstractTypedPanel<T> parentPanel;
     List<FieldControllerElement> components;
 
     public AutoPanelFieldCreator(Class<T> dataClass, TypedAutoPanel<T> parentPanel) {
