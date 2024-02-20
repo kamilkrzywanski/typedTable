@@ -4,7 +4,6 @@ import net.miginfocom.swing.MigLayout;
 import org.krzywanski.panel_v1.AbstractTypedPanel;
 import org.krzywanski.panel_v1.DataAction;
 import org.krzywanski.panel_v1.autopanel.PanelMode;
-import org.krzywanski.panel_v1.autopanel.TypedAutoPanel;
 import org.krzywanski.panel_v1.dataflow.Insert;
 import org.krzywanski.panel_v1.dataflow.Remove;
 import org.krzywanski.panel_v1.dataflow.Update;
@@ -39,7 +38,7 @@ public class AutoPanelButtons<T> extends JPanel {
     final Supplier<Remove<?>> removeSupplier;
     final Supplier<Update<?>> updateSupplier;
 
-    public AutoPanelButtons(TypedAutoPanel<T> dataPanel, Supplier<Insert<?>> insertSupplier, Supplier<Remove<?>> removeSupplier, Supplier<Update<?>> updateSupplier) {
+    public AutoPanelButtons(AbstractTypedPanel<T> dataPanel, Supplier<Insert<?>> insertSupplier, Supplier<Remove<?>> removeSupplier, Supplier<Update<?>> updateSupplier) {
         super(new MigLayout("gapx 0, insets 0"));
         this.dataPanel = dataPanel;
         this.insertSupplier = insertSupplier;

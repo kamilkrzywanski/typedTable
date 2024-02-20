@@ -5,6 +5,7 @@ import org.krzywanski.panel_v1.PanelTableController;
 import org.krzywanski.panel_v1.autopanel.TypedAutoPanel;
 import org.krzywanski.panel_v1.autopanel.buttons.DefaultControllerValidator;
 import org.krzywanski.panel_v1.fields.TableValueController;
+import org.krzywanski.panel_v1.manualPanel.ManualPanel;
 import org.krzywanski.table.TypedTablePanel;
 import org.krzywanski.table.providers.DefaultDataPrivder;
 import org.krzywanski.test.dto.TestModelDto;
@@ -61,14 +62,21 @@ public class ExampleUI extends JFrame {
 
     private void buildRightPanel() {
         JPanel rightPanel = new JPanel(new MigLayout());
-
-
         JPanel controllPanel = new JPanel(new MigLayout());
-
         JTextField textField = new JFormattedTextField();
+        JTextField textField2 = new JFormattedTextField();
+        JTextField textField3 = new JFormattedTextField();
+
+        ManualPanel<TestModelDto> manualPanel = new ManualPanel<>(() -> Main.getAllData().get(0), TestModelDto.class);
+        manualPanel.setDataFlowAdapter(new TestModelService());
+        manualPanel.connectFieldWithPanel("columnA", textField);
+        manualPanel.connectFieldWithPanel("columnB", textField2);
+        manualPanel.connectFieldWithPanel("columnC", textField3);
+
 
         controllPanel.add(new JLabel("ColumnA"));
-        controllPanel.add(textField);
+        controllPanel.add(textField, "grow, wrap");
+        controllPanel.add(manualPanel, "span, wrap");
 
 
         TypedTablePanel<TestModelDto> table = TypedTablePanel.getTableWithData(Main.getAllData(), TestModelDto.class, 3);

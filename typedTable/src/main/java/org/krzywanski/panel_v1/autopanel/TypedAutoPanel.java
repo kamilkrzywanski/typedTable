@@ -3,7 +3,7 @@ package org.krzywanski.panel_v1.autopanel;
 import net.miginfocom.swing.MigLayout;
 import org.krzywanski.TypedFrameworkConfiguration;
 import org.krzywanski.panel_v1.AbstractTypedPanel;
-import org.krzywanski.panel_v1.autopanel.buttons.AutoPanelButtons;
+import org.krzywanski.panel_v1.fields.FieldBuilder;
 
 import javax.swing.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -28,9 +28,12 @@ public class TypedAutoPanel<T> extends AbstractTypedPanel<T> {
      */
     public TypedAutoPanel(Supplier<T> dataSupplier, Class<T> dataClass) {
         super(dataSupplier, dataClass);
-        super.autoPanelButtons = new AutoPanelButtons<>(this, () -> insertRepository, () -> removeRepository, () -> updateRepository);
-        this.fieldController = new AutoPanelFieldCreator<>(dataClass, this);
         setLayout(new MigLayout("fill"));
+    }
+
+    @Override
+    protected FieldBuilder<T> createFieldController(Class<T> dataClass) {
+        return new AutoPanelFieldCreator<>(dataClass, this);
     }
 
     public TypedAutoPanel<T> buildPanel(){

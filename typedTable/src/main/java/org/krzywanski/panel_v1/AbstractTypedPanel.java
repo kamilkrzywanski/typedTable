@@ -34,11 +34,14 @@ public abstract class AbstractTypedPanel<T> extends JPanel {
 
     public AbstractTypedPanel(Supplier<T> dataSupplier, Class<T> dataClass) {
         super();
+        this.autoPanelButtons = new AutoPanelButtons<>(this, () -> insertRepository, () -> removeRepository, () -> updateRepository);
         this.dataSupplier = dataSupplier;
         this.dataClass = dataClass;
         this.data = dataSupplier.get();
+        this.fieldController = createFieldController(dataClass);
     }
 
+    protected abstract FieldBuilder<T> createFieldController(Class<T> dataClass);
     /**
      * Saves changes to data object
      */

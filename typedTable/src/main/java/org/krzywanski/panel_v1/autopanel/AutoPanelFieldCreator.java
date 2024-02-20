@@ -6,10 +6,8 @@ import org.krzywanski.panel_v1.AbstractTypedPanel;
 import org.krzywanski.panel_v1.FieldToolKit;
 import org.krzywanski.panel_v1.TypedPanelFields;
 import org.krzywanski.panel_v1.fields.*;
-import org.krzywanski.panel_v1.validation.RevalidateDocumentListener;
 
 import javax.swing.*;
-import javax.swing.text.JTextComponent;
 import javax.swing.text.NumberFormatter;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
@@ -50,21 +48,12 @@ public class AutoPanelFieldCreator<T> implements FieldBuilder<T> {
              components = Arrays.stream(dataClass.getDeclaredFields())
                      .filter(field -> findLabel(field) != null)
                      .map(this::createFieldControllerElement)
-                     .map(this::installDocumentListener)
+                     .map(FieldToolKit::installDocumentListener)
                      .collect(Collectors.toList());
         }
 
       return components;
 
-    }
-
-    private FieldControllerElement installDocumentListener(FieldControllerElement element) {
-        if (element.getEditorComponent() instanceof JTextComponent) {
-            JTextComponent textComponent = (JTextComponent) element.getSecondComponent();
-            textComponent.getDocument().addDocumentListener(new RevalidateDocumentListener(element));
-        }
-
-        return element;
     }
 
     private FieldControllerElement createFieldControllerElement(Field field) {
