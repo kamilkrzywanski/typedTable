@@ -63,21 +63,21 @@ public class ExampleUI extends JFrame {
     private void buildRightPanel() {
         JPanel rightPanel = new JPanel(new MigLayout());
         JPanel controllPanel = new JPanel(new MigLayout());
-        JTextField textField = new JFormattedTextField();
-        JTextField textField2 = new JFormattedTextField();
-        JTextField textField3 = new JFormattedTextField();
+        JTextField textField = new JTextField();
+        JTextField textField3 = new JTextField();
+        JSpinner spinner = new JSpinner();
 
         ManualPanel<TestModelDto> manualPanel = new ManualPanel<>(() -> Main.getAllData().get(0), TestModelDto.class);
         manualPanel.setDataFlowAdapter(new TestModelService());
         manualPanel.connectFieldWithPanel("columnA", textField);
-        manualPanel.connectFieldWithPanel("columnB", textField2);
+        manualPanel.connectFieldWithPanel("columnB", spinner);
         manualPanel.connectFieldWithPanel("columnC", textField3);
 
 
         controllPanel.add(new JLabel("ColumnA"));
         controllPanel.add(textField, "grow, wrap");
         controllPanel.add(new JLabel("ColumnB"));
-        controllPanel.add(textField2, "grow, wrap");
+        controllPanel.add(spinner, "grow, wrap");
         controllPanel.add(new JLabel("ColumnC"));
         controllPanel.add(textField3, "grow, wrap");
         controllPanel.add(manualPanel, "span, wrap");

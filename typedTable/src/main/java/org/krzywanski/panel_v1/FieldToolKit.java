@@ -17,6 +17,15 @@ public class FieldToolKit {
             JTextComponent textComponent = (JTextComponent) component;
             textComponent.getDocument().addUndoableEditListener(undoManager);
         }
+        if (component instanceof JSpinner) {
+            JSpinner spinner = (JSpinner) component;
+            if (spinner.getEditor() instanceof JSpinner.DefaultEditor) {
+                JSpinner.DefaultEditor editor = (JSpinner.DefaultEditor) spinner.getEditor();
+                JTextComponent textComponent = editor.getTextField();
+                textComponent.getDocument().addUndoableEditListener(undoManager);
+            }
+            //add undoManager
+        }
 
         component.registerKeyboardAction(e -> {
             if (undoManager.canUndo()) {
@@ -35,6 +44,14 @@ public class FieldToolKit {
         if (element.getEditorComponent() instanceof JTextComponent) {
             JTextComponent textComponent = (JTextComponent) element.getEditorComponent();
             textComponent.getDocument().addDocumentListener(new RevalidateDocumentListener(element));
+        }
+        if (element.getEditorComponent() instanceof JSpinner) {
+            JSpinner spinner = (JSpinner) element.getEditorComponent();
+            if (spinner.getEditor() instanceof JSpinner.DefaultEditor) {
+                JSpinner.DefaultEditor editor = (JSpinner.DefaultEditor) spinner.getEditor();
+                JTextComponent textComponent = editor.getTextField();
+                textComponent.getDocument().addDocumentListener(new RevalidateDocumentListener(element));
+            }
         }
 
         return element;

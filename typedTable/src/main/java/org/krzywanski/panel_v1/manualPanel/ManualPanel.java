@@ -42,7 +42,7 @@ public class ManualPanel<T> extends AbstractTypedPanel<T> {
     }
 
 
-    public void connectFieldWithPanel(String fieldName, JTextField component) {
+    public void connectFieldWithPanel(String fieldName, JComponent component) {
 
         Field field = Arrays.stream(getDataClass().getDeclaredFields())
                 .filter(f -> f.getName().equals(fieldName))
