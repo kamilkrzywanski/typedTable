@@ -20,7 +20,7 @@ public class PanelTableController<T> {
 
             if (action == DataAction.REMOVE || action == DataAction.INSERT) {
                 if (action == DataAction.REMOVE && table.getDataList() != null)
-                    System.out.println(table.getDataList().remove(element));
+                    table.getDataList().remove(element);
 
                 table.refreshData();
                 return;

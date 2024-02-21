@@ -93,8 +93,6 @@ public class Main {
     }
 
     public static List<TestModelDto> getData(int limit, int offest, List<SortColumn> sortColumn, String searchString, ActionType actionType, Map<String, String> extraParams) {
-        extraParams.forEach((s, s2) -> System.out.println(s + " " + s2));
-
         if (limit == -1)
             return Main.getData(0, Integer.MAX_VALUE, searchString);
         return Main.getData(offest, limit, searchString);
