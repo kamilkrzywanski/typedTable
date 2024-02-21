@@ -5,6 +5,7 @@ import org.krzywanski.panel_v1.PanelTableController;
 import org.krzywanski.panel_v1.autopanel.TypedAutoPanel;
 import org.krzywanski.panel_v1.autopanel.buttons.DefaultControllerValidator;
 import org.krzywanski.panel_v1.fields.TableValueController;
+import org.krzywanski.panel_v1.fields.TextFieldWithTableSelect;
 import org.krzywanski.panel_v1.manualPanel.ManualPanel;
 import org.krzywanski.table.TypedTablePanel;
 import org.krzywanski.table.providers.DefaultDataPrivder;
@@ -66,18 +67,16 @@ public class ExampleUI extends JFrame {
         JTextField textField = new JTextField();
         JTextField textField3 = new JTextField();
         JSpinner spinner = new JSpinner();
-        JComboBox<TestFormatClass> comboBox = new JComboBox<>(new DefaultComboBoxModel<>(new TestFormatClass[]{new TestFormatClass("A"), new TestFormatClass("B")}));
+        TextFieldWithTableSelect<TestFormatClass> selectPanel = TextFieldWithTableSelect.getTextWithTableSelect(List.of(new TestFormatClass("A"), new TestFormatClass("B")), "TestFormatClass.class");
 
-        comboBox.getModel().getClass().getTypeName();
+
         ManualPanel<TestModelDto> manualPanel = new ManualPanel<>(() -> Main.getAllData().get(0), TestModelDto.class);
         manualPanel.setDataFlowAdapter(new TestModelService());
         manualPanel.connectFieldWithPanel("columnA", textField);
         manualPanel.connectFieldWithPanel("columnB", spinner);
         manualPanel.connectFieldWithPanel("columnC", textField3);
-        manualPanel.connectFieldWithPanel("testFormatClass", comboBox);
+        manualPanel.connectFieldWithPanel("testFormatClass", selectPanel);
 
-        controllPanel.add(new JLabel("TestFormatClass"));
-        controllPanel.add(comboBox, "grow, wrap");
 
         controllPanel.add(new JLabel("ColumnA"));
         controllPanel.add(textField, "grow, wrap");
@@ -85,6 +84,8 @@ public class ExampleUI extends JFrame {
         controllPanel.add(spinner, "grow, wrap");
         controllPanel.add(new JLabel("ColumnC"));
         controllPanel.add(textField3, "grow, wrap");
+        controllPanel.add(new JLabel("TestFormatClass"));
+        controllPanel.add(selectPanel, "grow, wrap");
         controllPanel.add(manualPanel, "span, wrap");
 
 

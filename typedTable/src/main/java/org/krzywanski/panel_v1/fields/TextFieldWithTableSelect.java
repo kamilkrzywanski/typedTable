@@ -6,6 +6,7 @@ import org.krzywanski.table.TypedTablePanel;
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.List;
 
 public class TextFieldWithTableSelect<T> extends JPanel {
     /**
@@ -81,5 +82,9 @@ public class TextFieldWithTableSelect<T> extends JPanel {
 
     public JButton getButton() {
         return button;
+    }
+
+    public static <T> TextFieldWithTableSelect<T> getTextWithTableSelect(List<T> data, String dialogTitle) {
+        return new TextFieldWithTableSelect<>(TypedTablePanel.getTableWithData(data, (Class<T>) data.get(0).getClass()), dialogTitle);
     }
 }

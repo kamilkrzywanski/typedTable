@@ -7,6 +7,7 @@ import org.krzywanski.panel_v1.autopanel.buttons.AutoPanelButtons;
 import org.krzywanski.panel_v1.fields.FieldBuilder;
 import org.krzywanski.panel_v1.fields.FieldControllerElement;
 import org.krzywanski.panel_v1.fields.FieldValueController;
+import org.krzywanski.panel_v1.fields.TableValueController;
 
 import javax.swing.*;
 import java.beans.IntrospectionException;
@@ -44,6 +45,10 @@ public class ManualPanel<T> extends AbstractTypedPanel<T> {
 
     public void connectFieldWithPanel(String fieldName, JComponent component) {
 
+        if (fieldController.getComponents().stream().anyMatch(el -> el.getField().getName().equals(fieldName)))
+            throw new IllegalArgumentException(String.format("Field %s already connected", fieldName));
+
+
         Field field = Arrays.stream(getDataClass().getDeclaredFields())
                 .filter(f -> f.getName().equals(fieldName))
                 .findFirst()
@@ -68,5 +73,8 @@ public class ManualPanel<T> extends AbstractTypedPanel<T> {
 
     public AutoPanelButtons<T> getButtonsForPanel() {
         return autoPanelButtons;
+    }
+
+    public <E> void connectFieldWithPanelAsTable(String field, Class<E> fieldClass, TableValueController<E> selectFormatClass) {
     }
 }

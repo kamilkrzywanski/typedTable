@@ -13,6 +13,10 @@ public class FieldControllerResolver {
 
     public FieldValueController<?, ?> findFieldValueController(Class<?> dataClass, JComponent component) {
 
+        if (component instanceof TextFieldWithTableSelect<?>) {
+            return new TableValueController<>((TextFieldWithTableSelect<?>) component);
+        }
+
         if (component instanceof JCheckBox) {
             if (dataClass != Boolean.class) {
                 throw new IllegalArgumentException(String.format("Component %s is not supported for %s type", component.getClass().getName(), dataClass.getName()));
