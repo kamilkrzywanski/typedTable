@@ -7,7 +7,6 @@ import org.krzywanski.panel_v1.autopanel.buttons.AutoPanelButtons;
 import org.krzywanski.panel_v1.fields.FieldBuilder;
 import org.krzywanski.panel_v1.fields.FieldControllerElement;
 import org.krzywanski.panel_v1.fields.FieldValueController;
-import org.krzywanski.panel_v1.fields.TableValueController;
 
 import javax.swing.*;
 import java.beans.IntrospectionException;
@@ -75,6 +74,4 @@ public class ManualPanel<T> extends AbstractTypedPanel<T> {
         return autoPanelButtons;
     }
 
-    public <E> void connectFieldWithPanelAsTable(String field, Class<E> fieldClass, TableValueController<E> selectFormatClass) {
-    }
 }

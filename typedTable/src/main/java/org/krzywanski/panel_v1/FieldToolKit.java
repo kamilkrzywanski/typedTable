@@ -52,10 +52,6 @@ public class FieldToolKit {
         }
     }
 
-    private static void registerUndoRedoAction(JComponent component) {
-
-    }
-
     public static FieldControllerElement installDocumentListener(FieldControllerElement element) {
         if (element.getEditorComponent() instanceof JTextComponent) {
             JTextComponent textComponent = (JTextComponent) element.getEditorComponent();
