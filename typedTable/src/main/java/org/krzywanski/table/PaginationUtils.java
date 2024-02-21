@@ -24,7 +24,7 @@ public class PaginationUtils {
         if (provider != null) {
             return provider.getLimit();
         }
-        return tTypedTable.currentData.size();
+        return tTypedTable.dataList.size();
     }
 
     public Page nextPageAction() {
@@ -85,9 +85,13 @@ public class PaginationUtils {
         return new Page(1, localLimit, dataSize);
     }
 
-    public void refreshData() {
-        limit = findCurrentLimit();
+    public Page refreshData() {
         localAddData(ActionType.REFRESH);
+
+        int dataSize = getValue(provider);
+        int currentPage = offset / limit;
+        currentPage++;
+        return new Page(currentPage, limit, dataSize);
     }
 
     private void localAddData(ActionType actionType) {

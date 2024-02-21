@@ -273,6 +273,6 @@ public class TypedTablePanel<T> extends JPanel {
     }
 
     public void refreshData() {
-        table.refreshData();
+        setLabelText(table.refreshData());
     }
 }

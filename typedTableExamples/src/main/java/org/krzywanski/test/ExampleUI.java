@@ -53,7 +53,7 @@ public class ExampleUI extends JFrame {
         autoPanel.addInsertValidator(new DefaultControllerValidator<>((r) -> !"D".equals(r.getColumnA()), () -> "ERROR"));
         autoPanel.setPreferredSize(new Dimension(600, 300));
 
-        new PanelTableController<>(table.table, autoPanel);
+        new PanelTableController<>(table, autoPanel);
 
         leftPanel.add(autoPanel.buildPanel(2), "wrap");
         leftPanel.add(table, "grow,push");
@@ -94,7 +94,7 @@ public class ExampleUI extends JFrame {
         rightPanel.add(controllPanel, "wrap");
         rightPanel.add(table, "grow,push");
 
-        new PanelTableController<>(table.table, manualPanel);
+        new PanelTableController<>(table, manualPanel);
 
         add(rightPanel, "grow,push");
         setVisible(true);

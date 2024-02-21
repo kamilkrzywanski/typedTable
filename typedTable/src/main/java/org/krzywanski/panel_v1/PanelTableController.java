@@ -1,16 +1,16 @@
 package org.krzywanski.panel_v1;
 
-import org.krzywanski.table.TypedTable;
+import org.krzywanski.table.TypedTablePanel;
 
 public class PanelTableController<T> {
-    final TypedTable<T> table;
+    final TypedTablePanel<T> table;
     final AbstractTypedPanel<T> panel;
 
-    public PanelTableController(TypedTable<T> table, AbstractTypedPanel<T> panel) {
+    public PanelTableController(TypedTablePanel<T> table, AbstractTypedPanel<T> panel) {
         this.table = table;
         this.panel = panel;
-        if (table.getRowCount() > 0)
-            table.setRowSelectionInterval(0, 0);
+        if (table.table.getRowCount() > 0)
+            table.table.setRowSelectionInterval(0, 0);
         connectPanelWithTable();
     }
 
@@ -19,17 +19,17 @@ public class PanelTableController<T> {
         panel.addPanelChangeValueListener( (element, action) -> {
 
             if (action == DataAction.REMOVE || action == DataAction.INSERT) {
-                if (action == DataAction.REMOVE && table.getDataList() != null)
-                    table.getDataList().remove(element);
+                if (action == DataAction.REMOVE && table.table.getDataList() != null)
+                    table.table.getDataList().remove(element);
 
                 table.refreshData();
                 return;
             }
-            int selectedRow = table.getSelectedRow();
+            int selectedRow = table.table.getSelectedRow();
 
             selectedRow = Math.max(0, selectedRow);
             table.setDataAt(selectedRow, element);
-            table.getSelectionModel().setSelectionInterval(selectedRow, selectedRow);
+            table.table.getSelectionModel().setSelectionInterval(selectedRow, selectedRow);
 
         });
     }
