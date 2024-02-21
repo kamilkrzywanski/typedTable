@@ -158,7 +158,7 @@ public abstract class AbstractTypedPanel<T> extends JPanel {
                 ErrorDialog.showErrorDialog(this, e.getMessage(), e);
                 return;
             }
-            listeners.forEach(listener -> listener.valueChanged(null, DataAction.REMOVE));
+            listeners.forEach(listener -> listener.valueChanged(data, DataAction.REMOVE));
         }
     }
 

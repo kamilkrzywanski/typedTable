@@ -27,7 +27,11 @@ public class NumberSpinnerValueController implements FieldValueController<Number
 
     @Override
     public void setValue(FieldValueSupplier<Number> value) {
-        spinner.setValue(value.getValue());
+        if (value.getValue() == null)
+            textField.setText("");
+        else
+            spinner.setValue(value.getValue());
+
     }
 
     @Override
