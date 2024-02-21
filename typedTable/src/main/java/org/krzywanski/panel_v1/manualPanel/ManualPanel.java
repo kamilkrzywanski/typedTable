@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class ManualPanel<T> extends AbstractTypedPanel<T> {
-    List<FieldControllerElement> components = new ArrayList<>();
+    final List<FieldControllerElement> components = new ArrayList<>();
 
     public ManualPanel(Supplier<T> dataSupplier, Class<T> dataClass) {
         super(dataSupplier, dataClass, false);
@@ -28,7 +28,7 @@ public class ManualPanel<T> extends AbstractTypedPanel<T> {
 
     @Override
     protected FieldBuilder<T> createFieldController(Class<T> dataClass) {
-        return new FieldBuilder<T>() {
+        return new FieldBuilder<>() {
             @Override
             public List<FieldControllerElement> getComponents() {
                 return components;

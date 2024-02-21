@@ -15,7 +15,7 @@ public class FieldControllerElement {
     /**
      * Type of elemnt in panel
      */
-    Class<?> type;
+    final Class<?> type;
 
     /**
      * Property descriptor for element
@@ -95,6 +95,7 @@ public class FieldControllerElement {
         return fieldValueController;
     }
 
+    @SuppressWarnings("unchecked")
     public void setFieldValueController(FieldValueController<?, ?> fieldValueController) {
         this.fieldValueController = (FieldValueController<Object, JComponent>) fieldValueController;
     }

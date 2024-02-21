@@ -21,14 +21,14 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 public abstract class AbstractTypedPanel<T> extends JPanel {
-    protected FieldBuilder<T> fieldController;
+    protected final FieldBuilder<T> fieldController;
     protected T data;
     final protected Supplier<T> dataSupplier;
     protected Insert<T> insertRepository;
     protected Remove<T> removeRepository;
     protected Update<T> updateRepository;
     final Class<T> dataClass;
-    protected AutoPanelButtons<T> autoPanelButtons;
+    protected final AutoPanelButtons<T> autoPanelButtons;
     final List<PanelChangeValueListener<T>> listeners = new ArrayList<>();
     final boolean beanValidationEnabled;
 

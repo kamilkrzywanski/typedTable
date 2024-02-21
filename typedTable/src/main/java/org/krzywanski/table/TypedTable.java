@@ -76,7 +76,7 @@ public class TypedTable<T> extends JTable {
     /**
      * Provide a custom sizes of columns when user change
      */
-    TableWidthTool instance = TableWidthProvider.getInstance();
+    final TableWidthTool instance = TableWidthProvider.getInstance();
     /**
      * If dynamic provider used insead of list;
      */

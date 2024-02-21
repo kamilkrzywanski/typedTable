@@ -84,6 +84,7 @@ public class TextFieldWithTableSelect<T> extends JPanel {
         return button;
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> TextFieldWithTableSelect<T> getTextWithTableSelect(List<T> data, String dialogTitle) {
         return new TextFieldWithTableSelect<>(TypedTablePanel.getTableWithData(data, (Class<T>) data.get(0).getClass()), dialogTitle);
     }
