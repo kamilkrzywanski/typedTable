@@ -22,7 +22,7 @@ public class ManualPanel<T> extends AbstractTypedPanel<T> {
     List<FieldControllerElement> components = new ArrayList<>();
 
     public ManualPanel(Supplier<T> dataSupplier, Class<T> dataClass) {
-        super(dataSupplier, dataClass);
+        super(dataSupplier, dataClass, false);
         setLayout(new MigLayout("fill"));
         add(autoPanelButtons);
     }

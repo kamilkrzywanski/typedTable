@@ -30,10 +30,12 @@ public abstract class AbstractTypedPanel<T> extends JPanel {
     final Class<T> dataClass;
     protected AutoPanelButtons<T> autoPanelButtons;
     final List<PanelChangeValueListener<T>> listeners = new ArrayList<>();
+    final boolean beanValidationEnabled;
 
 
-    public AbstractTypedPanel(Supplier<T> dataSupplier, Class<T> dataClass) {
+    public AbstractTypedPanel(Supplier<T> dataSupplier, Class<T> dataClass, boolean beanValidationEnabled) {
         super();
+        this.beanValidationEnabled = beanValidationEnabled;
         this.autoPanelButtons = new AutoPanelButtons<>(this, () -> insertRepository, () -> removeRepository, () -> updateRepository);
         this.dataSupplier = dataSupplier;
         this.dataClass = dataClass;
@@ -59,11 +61,13 @@ public abstract class AbstractTypedPanel<T> extends JPanel {
         });
 
 
-        FieldValidator<T> fieldValidator = new FieldValidator<>();
-        Set<String> validationResult = fieldValidator.validateBean(data);
-        if (!validationResult.isEmpty()) {
-            JOptionPane.showMessageDialog(this, validationResult.iterator().next(), "Validation error", JOptionPane.ERROR_MESSAGE);
-            return false;
+        if (beanValidationEnabled) {
+            FieldValidator<T> fieldValidator = new FieldValidator<>();
+            Set<String> validationResult = fieldValidator.validateBean(data);
+            if (!validationResult.isEmpty()) {
+                JOptionPane.showMessageDialog(this, validationResult.iterator().next(), "Validation error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
         }
 
 

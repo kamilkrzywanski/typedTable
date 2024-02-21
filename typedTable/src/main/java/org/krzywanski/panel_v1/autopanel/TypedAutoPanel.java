@@ -27,7 +27,7 @@ public class TypedAutoPanel<T> extends AbstractTypedPanel<T> {
      * @param dataClass    - class of data
      */
     public TypedAutoPanel(Supplier<T> dataSupplier, Class<T> dataClass) {
-        super(dataSupplier, dataClass);
+        super(dataSupplier, dataClass, true);
         setLayout(new MigLayout("fill"));
     }
 
