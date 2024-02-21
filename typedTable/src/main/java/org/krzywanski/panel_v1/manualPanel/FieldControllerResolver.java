@@ -13,6 +13,21 @@ public class FieldControllerResolver {
 
     public FieldValueController<?, ?> findFieldValueController(Class<?> dataClass, JComponent component) {
 
+        if (component instanceof JCheckBox) {
+            if (dataClass != Boolean.class) {
+                throw new IllegalArgumentException(String.format("Component %s is not supported for %s type", component.getClass().getName(), dataClass.getName()));
+            }
+            return new BooleanCheckBoxValueController((JCheckBox) component);
+        }
+
+        if (component instanceof JComboBox) {
+            JComboBox<?> comboBox = (JComboBox<?>) component;
+            if (comboBox.getItemCount() > 0 && comboBox.getItemAt(0).getClass() != dataClass) {
+                throw new IllegalArgumentException((String.format("Combobox item type %s is not compatible with %s", comboBox.getItemAt(0).getClass().getName(), dataClass.getName())));
+            }
+            return new ComboBoxValueController<>((JComboBox<?>) component);
+        }
+
         switch (dataClass.getName()) {
             case "java.lang.String":
                 return getStringValueControllerFor(component);

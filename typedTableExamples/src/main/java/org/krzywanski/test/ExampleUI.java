@@ -66,13 +66,18 @@ public class ExampleUI extends JFrame {
         JTextField textField = new JTextField();
         JTextField textField3 = new JTextField();
         JSpinner spinner = new JSpinner();
+        JComboBox<TestFormatClass> comboBox = new JComboBox<>(new DefaultComboBoxModel<>(new TestFormatClass[]{new TestFormatClass("A"), new TestFormatClass("B")}));
 
+        comboBox.getModel().getClass().getTypeName();
         ManualPanel<TestModelDto> manualPanel = new ManualPanel<>(() -> Main.getAllData().get(0), TestModelDto.class);
         manualPanel.setDataFlowAdapter(new TestModelService());
         manualPanel.connectFieldWithPanel("columnA", textField);
         manualPanel.connectFieldWithPanel("columnB", spinner);
         manualPanel.connectFieldWithPanel("columnC", textField3);
+        manualPanel.connectFieldWithPanel("testFormatClass", comboBox);
 
+        controllPanel.add(new JLabel("TestFormatClass"));
+        controllPanel.add(comboBox, "grow, wrap");
 
         controllPanel.add(new JLabel("ColumnA"));
         controllPanel.add(textField, "grow, wrap");
