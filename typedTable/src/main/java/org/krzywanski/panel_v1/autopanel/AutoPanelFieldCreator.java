@@ -1,25 +1,24 @@
-package org.krzywanski.panel_v1;
+package org.krzywanski.panel_v1.autopanel;
 
 import org.krzywanski.BundleTranslator;
 import org.krzywanski.TypedFrameworkConfiguration;
-import org.krzywanski.panel_v1.autopanel.TypedAutoPanel;
+import org.krzywanski.panel_v1.AbstractTypedPanel;
+import org.krzywanski.panel_v1.FieldToolKit;
+import org.krzywanski.panel_v1.TypedPanelFields;
 import org.krzywanski.panel_v1.fields.*;
-import org.krzywanski.panel_v1.validation.RevalidateDocumentListener;
 
 import javax.swing.*;
-import javax.swing.text.JTextComponent;
 import javax.swing.text.NumberFormatter;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class PanelFieldCreator<T> implements FieldBuilder<T> {
+public class AutoPanelFieldCreator<T> implements FieldBuilder<T> {
     /**
      * Translator for resource bundles if some has been defined
      */
@@ -33,10 +32,10 @@ public class PanelFieldCreator<T> implements FieldBuilder<T> {
      */
     final Map<String, FieldValueController<?, ?>> fieldControllers = new HashMap<>();
 
-    final TypedAutoPanel<T> parentPanel;
+    final AbstractTypedPanel<T> parentPanel;
     List<FieldControllerElement> components;
 
-    public PanelFieldCreator(Class<T> dataClass, TypedAutoPanel<T> parentPanel) {
+    public AutoPanelFieldCreator(Class<T> dataClass, TypedAutoPanel<T> parentPanel) {
         this.dataClass = dataClass;
         this.parentPanel = parentPanel;
     }
@@ -48,21 +47,12 @@ public class PanelFieldCreator<T> implements FieldBuilder<T> {
              components = Arrays.stream(dataClass.getDeclaredFields())
                      .filter(field -> findLabel(field) != null)
                      .map(this::createFieldControllerElement)
-                     .map(this::installDocumentListener)
+                     .map(FieldToolKit::installDocumentListener)
                      .collect(Collectors.toList());
         }
 
       return components;
 
-    }
-
-    private FieldControllerElement installDocumentListener(FieldControllerElement element) {
-        if (element.getEditorComponent() instanceof JTextComponent) {
-            JTextComponent textComponent = (JTextComponent) element.getSecondComponent();
-            textComponent.getDocument().addDocumentListener(new RevalidateDocumentListener(element));
-        }
-
-        return element;
     }
 
     private FieldControllerElement createFieldControllerElement(Field field) {
@@ -100,22 +90,22 @@ public class PanelFieldCreator<T> implements FieldBuilder<T> {
             return createTextField(field);
         }
         if(field.getType().equals(Integer.class)) {
-            return createIntegerTextField(field);
+            return createNumberTextField(field);
         }
         if(field.getType().equals(Double.class)) {
-            return createDoubleTextField(field);
+            return createNumberTextField(field);
         }
         if(field.getType().equals(Float.class)) {
-            return createFloatTextField(field);
+            return createNumberTextField(field);
         }
         if(field.getType().equals(Long.class)) {
-            return createLongTextField(field);
+            return createNumberTextField(field);
         }
         if(field.getType().equals(Short.class)) {
-            return createShortTextField(field);
+            return createNumberTextField(field);
         }
         if(field.getType().equals(BigDecimal.class)) {
-            return createBigDecimalTextField(field);
+            return createNumberTextField(field);
         }
         if(field.getType().isEnum()) {
             return createEnumComboBox(field);
@@ -130,28 +120,8 @@ public class PanelFieldCreator<T> implements FieldBuilder<T> {
         return createLabelAndInstallControllerForComboBox(field, new JComboBox<>(field.getType().getEnumConstants()));
     }
 
-    private FieldControllerElement createBigDecimalTextField(FieldControllerElement field) {
-        return createLabelAndInstallControllerForTextField(field, createFieldWithFormatter(new DecimalFormat(), field));
-    }
-
-    private FieldControllerElement createShortTextField(FieldControllerElement field) {
-        return createLabelAndInstallControllerForTextField(field, createFieldWithFormatter(NumberFormat.getIntegerInstance(), field));
-    }
-
-    private FieldControllerElement createLongTextField(FieldControllerElement field) {
-        return createLabelAndInstallControllerForTextField(field, createFieldWithFormatter(NumberFormat.getNumberInstance(), field));
-    }
-
-    private FieldControllerElement createFloatTextField(FieldControllerElement field) {
-        return createLabelAndInstallControllerForTextField(field, createFieldWithFormatter(NumberFormat.getNumberInstance(), field));
-    }
-
-    private FieldControllerElement createDoubleTextField(FieldControllerElement field) {
-        return createLabelAndInstallControllerForTextField(field, createFieldWithFormatter(NumberFormat.getNumberInstance(), field));
-    }
-
-    private FieldControllerElement createIntegerTextField(FieldControllerElement field) {
-        return createLabelAndInstallControllerForTextField(field, createFieldWithFormatter(NumberFormat.getIntegerInstance(), field));
+    private FieldControllerElement createNumberTextField(FieldControllerElement field) {
+        return createLabelAndInstallControllerForTextField(field, createFieldWithNumberFormatter(field));
     }
 
     private FieldControllerElement createTextField(FieldControllerElement field) {
@@ -191,7 +161,7 @@ public class PanelFieldCreator<T> implements FieldBuilder<T> {
             case "Float":
             case "Long":
             case "Short":
-                field.setFieldValueController(new NumberTextFieldValueController(component));
+                field.setFieldValueController(new NumberJFormattedTextFieldValueController(component));
                 break;
             case "String":
                 field.setFieldValueController(new StringTextFieldValueController(component));
@@ -208,8 +178,8 @@ public class PanelFieldCreator<T> implements FieldBuilder<T> {
         return field;
     }
 
-    private static JFormattedTextField createFieldWithFormatter(NumberFormat format, FieldControllerElement field) {
-        NumberFormatter formatter = new NumberFormatter(format) {
+    private JFormattedTextField createFieldWithNumberFormatter(FieldControllerElement field) {
+        NumberFormatter formatter = new NumberFormatter(findNumberFormat(field)) {
             @Override
             public Object stringToValue(String text) throws ParseException {
                 if (text.isEmpty())
@@ -221,6 +191,23 @@ public class PanelFieldCreator<T> implements FieldBuilder<T> {
 //        formatter.setAllowsInvalid(false);
         formatter.setValueClass(field.getType());
         return new JFormattedTextField(formatter);
+    }
+
+    private NumberFormat findNumberFormat(FieldControllerElement field) {
+        NumberFormat numberFormat = null;
+        switch (field.getType().getSimpleName()) {
+            case "Integer":
+            case "Long":
+            case "Short":
+                numberFormat = NumberFormat.getIntegerInstance();
+                break;
+            case "BigDecimal":
+            case "Double":
+            case "Float":
+                numberFormat = NumberFormat.getNumberInstance();
+                break;
+        }
+        return numberFormat;
     }
 
     public <R> void addDataEditor(String fieldName, Class<R> columnClass, FieldValueController<? extends R, ?> fieldValueController) {

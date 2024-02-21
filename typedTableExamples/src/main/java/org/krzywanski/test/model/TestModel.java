@@ -1,9 +1,11 @@
 package org.krzywanski.test.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
@@ -13,8 +15,8 @@ public class TestModel implements Comparable<TestModel>, Serializable {
     private Integer id;
     private String columnA;
 
-    @Column(precision = 10, scale = 2)
-    private BigDecimal columnB;
+    //    @Column(precision = 10, scale = 2)
+    private Double columnB;
     private String columnC;
     private Date myDate = new Date();
     private TestEnum testEnum = TestEnum.MEDIUM;
@@ -43,11 +45,11 @@ public class TestModel implements Comparable<TestModel>, Serializable {
         this.columnA = columnA;
     }
 
-    public BigDecimal getColumnB() {
+    public Double getColumnB() {
         return columnB;
     }
 
-    public void setColumnB(BigDecimal columnB) {
+    public void setColumnB(Double columnB) {
         this.columnB = columnB;
     }
 

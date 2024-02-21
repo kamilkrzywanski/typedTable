@@ -4,25 +4,28 @@ import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.function.Function;
 
-public class NumberTextFieldValueController implements DefaultTextFieldValueController<Number> {
+public class FunctionalNumberTextFieldValueController implements DefaultTextFieldValueController<Number> {
 
     final ResourceBundle rb = ResourceBundle.getBundle("Messages", Locale.getDefault());
 
-    private final JFormattedTextField textField;
+    private final JTextField textField;
+    private final Function<String, Number> valueTransformer;
 
-    public NumberTextFieldValueController(JFormattedTextField textField) {
+    public FunctionalNumberTextFieldValueController(JTextField textField, Function<String, Number> valueTransformer) {
         this.textField = textField;
+        this.valueTransformer = valueTransformer;
     }
 
     @Override
     public Number getValue() {
-        return (Number) textField.getValue();
+        return valueTransformer.apply(textField.getText());
     }
 
     @Override
     public void setValue(FieldValueSupplier<Number> value) {
-        textField.setValue(value.getValue());
+        textField.setText(value.getValue() != null ? value.getValue().toString() : "");
     }
 
     @Override
@@ -33,7 +36,7 @@ public class NumberTextFieldValueController implements DefaultTextFieldValueCont
     @Override
     public Number getValueForValidation() throws IllegalArgumentException {
         try {
-            return (Number) textField.getFormatter().stringToValue(textField.getText());
+            return getValue();
         } catch (Exception e) {
             throw new IllegalArgumentException(rb.getString("number.format.error"));
         }

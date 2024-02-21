@@ -538,4 +538,8 @@ public class TypedTable<T> extends JTable {
     public void refreshData() {
         paginationUtils.refreshData();
     }
+
+    public List<T> getDataList() {
+        return dataList;
+    }
 }

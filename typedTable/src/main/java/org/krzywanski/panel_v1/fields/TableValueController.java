@@ -4,6 +4,11 @@ import org.krzywanski.table.TypedTablePanel;
 
 public class TableValueController<T> implements FieldValueController<T, TextFieldWithTableSelect<T>> {
     final TextFieldWithTableSelect<T> table;
+
+    public TableValueController(TextFieldWithTableSelect<T> table) {
+        this.table = table;
+    }
+
     public TableValueController(TypedTablePanel<T> table, String dialogTitle) {
         this.table = new TextFieldWithTableSelect<>(table, dialogTitle);
     }

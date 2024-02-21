@@ -1,6 +1,6 @@
 package org.krzywanski.panel_v1.fields;
 
-import org.krzywanski.panel_v1.autopanel.TypedAutoPanel;
+import org.krzywanski.panel_v1.AbstractTypedPanel;
 import org.krzywanski.panel_v1.validation.ValidatorDialog;
 
 import javax.swing.*;
@@ -11,7 +11,7 @@ import java.util.Objects;
 
 public class FieldControllerElement {
 
-    final TypedAutoPanel<?> owner;
+    final AbstractTypedPanel<?> owner;
     /**
      * Type of elemnt in panel
      */
@@ -46,7 +46,7 @@ public class FieldControllerElement {
      * @param field              field from data class
      * @param propertyDescriptor property descriptor for element
      */
-    public FieldControllerElement(TypedAutoPanel<?> owner, Field field, PropertyDescriptor propertyDescriptor) {
+    public FieldControllerElement(AbstractTypedPanel<?> owner, Field field, PropertyDescriptor propertyDescriptor) {
         this.owner = owner;
         this.field = field;
         this.type = field.getType();

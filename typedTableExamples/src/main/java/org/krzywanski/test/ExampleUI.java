@@ -5,6 +5,8 @@ import org.krzywanski.panel_v1.PanelTableController;
 import org.krzywanski.panel_v1.autopanel.TypedAutoPanel;
 import org.krzywanski.panel_v1.autopanel.buttons.DefaultControllerValidator;
 import org.krzywanski.panel_v1.fields.TableValueController;
+import org.krzywanski.panel_v1.fields.TextFieldWithTableSelect;
+import org.krzywanski.panel_v1.manualPanel.ManualPanel;
 import org.krzywanski.table.TypedTablePanel;
 import org.krzywanski.table.providers.DefaultDataPrivder;
 import org.krzywanski.test.dto.TestModelDto;
@@ -61,21 +63,38 @@ public class ExampleUI extends JFrame {
 
     private void buildRightPanel() {
         JPanel rightPanel = new JPanel(new MigLayout());
-
-
         JPanel controllPanel = new JPanel(new MigLayout());
-
-        JTextField textField = new JFormattedTextField();
-
-        controllPanel.add(new JLabel("ColumnA"));
-        controllPanel.add(textField);
-
+        JTextField textField = new JTextField();
+        JTextField textField3 = new JTextField();
+        JSpinner spinner = new JSpinner();
+        TextFieldWithTableSelect<TestFormatClass> selectPanel = TextFieldWithTableSelect.getTextWithTableSelect(List.of(new TestFormatClass("A"), new TestFormatClass("B")), "TestFormatClass.class");
 
         TypedTablePanel<TestModelDto> table = TypedTablePanel.getTableWithData(Main.getAllData(), TestModelDto.class, 3);
+
+        ManualPanel<TestModelDto> manualPanel = new ManualPanel<>(() -> table.getSelectedItem(), TestModelDto.class);
+        manualPanel.setDataFlowAdapter(new TestModelService());
+        manualPanel.connectFieldWithPanel("columnA", textField);
+        manualPanel.connectFieldWithPanel("columnB", spinner);
+        manualPanel.connectFieldWithPanel("columnC", textField3);
+        manualPanel.connectFieldWithPanel("testFormatClass", selectPanel);
+
+
+        controllPanel.add(new JLabel("ColumnA"));
+        controllPanel.add(textField, "grow, wrap");
+        controllPanel.add(new JLabel("ColumnB"));
+        controllPanel.add(spinner, "grow, wrap");
+        controllPanel.add(new JLabel("ColumnC"));
+        controllPanel.add(textField3, "grow, wrap");
+        controllPanel.add(new JLabel("TestFormatClass"));
+        controllPanel.add(selectPanel, "grow, wrap");
+        controllPanel.add(manualPanel, "span, wrap");
+
+
 
         rightPanel.add(controllPanel, "wrap");
         rightPanel.add(table, "grow,push");
 
+        new PanelTableController<>(table.table, manualPanel);
 
         add(rightPanel, "grow,push");
         setVisible(true);

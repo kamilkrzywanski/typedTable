@@ -1,7 +1,7 @@
 package org.krzywanski.panel_v1.validation;
 
+import org.krzywanski.panel_v1.AbstractTypedPanel;
 import org.krzywanski.panel_v1.autopanel.PanelMode;
-import org.krzywanski.panel_v1.autopanel.TypedAutoPanel;
 import org.krzywanski.panel_v1.fields.FieldControllerElement;
 
 import javax.swing.*;
@@ -16,12 +16,12 @@ import java.util.Set;
 public class ValidatorDialog<T> {
 
     final FieldControllerElement controller;
-    final TypedAutoPanel<T> parentPanel;
+    final AbstractTypedPanel<T> parentPanel;
     final FieldValidator<T> validator = new FieldValidator<>();
 
     WindowDelegate window = null;
 
-    public ValidatorDialog(FieldControllerElement controller, TypedAutoPanel<T> parentPanel) {
+    public ValidatorDialog(FieldControllerElement controller, AbstractTypedPanel<T> parentPanel) {
         this.controller = controller;
         this.parentPanel = parentPanel;
     }
