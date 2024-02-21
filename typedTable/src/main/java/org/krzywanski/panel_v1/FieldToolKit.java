@@ -16,6 +16,18 @@ public class FieldToolKit {
         if (component instanceof JTextComponent) {
             JTextComponent textComponent = (JTextComponent) component;
             textComponent.getDocument().addUndoableEditListener(undoManager);
+
+            component.registerKeyboardAction(e -> {
+                if (undoManager.canUndo()) {
+                    undoManager.undo();
+                }
+            }, KeyStroke.getKeyStroke("control Z"), JComponent.WHEN_FOCUSED);
+
+            component.registerKeyboardAction(e -> {
+                if (undoManager.canRedo()) {
+                    undoManager.redo();
+                }
+            }, KeyStroke.getKeyStroke("control Y"), JComponent.WHEN_FOCUSED);
         }
         if (component instanceof JSpinner) {
             JSpinner spinner = (JSpinner) component;
@@ -23,21 +35,25 @@ public class FieldToolKit {
                 JSpinner.DefaultEditor editor = (JSpinner.DefaultEditor) spinner.getEditor();
                 JTextComponent textComponent = editor.getTextField();
                 textComponent.getDocument().addUndoableEditListener(undoManager);
+
+                textComponent.registerKeyboardAction(e -> {
+                    if (undoManager.canUndo()) {
+                        undoManager.undo();
+                    }
+                }, KeyStroke.getKeyStroke("control Z"), JComponent.WHEN_FOCUSED);
+
+                textComponent.registerKeyboardAction(e -> {
+                    if (undoManager.canRedo()) {
+                        undoManager.redo();
+                    }
+                }, KeyStroke.getKeyStroke("control Y"), JComponent.WHEN_FOCUSED);
             }
             //add undoManager
         }
+    }
 
-        component.registerKeyboardAction(e -> {
-            if (undoManager.canUndo()) {
-                undoManager.undo();
-            }
-        }, KeyStroke.getKeyStroke("control Z"), JComponent.WHEN_FOCUSED);
+    private static void registerUndoRedoAction(JComponent component) {
 
-        component.registerKeyboardAction(e -> {
-            if (undoManager.canRedo()) {
-                undoManager.redo();
-            }
-        }, KeyStroke.getKeyStroke("control Y"), JComponent.WHEN_FOCUSED);
     }
 
     public static FieldControllerElement installDocumentListener(FieldControllerElement element) {
