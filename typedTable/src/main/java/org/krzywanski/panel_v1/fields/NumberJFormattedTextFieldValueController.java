@@ -5,13 +5,13 @@ import javax.swing.text.JTextComponent;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-public class NumberTextFieldValueController implements DefaultTextFieldValueController<Number> {
+public class NumberJFormattedTextFieldValueController implements DefaultTextFieldValueController<Number> {
 
     final ResourceBundle rb = ResourceBundle.getBundle("Messages", Locale.getDefault());
 
     private final JFormattedTextField textField;
 
-    public NumberTextFieldValueController(JFormattedTextField textField) {
+    public NumberJFormattedTextFieldValueController(JFormattedTextField textField) {
         this.textField = textField;
     }
 

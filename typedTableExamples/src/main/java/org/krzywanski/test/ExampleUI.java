@@ -76,6 +76,10 @@ public class ExampleUI extends JFrame {
 
         controllPanel.add(new JLabel("ColumnA"));
         controllPanel.add(textField, "grow, wrap");
+        controllPanel.add(new JLabel("ColumnB"));
+        controllPanel.add(textField2, "grow, wrap");
+        controllPanel.add(new JLabel("ColumnC"));
+        controllPanel.add(textField3, "grow, wrap");
         controllPanel.add(manualPanel, "span, wrap");
 
 
@@ -84,6 +88,7 @@ public class ExampleUI extends JFrame {
         rightPanel.add(controllPanel, "wrap");
         rightPanel.add(table, "grow,push");
 
+        new PanelTableController<>(table.table, manualPanel);
 
         add(rightPanel, "grow,push");
         setVisible(true);

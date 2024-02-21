@@ -1,6 +1,5 @@
 package org.krzywanski.test.dto;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -16,7 +15,6 @@ import org.krzywanski.test.validation.BetweenValidator;
 import org.krzywanski.test.validation.TestModelDtoValidator;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 
 @ReflectionSort
@@ -45,8 +43,8 @@ public class TestModelDto implements Comparable<TestModelDto>, Serializable {
     @BetweenValidator(min = "10.00", max = "11111.00")
     @NotNull(message = "{field.not.empty}")
     @MyTableColumn(label = "decimal.column", format = "0.00$", sortable = true)
-    @Column(precision = 10, scale = 2)
-    private BigDecimal columnB;
+//    @Column(precision = 10, scale = 2)
+    private Double columnB;
     @NotEmpty(message = "{valid.emial.required}")
     @Email(message = "{valid.emial.required}")
     @MyTableColumn(label = "E-mail")
@@ -84,11 +82,11 @@ public class TestModelDto implements Comparable<TestModelDto>, Serializable {
         this.columnA = columnA;
     }
 
-    public BigDecimal getColumnB() {
+    public Double getColumnB() {
         return columnB;
     }
 
-    public void setColumnB(BigDecimal columnB) {
+    public void setColumnB(Double columnB) {
         this.columnB = columnB;
     }
 

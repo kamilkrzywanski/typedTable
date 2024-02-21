@@ -1,13 +1,12 @@
 package org.krzywanski.panel_v1;
 
-import org.krzywanski.panel_v1.autopanel.TypedAutoPanel;
 import org.krzywanski.table.TypedTable;
 
 public class PanelTableController<T> {
     final TypedTable<T> table;
-    final TypedAutoPanel<T> panel;
+    final AbstractTypedPanel<T> panel;
 
-    public PanelTableController(TypedTable<T> table, TypedAutoPanel<T> panel) {
+    public PanelTableController(TypedTable<T> table, AbstractTypedPanel<T> panel) {
         this.table = table;
         this.panel = panel;
         if (table.getRowCount() > 0)
