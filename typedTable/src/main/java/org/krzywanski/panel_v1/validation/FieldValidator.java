@@ -18,11 +18,12 @@ public class FieldValidator<T> {
                     new AggregateResourceBundleLocator(TypedFrameworkConfiguration.resourceBundles))
     ).buildValidatorFactory().getValidator();
     public Set<String> validateField(Class<T> dataClass, FieldControllerElement element) {
+        return validateField(dataClass, element.getField().getName(), element.getFieldValueController().getValueForValidation());
+    }
+
+    public Set<String> validateField(Class<T> beanClass, String propertyName, Object value) {
         try {
-            return validator.validateValue(dataClass, element.getField().getName(), element.getFieldValueController().getValueForValidation())
-                    .stream()
-                    .map(ConstraintViolation::getMessage)
-                    .collect(Collectors.toSet());
+            return validator.validateValue(beanClass, propertyName, value).stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet());
         } catch (IllegalArgumentException e) {
             return Set.of(e.getMessage());
         }
