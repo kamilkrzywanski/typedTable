@@ -51,7 +51,7 @@ public class TestModelDto implements Comparable<TestModelDto>, Serializable {
     @MyTableColumn(label = "User date", format = "dd-MM-yyyy", alignment = Alignment.CENTER)
     private Date date = new Date();
 
-    @MyTableColumn(label = "Priority")
+    @MyTableColumn(label = "Priority", editable = true)
     private TestEnum testEnum = TestEnum.MEDIUM;
 
     @MyTableColumn(label = "customFormatter")
