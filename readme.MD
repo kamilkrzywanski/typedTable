@@ -38,7 +38,6 @@ Custom formatter for objects example:
 
 Incoming features:
 - crud operations on table
-- create of crud panel for table
 
 
 Test environment:
