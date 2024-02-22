@@ -30,21 +30,19 @@ public class TestModelDto implements Comparable<TestModelDto>, Serializable {
     Integer id;
 
     //        @CustomRenderer(renderer = BooleanIconRenderer.class)
-    @MyTableColumn(label = "Boolean value")
+    @MyTableColumn(label = "Boolean value", editable = true)
     private Boolean booleanValue = true;
 
     @NotEmpty(message = "{field.not.empty}")
     @Pattern(regexp = "(^$|[0-9]{10})", message = "{mobile.number.10.digits}")
-    @MyTableColumn(label = "Mobile number", width = 200, sortable = true)
+    @MyTableColumn(label = "Mobile number", width = 200, sortable = true, editable = true)
     private String columnA;
 
-    //    @DecimalMin(value = "10.00", message = "{decimal.column.greater.than}")
-//    @DecimalMax(value = "11111.00", message = "{decimal.column.less.than}")
     @BetweenValidator(min = "10.00", max = "11111.00")
     @NotNull(message = "{field.not.empty}")
     @MyTableColumn(label = "decimal.column", format = "0.00$", sortable = true)
-//    @Column(precision = 10, scale = 2)
     private Double columnB;
+
     @NotEmpty(message = "{valid.emial.required}")
     @Email(message = "{valid.emial.required}")
     @MyTableColumn(label = "E-mail")

@@ -43,4 +43,9 @@ public @interface MyTableColumn {
      * @return alignment
      */
     Alignment alignment() default Alignment.LEFT;
+
+    /**
+     * if column is editable
+     */
+    boolean editable() default false;
 }

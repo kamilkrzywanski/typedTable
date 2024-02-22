@@ -11,6 +11,7 @@ import org.krzywanski.table.utils.Page;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.event.ActionListener;
@@ -143,11 +144,17 @@ public class TypedTable<T> extends JTable {
         installHeaderPropertyChangeListener();
         fixHeadersSize();
         tableHeader.addMouseListener(new TableOrderColumnsMouseAdapter(this, instance));
-    }
 
-    @Override
-    public Class<?> getColumnClass(int column) {
-        return super.getColumnClass(column);
+        model.addTableModelListener(new TableModelListener() {
+
+            public void tableChanged(TableModelEvent tme) {
+                if (tme.getFirstRow() > 0 && tme.getType() == TableModelEvent.UPDATE) {
+                    System.out.println("Cell " + tme.getFirstRow() + ", " + tme.getColumn() + " changed."
+                            + " The new value: " + getModel().getValueAt(tme.getFirstRow(), tme.getColumn()));
+                }
+            }
+        });
+
     }
 
     /**
@@ -452,7 +459,7 @@ public class TypedTable<T> extends JTable {
 
     public <C> void addColumn(String columnName, Class<C> columnClass, Function<T, C> function) {
         TableColumn tableColumn = new TableColumn(columnCreator.getTableColumns().size());
-        columnCreator.getTableColumns().add(new FieldMock(columnName, columnClass, function, tableColumn, true));
+        columnCreator.getTableColumns().add(new FieldMock(columnName, columnClass, function, tableColumn, false));
         tableColumn.setHeaderValue(columnName);
         try {
             SwingUtilities.invokeAndWait(() -> {

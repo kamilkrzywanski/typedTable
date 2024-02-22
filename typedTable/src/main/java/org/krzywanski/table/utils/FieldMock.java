@@ -42,7 +42,7 @@ public class FieldMock {
         this.type = field.getType();
         this.functionToCompute = null;
         this.tableColumn = tableColumn;
-        this.isEditable = false;
+        this.isEditable = isEditable;
 
         try {
             this.propertyDescriptor = new PropertyDescriptor(field.getName(), field.getDeclaringClass());

@@ -80,7 +80,7 @@ public class ColumnCreator {
                     tableColumn.setWidth(0);
                 }
 
-                tableColumns.add(new FieldMock(field.getName(), field.getField(), tableColumn, false));
+                tableColumns.add(new FieldMock(field.getName(), field.getField(), tableColumn, annotation.editable()));
 
                 iterator++;
             }
