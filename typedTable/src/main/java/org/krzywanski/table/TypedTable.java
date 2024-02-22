@@ -542,4 +542,8 @@ public class TypedTable<T> extends JTable {
     public List<T> getDataList() {
         return dataList;
     }
+
+    public void updateRow(int row, Function<T, T> dataTransformer) {
+        setDataAt(row, dataTransformer.apply(getItemAt(row)));
+    }
 }

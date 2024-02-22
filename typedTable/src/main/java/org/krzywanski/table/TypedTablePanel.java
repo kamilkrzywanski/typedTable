@@ -275,4 +275,9 @@ public class TypedTablePanel<T> extends JPanel {
     public void refreshData() {
         setLabelText(table.refreshData());
     }
+
+    public void updateRow(int row, Function<T, T> dataTransformer) {
+        table.updateRow(row, dataTransformer);
+    }
+
 }
