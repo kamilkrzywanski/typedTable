@@ -53,6 +53,7 @@ public class FieldMock {
                 this.propertyDescriptor = new PropertyDescriptor(field.getName(), field.getDeclaringClass(), ReflectionUtils.IS_PREFIX + ReflectionUtils.capitalize(field.getName()), null);
                 Logger.getAnonymousLogger().log(Level.WARNING, "Field " + field.getName() + " will be not editable!");
             } catch (IntrospectionException ex) {
+                Logger.getAnonymousLogger().log(Level.SEVERE, "Field needs to have at least getter for field " + field.getName() + " in class " + field.getDeclaringClass().getCanonicalName() + " !", ex);
                 throw new RuntimeException(ex);
             }
         }
