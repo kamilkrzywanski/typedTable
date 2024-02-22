@@ -54,7 +54,10 @@ public class ExampleUI extends JFrame {
         autoPanel.setPreferredSize(new Dimension(600, 300));
 
         new PanelTableController<>(table, autoPanel);
-
+        table.updateRow(4, testModelDto -> {
+            testModelDto.setColumnA("TestChange");
+            return testModelDto;
+        });
         leftPanel.add(autoPanel.buildPanel(2), "wrap");
         leftPanel.add(table, "grow,push");
         add(leftPanel, "grow,push");
