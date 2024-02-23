@@ -11,6 +11,7 @@ import org.krzywanski.table.utils.FieldMock;
 import org.krzywanski.table.utils.Page;
 import org.krzywanski.table.validation.GenericEditor;
 import org.krzywanski.table.validation.RevalidateDocumentListener;
+import org.krzywanski.table.validation.ValidatorDialog;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
@@ -549,12 +550,53 @@ public class TypedTable<T> extends JTable {
     public void installDataUpdateAdapter(Update<T> update) {
         model.addTableModelListener(new TableDataFlowListener<>(this, update));
         model.setUpdateAdapterInstalled(true);
+
+        setNumberEditorForClass(Integer.class, Integer::parseInt);
+        setNumberEditorForClass(Double.class, Double::parseDouble);
+        setNumberEditorForClass(Float.class, Float::parseFloat);
+        setNumberEditorForClass(Long.class, Long::parseLong);
+        setNumberEditorForClass(Short.class, Short::parseShort);
+        setEditorForClass(String.class, s -> s);
+    }
+
+    private void setEditorForClass(Class<?> clazz, Function<String, ?> transformer) {
         JFormattedTextField textField = new JFormattedTextField();
-        textField.getDocument().addDocumentListener(new RevalidateDocumentListener<>(this, textField, columnCreator));
-        setDefaultEditor(Object.class, new GenericEditor<>(textField, this));
+        ValidatorDialog<T> validatorDialog = new ValidatorDialog<>(textField, this);
+        textField.getDocument().addDocumentListener(new RevalidateDocumentListener<>(this, textField, columnCreator, validatorDialog, transformer));
+        setDefaultEditor(clazz, new GenericEditor<>(textField, this, validatorDialog, transformer));
+    }
+
+    private void setNumberEditorForClass(Class<?> clazz, Function<String, ?> transformer) {
+        JFormattedTextField textField = new JFormattedTextField();
+        ValidatorDialog<T> validatorDialog = new ValidatorDialog<>(textField, this);
+        textField.getDocument().addDocumentListener(new RevalidateDocumentListener<>(this, textField, columnCreator, validatorDialog, transformer));
+        setDefaultEditor(clazz, new GenericEditor<>(textField, this, validatorDialog, transformer));
     }
 
     public ColumnCreator getColumnCreator() {
         return columnCreator;
     }
+//TODO CHECK THIS WAY TO MAKE IT WORK
+//    @Override
+//    public Component prepareEditor(TableCellEditor editor, int row, int column) {
+//        Component c = super.prepareEditor(editor, row, column);
+//        if(c instanceof JTextField)
+//            ((JTextField)c).getDocument().addDocumentListener(new DocumentListener() {
+//                @Override
+//                public void insertUpdate(DocumentEvent e) {
+//                    System.out.println("insert");
+//                }
+//
+//                @Override
+//                public void removeUpdate(DocumentEvent e) {
+//                    System.out.println("remove");
+//                }
+//
+//                @Override
+//                public void changedUpdate(DocumentEvent e) {
+//                    System.out.println("change");
+//                }
+//            });
+//    return c;
+//    }
 }

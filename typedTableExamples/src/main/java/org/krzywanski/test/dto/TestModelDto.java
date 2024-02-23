@@ -40,7 +40,7 @@ public class TestModelDto implements Comparable<TestModelDto>, Serializable {
 
     @BetweenValidator(min = "10.00", max = "11111.00")
     @NotNull(message = "{field.not.empty}")
-    @MyTableColumn(label = "decimal.column", format = "0.00$", sortable = true)
+    @MyTableColumn(label = "decimal.column", format = "0.00$", sortable = true, editable = true)
     private Double columnB;
 
     @NotEmpty(message = "{valid.emial.required}")

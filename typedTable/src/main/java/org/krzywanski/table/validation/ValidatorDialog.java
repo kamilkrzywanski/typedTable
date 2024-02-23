@@ -1,5 +1,7 @@
 package org.krzywanski.table.validation;
 
+import org.krzywanski.table.TypedTable;
+
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
@@ -14,9 +16,11 @@ public class ValidatorDialog<T> {
     final Component component;
 
     WindowDelegate window = null;
+    final TypedTable<T> table;
 
-    public ValidatorDialog(Component component) {
+    public ValidatorDialog(Component component, TypedTable<T> table) {
         this.component = component;
+        this.table = table;
     }
 
 
@@ -24,6 +28,7 @@ public class ValidatorDialog<T> {
         if (window == null)
             window = new WindowDelegate(SwingUtilities.getWindowAncestor(component));
 
+        window.computeLocation();
         window.setLabel(message);
         window.pack();
         window.setVisible(true);
@@ -38,11 +43,6 @@ public class ValidatorDialog<T> {
         }
     }
 
-    public void dispose() {
-        if (window != null)
-            window.dispose();
-    }
-
 
     private class WindowDelegate extends JWindow {
 
@@ -50,15 +50,19 @@ public class ValidatorDialog<T> {
 
         public WindowDelegate(Window parent) {
             super(parent);
+            System.out.println("Creating window");
             errorLabel = new JLabel();
             errorLabel.setBorder(new LineBorder(Color.RED, 1));
             buildUI();
         }
 
-//        @Override
-//        public synchronized void setVisible(boolean b) {
-//            super.setVisible(b && (parentPanel.getMode() == PanelMode.UPDATE || parentPanel.getMode() == PanelMode.ADD));
-//        }
+        @Override
+        public synchronized void setVisible(boolean b) {
+
+            if (b)
+                computeLocation();
+            super.setVisible(b);
+        }
 
         private void buildUI() {
             JPanel contentPane = (JPanel) getContentPane();
@@ -98,9 +102,14 @@ public class ValidatorDialog<T> {
 
         private void computeLocation() {
             try {
-                Point loc = component.getLocationOnScreen();
-                setLocation(loc.x + 20, loc.y + 30);
+                Rectangle rect = table.getCellRect(table.getSelectedRow(), table.getSelectedColumn(), true);
+                Point cellLocationOnScreen = rect.getLocation();
+                Point tableLocationOnScreen = table.getLocationOnScreen();
+                int relativeX = tableLocationOnScreen.x + cellLocationOnScreen.x;
+                int relativeY = tableLocationOnScreen.y + cellLocationOnScreen.y + rect.height;
+                setLocation(relativeX, relativeY);
             } catch (IllegalComponentStateException e) {
+                System.out.println("Illegal component state");
                 //do nothing
             }
         }
