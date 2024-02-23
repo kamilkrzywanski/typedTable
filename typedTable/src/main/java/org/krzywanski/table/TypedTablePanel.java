@@ -1,6 +1,7 @@
 package org.krzywanski.table;
 
 import net.miginfocom.swing.MigLayout;
+import org.krzywanski.panel_v1.dataflow.Update;
 import org.krzywanski.table.annot.TableFilters;
 import org.krzywanski.table.components.FilterDialog;
 import org.krzywanski.table.components.PopupDialog;
@@ -57,7 +58,7 @@ public class TypedTablePanel<T> extends JPanel {
         return new TypedTablePanel<>(null, typeClass, provider, 1);
     }
 
-    private TypedTablePanel(List<T> dataList, Class<? extends T> typeClass, TableDataProvider<T> provider, int id) {
+    private TypedTablePanel(List<T> dataList, Class<T> typeClass, TableDataProvider<T> provider, int id) {
         super(new MigLayout());
         table = new TypedTable<>(dataList, typeClass, provider, id);
         createButtons();
@@ -280,4 +281,7 @@ public class TypedTablePanel<T> extends JPanel {
         table.updateRow(row, dataTransformer);
     }
 
+    public void installDataUpdateAdapter(Update<T> update) {
+        table.installDataUpdateAdapter(update);
+    }
 }

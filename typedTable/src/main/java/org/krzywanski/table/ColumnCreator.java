@@ -6,6 +6,7 @@ import org.krzywanski.table.annot.MyTableColumn;
 import org.krzywanski.table.providers.TableWidthProvider;
 import org.krzywanski.table.utils.FieldMock;
 
+import javax.swing.*;
 import javax.swing.table.TableColumn;
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -95,7 +96,12 @@ public class ColumnCreator {
     }
 
     public FieldMock getFieldByName(Object name) {
-        return tableColumns.stream().filter(fieldTableColumnEntry -> fieldTableColumnEntry.getTableColumn().getHeaderValue().equals(name)).findFirst().get();
+        for (FieldMock fieldTableColumnEntry : tableColumns) {
+            if (fieldTableColumnEntry.getTableColumn().getHeaderValue().equals(name)) {
+                return Optional.of(fieldTableColumnEntry).get();
+            }
+        }
+        return null;
     }
 
     public Vector<String> getColumnsNames() {
@@ -104,5 +110,14 @@ public class ColumnCreator {
             columnsNames.add(fieldMock.getTableColumn().getHeaderValue().toString());
         }
         return columnsNames;
+    }
+
+    public FieldMock getColumnField(int columnIndex, JTable table) {
+        return getFieldByName(
+                table.getTableHeader().
+                        getColumnModel().
+                        getColumn(columnIndex).
+                        getHeaderValue()
+        );
     }
 }

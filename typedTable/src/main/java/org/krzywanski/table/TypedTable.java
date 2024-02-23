@@ -1,5 +1,6 @@
 package org.krzywanski.table;
 
+import org.krzywanski.panel_v1.dataflow.Update;
 import org.krzywanski.table.annot.EnableMultiSort;
 import org.krzywanski.table.annot.MyTableColumn;
 import org.krzywanski.table.annot.ReflectionSort;
@@ -8,10 +9,11 @@ import org.krzywanski.table.providers.*;
 import org.krzywanski.table.renderer.TypedTableRenderer;
 import org.krzywanski.table.utils.FieldMock;
 import org.krzywanski.table.utils.Page;
+import org.krzywanski.table.validation.GenericEditor;
+import org.krzywanski.table.validation.RevalidateDocumentListener;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.event.ActionListener;
@@ -73,7 +75,7 @@ public class TypedTable<T> extends JTable {
     /**
      * Entity for create table
      */
-    final Class<? extends T> typeClass;
+    final Class<T> typeClass;
     /**
      * Provide a custom sizes of columns when user change
      */
@@ -117,7 +119,7 @@ public class TypedTable<T> extends JTable {
      * @param typeClass - data class
      * @param provider  - provider of data with pagination requests
      */
-    public TypedTable(List<T> dataList, Class<? extends T> typeClass, TableDataProvider<T> provider) {
+    public TypedTable(List<T> dataList, Class<T> typeClass, TableDataProvider<T> provider) {
         this(dataList, typeClass, provider, 0);
     }
 
@@ -129,13 +131,13 @@ public class TypedTable<T> extends JTable {
      * @param provider  - provider of data with pagination requests
      * @param id        - identifier of instance of table to save widths of table if we use one entity in few places and want to each one have individual widths and columns
      */
-    public TypedTable(List<T> dataList, Class<? extends T> typeClass, TableDataProvider<T> provider, long id) {
+    public TypedTable(List<T> dataList, Class<T> typeClass, TableDataProvider<T> provider, long id) {
         super(new TypedTableModel(new ColumnCreator(typeClass, id)));
         this.id = id;
         this.multiSortEnable = typeClass.isAnnotationPresent(EnableMultiSort.class);
         columnCreator = ((TypedTableModel) getModel()).getColumnCreator();
         this.listener = new ChangeHeaderNamePropertyChangeListener(columnCreator);
-        this.typeClass = typeClass;
+        this.typeClass = (Class<T>) typeClass;
         this.dataList = dataList;
         this.provider = provider;
         this.currentData = dataList;
@@ -144,16 +146,6 @@ public class TypedTable<T> extends JTable {
         installHeaderPropertyChangeListener();
         fixHeadersSize();
         tableHeader.addMouseListener(new TableOrderColumnsMouseAdapter(this, instance));
-
-        model.addTableModelListener(new TableModelListener() {
-
-            public void tableChanged(TableModelEvent tme) {
-                if (tme.getFirstRow() > 0 && tme.getType() == TableModelEvent.UPDATE) {
-                    System.out.println("Cell " + tme.getFirstRow() + ", " + tme.getColumn() + " changed."
-                            + " The new value: " + getModel().getValueAt(tme.getFirstRow(), tme.getColumn()));
-                }
-            }
-        });
 
     }
 
@@ -423,7 +415,7 @@ public class TypedTable<T> extends JTable {
     /**
      * @return - returns type class of current table
      */
-    public Class<? extends T> getTypeClass() {
+    public Class<T> getTypeClass() {
         return typeClass;
     }
 
@@ -459,7 +451,7 @@ public class TypedTable<T> extends JTable {
 
     public <C> void addColumn(String columnName, Class<C> columnClass, Function<T, C> function) {
         TableColumn tableColumn = new TableColumn(columnCreator.getTableColumns().size());
-        columnCreator.getTableColumns().add(new FieldMock(columnName, columnClass, function, tableColumn, false));
+        columnCreator.getTableColumns().add(new FieldMock(columnName, columnClass, function, tableColumn, true));
         tableColumn.setHeaderValue(columnName);
         try {
             SwingUtilities.invokeAndWait(() -> {
@@ -552,5 +544,17 @@ public class TypedTable<T> extends JTable {
 
     public void updateRow(int row, Function<T, T> dataTransformer) {
         setDataAt(row, dataTransformer.apply(getItemAt(row)));
+    }
+
+    public void installDataUpdateAdapter(Update<T> update) {
+        model.addTableModelListener(new TableDataFlowListener<>(this, update));
+        model.setUpdateAdapterInstalled(true);
+        JFormattedTextField textField = new JFormattedTextField();
+        textField.getDocument().addDocumentListener(new RevalidateDocumentListener<>(this, textField, columnCreator));
+        setDefaultEditor(Object.class, new GenericEditor<>(textField, this));
+    }
+
+    public ColumnCreator getColumnCreator() {
+        return columnCreator;
     }
 }

@@ -27,7 +27,7 @@ public class TypedTableRenderer extends DefaultTableCellRenderer {
 
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 
-        FieldMock pdFieldPair = getColumnField(column, table);
+        FieldMock pdFieldPair = columnCreator.getColumnField(column, table);
 
         TableCellRenderer customRenderer = getCustomRenderer(pdFieldPair);
         if(customRenderer != null){
@@ -61,14 +61,6 @@ public class TypedTableRenderer extends DefaultTableCellRenderer {
         return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
     }
 
-    FieldMock getColumnField(int columnIndex, JTable table) {
-        return columnCreator.getFieldByName(
-                table.getTableHeader().
-                        getColumnModel().
-                        getColumn(columnIndex).
-                        getHeaderValue()
-        );
-    }
 
     private String createToolTipText(Object tooltip) {
         StringBuilder tooltipText = new StringBuilder("<html>");

@@ -21,11 +21,15 @@ public class TypedTableModel extends DefaultTableModel {
 
     @Override
     public boolean isCellEditable(int row, int column) {
-        return columnCreator.getTableColumns().get(column).getEditable();
+        return columnCreator.getTableColumns().get(column).getEditable() && updateAdapterInstalled;
     }
 
     @Override
     public void fireTableCellUpdated(int row, int column) {
         super.fireTableCellUpdated(row, column);
+    }
+
+    public void setUpdateAdapterInstalled(boolean updateAdapterInstalled) {
+        this.updateAdapterInstalled = updateAdapterInstalled;
     }
 }
