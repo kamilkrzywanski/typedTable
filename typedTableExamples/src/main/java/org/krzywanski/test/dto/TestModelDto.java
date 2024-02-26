@@ -45,7 +45,7 @@ public class TestModelDto implements Comparable<TestModelDto>, Serializable {
 
     @NotEmpty(message = "{valid.emial.required}")
     @Email(message = "{valid.emial.required}")
-    @MyTableColumn(label = "E-mail")
+    @MyTableColumn(label = "E-mail", editable = true)
     private String columnC;
 
     @MyTableColumn(label = "User date", format = "dd-MM-yyyy", alignment = Alignment.CENTER)
