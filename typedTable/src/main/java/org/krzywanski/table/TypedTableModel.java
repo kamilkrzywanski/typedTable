@@ -4,6 +4,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class TypedTableModel extends DefaultTableModel {
     final ColumnCreator columnCreator;
+    boolean updateAdapterInstalled;
     TypedTableModel(ColumnCreator columnCreator){
         super(columnCreator.getColumnsNames(), 0);
         this.columnCreator = columnCreator;
@@ -20,6 +21,15 @@ public class TypedTableModel extends DefaultTableModel {
 
     @Override
     public boolean isCellEditable(int row, int column) {
-        return columnCreator.getTableColumns().get(column).getEditable();
+        return columnCreator.getTableColumns().get(column).getEditable() && updateAdapterInstalled;
+    }
+
+    @Override
+    public void fireTableCellUpdated(int row, int column) {
+        super.fireTableCellUpdated(row, column);
+    }
+
+    public void setUpdateAdapterInstalled(boolean updateAdapterInstalled) {
+        this.updateAdapterInstalled = updateAdapterInstalled;
     }
 }

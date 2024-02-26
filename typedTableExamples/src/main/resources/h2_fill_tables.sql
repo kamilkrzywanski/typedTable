@@ -1,5 +1,5 @@
 INSERT INTO testmodel (booleanvalue, columnb, testenum, mydate, columna, columnc)
- VALUES (true, 1.0, 0, '2019-01-01 00:00:00', 'A', 'C'),
+ VALUES (true, 55.5, 0, '2019-01-01 00:00:00', '2222222222', 'www@wo.pl'),
     (true, 2.0, 1, '2019-01-02 00:00:00', 'B', 'D'),
     (false, 3.0, 2, '2019-01-03 00:00:00', 'C', 'E'),
     (true, 4.0, 0, '2019-01-04 00:00:00', 'D', 'F'),

@@ -73,7 +73,7 @@ public class ExampleUI extends JFrame {
         TextFieldWithTableSelect<TestFormatClass> selectPanel = TextFieldWithTableSelect.getTextWithTableSelect(List.of(new TestFormatClass("A"), new TestFormatClass("B")), "TestFormatClass.class");
 
         TypedTablePanel<TestModelDto> table = TypedTablePanel.getTableWithData(Main.getAllData(), TestModelDto.class, 3);
-
+        table.installDataUpdateAdapter(new TestModelService());
         ManualPanel<TestModelDto> manualPanel = new ManualPanel<>(() -> table.getSelectedItem(), TestModelDto.class);
         manualPanel.setDataFlowAdapter(new TestModelService());
         manualPanel.connectFieldWithPanel("columnA", textField);
@@ -96,6 +96,9 @@ public class ExampleUI extends JFrame {
 
         rightPanel.add(controllPanel, "wrap");
         rightPanel.add(table, "grow,push");
+
+        TextFieldWithTableSelect<TestFormatClass> selectPanel2 = TextFieldWithTableSelect.getTextWithTableSelect(List.of(new TestFormatClass("A"), new TestFormatClass("B")), "TestFormatClass.class");
+        table.setTableEditorForClass(TestFormatClass.class, selectPanel2);
 
         new PanelTableController<>(table, manualPanel);
 

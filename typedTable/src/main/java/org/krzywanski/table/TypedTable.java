@@ -1,5 +1,7 @@
 package org.krzywanski.table;
 
+import org.krzywanski.panel_v1.dataflow.Update;
+import org.krzywanski.panel_v1.fields.TextFieldWithTableSelect;
 import org.krzywanski.table.annot.EnableMultiSort;
 import org.krzywanski.table.annot.MyTableColumn;
 import org.krzywanski.table.annot.ReflectionSort;
@@ -8,6 +10,8 @@ import org.krzywanski.table.providers.*;
 import org.krzywanski.table.renderer.TypedTableRenderer;
 import org.krzywanski.table.utils.FieldMock;
 import org.krzywanski.table.utils.Page;
+import org.krzywanski.table.validation.ComboBoxEditor;
+import org.krzywanski.table.validation.*;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
@@ -72,7 +76,7 @@ public class TypedTable<T> extends JTable {
     /**
      * Entity for create table
      */
-    final Class<? extends T> typeClass;
+    final Class<T> typeClass;
     /**
      * Provide a custom sizes of columns when user change
      */
@@ -106,6 +110,10 @@ public class TypedTable<T> extends JTable {
      */
     final ChangeHeaderNamePropertyChangeListener listener;
     /**
+     * action listeners for stop editing cell
+     */
+    final List<ActionListener> removeEditorListeners = new ArrayList<>();
+    /**
      * If true first row will be selected after data is loaded
      */
     private boolean selectFirstRow = true;
@@ -116,7 +124,7 @@ public class TypedTable<T> extends JTable {
      * @param typeClass - data class
      * @param provider  - provider of data with pagination requests
      */
-    public TypedTable(List<T> dataList, Class<? extends T> typeClass, TableDataProvider<T> provider) {
+    public TypedTable(List<T> dataList, Class<T> typeClass, TableDataProvider<T> provider) {
         this(dataList, typeClass, provider, 0);
     }
 
@@ -128,7 +136,7 @@ public class TypedTable<T> extends JTable {
      * @param provider  - provider of data with pagination requests
      * @param id        - identifier of instance of table to save widths of table if we use one entity in few places and want to each one have individual widths and columns
      */
-    public TypedTable(List<T> dataList, Class<? extends T> typeClass, TableDataProvider<T> provider, long id) {
+    public TypedTable(List<T> dataList, Class<T> typeClass, TableDataProvider<T> provider, long id) {
         super(new TypedTableModel(new ColumnCreator(typeClass, id)));
         this.id = id;
         this.multiSortEnable = typeClass.isAnnotationPresent(EnableMultiSort.class);
@@ -143,11 +151,7 @@ public class TypedTable<T> extends JTable {
         installHeaderPropertyChangeListener();
         fixHeadersSize();
         tableHeader.addMouseListener(new TableOrderColumnsMouseAdapter(this, instance));
-    }
 
-    @Override
-    public Class<?> getColumnClass(int column) {
-        return super.getColumnClass(column);
     }
 
     /**
@@ -416,7 +420,7 @@ public class TypedTable<T> extends JTable {
     /**
      * @return - returns type class of current table
      */
-    public Class<? extends T> getTypeClass() {
+    public Class<T> getTypeClass() {
         return typeClass;
     }
 
@@ -546,4 +550,62 @@ public class TypedTable<T> extends JTable {
     public void updateRow(int row, Function<T, T> dataTransformer) {
         setDataAt(row, dataTransformer.apply(getItemAt(row)));
     }
+
+    public void installDataUpdateAdapter(Update<T> update) {
+        model.addTableModelListener(new TableDataFlowListener<>(this, update));
+        model.setUpdateAdapterInstalled(true);
+
+        setNumberEditorForClass(Integer.class, Integer::parseInt);
+        setNumberEditorForClass(Double.class, Double::parseDouble);
+        setNumberEditorForClass(Float.class, Float::parseFloat);
+        setNumberEditorForClass(Long.class, Long::parseLong);
+        setNumberEditorForClass(Short.class, Short::parseShort);
+        setTextEditorForClass(String.class, s -> s);
+
+
+        Arrays.stream(getTypeClass().getDeclaredFields()).forEach(field -> {
+            if (field.getType().isEnum()) {
+                setComboBoxEditorForClass(field.getType(), field.getType().getEnumConstants());
+            }
+        });
+
+    }
+
+    protected void setTextEditorForClass(Class<?> clazz, Function<String, ?> transformer) {
+        JFormattedTextField textField = new JFormattedTextField();
+        ValidatorDialog<T> validatorDialog = new ValidatorDialog<>(textField, this);
+        textField.getDocument().addDocumentListener(new RevalidateDocumentListener<>(this, textField, columnCreator, validatorDialog, transformer));
+        setDefaultEditor(clazz, new TextFieldEditor<>(textField, this, validatorDialog, transformer));
+    }
+
+    protected void setNumberEditorForClass(Class<?> clazz, Function<String, ?> transformer) {
+        JFormattedTextField textField = new JFormattedTextField();
+        ValidatorDialog<T> validatorDialog = new ValidatorDialog<>(textField, this);
+        textField.getDocument().addDocumentListener(new RevalidateDocumentListener<>(this, textField, columnCreator, validatorDialog, transformer));
+        setDefaultEditor(clazz, new TextFieldEditor<>(textField, this, validatorDialog, transformer));
+    }
+
+    protected <C> void setComboBoxEditorForClass(Class<? extends C> clazz, C[] items) {
+        JComboBox<C> comboBox = new JComboBox<>(items);
+        ValidatorDialog<T> validatorDialog = new ValidatorDialog<>(comboBox, this);
+        setDefaultEditor(clazz, new ComboBoxEditor<>(comboBox, this, validatorDialog));
+    }
+
+    protected <E> void setTableEditorForClass(Class<E> clazz, TextFieldWithTableSelect<E> tableSelect) {
+        ValidatorDialog<T> validatorDialog = new ValidatorDialog<>(tableSelect, this);
+
+        removeEditorListeners.add(e -> validatorDialog.setVisible(false));
+        setDefaultEditor(clazz, new TypedTableEditor<>(tableSelect, this, validatorDialog));
+    }
+
+    public ColumnCreator getColumnCreator() {
+        return columnCreator;
+    }
+
+    @Override
+    public void removeEditor() {
+        removeEditorListeners.forEach(listener -> listener.actionPerformed(null));
+        super.removeEditor();
+    }
+
 }
