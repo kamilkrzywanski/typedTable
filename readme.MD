@@ -1,4 +1,4 @@
-Simple tool to map Entity to jtable in java 
+zSimple tool to map Entity to jtable in java
 @Author Kamil Krzywanski <br>
 
 Examples of usage yuo can find in:
@@ -17,6 +17,7 @@ style) -> [computedColumns](typedTable/features/table/computedColumns/computedCo
 -Add column with multiselect for selecting rows (objects<T>) - pagination
 friendly -> [multiSelect](typedTable/features/table/multiSelect/multiSelect.md) <br>
 -Add translation for columns -> [translation](typedTable/features/table/translation/translation.md) <br>
+-Make table editable -> [editable](typedTable/features/table/editable/editable.md) <br>
 
 It's olny idea at the moment but by annotations you can create simple table
 like there with export to CSV, EXCEL, Sort mechanism: 

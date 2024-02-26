@@ -98,7 +98,6 @@ public class ExampleUI extends JFrame {
         rightPanel.add(table, "grow,push");
 
         TextFieldWithTableSelect<TestFormatClass> selectPanel2 = TextFieldWithTableSelect.getTextWithTableSelect(List.of(new TestFormatClass("A"), new TestFormatClass("B")), "TestFormatClass.class");
-
         table.setTableEditorForClass(TestFormatClass.class, selectPanel2);
 
         new PanelTableController<>(table, manualPanel);
