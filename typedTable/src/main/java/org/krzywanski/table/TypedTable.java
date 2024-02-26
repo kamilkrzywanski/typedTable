@@ -607,4 +607,5 @@ public class TypedTable<T> extends JTable {
         removeEditorListeners.forEach(listener -> listener.actionPerformed(null));
         super.removeEditor();
     }
+
 }

@@ -18,11 +18,8 @@ public class FieldMock {
     final Field field;
     final Class<?> type;
     final Function<Object, Object> functionToCompute;
-
-    PropertyDescriptor propertyDescriptor;
-
+    final PropertyDescriptor propertyDescriptor;
     final TableColumn tableColumn;
-
     final Boolean isEditable;
 
     @SuppressWarnings("unchecked")
@@ -43,20 +40,7 @@ public class FieldMock {
         this.functionToCompute = null;
         this.tableColumn = tableColumn;
         this.isEditable = isEditable;
-
-        try {
-            this.propertyDescriptor = new PropertyDescriptor(field.getName(), field.getDeclaringClass());
-        } catch (IntrospectionException e) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Did you forget to add getter and setter for field " + field.getName() + " in class " + field.getDeclaringClass().getCanonicalName() + " ?");
-            try {
-                //MOCK IN CASE OF NO SETTER IN CASE OF READ ONLY FIELD
-                this.propertyDescriptor = new PropertyDescriptor(field.getName(), field.getDeclaringClass(), ReflectionUtils.IS_PREFIX + ReflectionUtils.capitalize(field.getName()), null);
-                Logger.getAnonymousLogger().log(Level.WARNING, "Field " + field.getName() + " will be not editable!");
-            } catch (IntrospectionException ex) {
-                Logger.getAnonymousLogger().log(Level.SEVERE, "Field needs to have at least getter for field " + field.getName() + " in class " + field.getDeclaringClass().getCanonicalName() + " !", ex);
-                throw new RuntimeException(ex);
-            }
-        }
+        this.propertyDescriptor = createPropertyDescriptor();
     }
 
     public Field getField() {
@@ -90,6 +74,22 @@ public class FieldMock {
            return propertyDescriptor.getReadMethod().invoke(o);
         else
           return functionToCompute.apply(o);
+    }
+
+    private PropertyDescriptor createPropertyDescriptor() {
+        try {
+            return new PropertyDescriptor(field.getName(), field.getDeclaringClass());
+        } catch (IntrospectionException e) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "Did you forget to add getter and setter for field " + field.getName() + " in class " + field.getDeclaringClass().getCanonicalName() + " ?");
+            try {
+                //MOCK IN CASE OF NO SETTER IN CASE OF READ ONLY FIELD
+                Logger.getAnonymousLogger().log(Level.WARNING, "Field " + field.getName() + " will be not editable!");
+                return new PropertyDescriptor(field.getName(), field.getDeclaringClass(), ReflectionUtils.IS_PREFIX + ReflectionUtils.capitalize(field.getName()), null);
+            } catch (IntrospectionException ex) {
+                Logger.getAnonymousLogger().log(Level.SEVERE, "Field needs to have at least getter for field " + field.getName() + " in class " + field.getDeclaringClass().getCanonicalName() + " !", ex);
+                throw new RuntimeException(ex);
+            }
+        }
     }
 
     public TableColumn getTableColumn() {
