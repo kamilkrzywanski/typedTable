@@ -11,7 +11,7 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.function.Function;
 
-public class GenericEditor<T> extends DefaultCellEditor {
+public class TextFieldEditor<T> extends DefaultCellEditor {
 
     Object value;
     FieldValidator<T> fieldValidator = new FieldValidator<>();
@@ -20,7 +20,7 @@ public class GenericEditor<T> extends DefaultCellEditor {
     final ResourceBundle resourceBundle = ResourceBundle.getBundle("Messages", Locale.getDefault());
     final Function<String, ?> transformer;
 
-    public <E> GenericEditor(JTextField textField, TypedTable<T> table, ValidatorDialog<T> validatorDialog, Function<String, E> transformer) {
+    public <E> TextFieldEditor(JTextField textField, TypedTable<T> table, ValidatorDialog<T> validatorDialog, Function<String, E> transformer) {
         super(textField);
         getComponent().setName("Table.editor");
         this.table = table;

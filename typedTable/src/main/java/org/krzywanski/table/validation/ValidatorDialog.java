@@ -28,7 +28,6 @@ public class ValidatorDialog<T> {
         if (window == null)
             window = new WindowDelegate(SwingUtilities.getWindowAncestor(component));
 
-        window.computeLocation();
         window.setLabel(message);
         window.pack();
         window.setVisible(true);
@@ -38,11 +37,19 @@ public class ValidatorDialog<T> {
         if (!errors.isEmpty()) {
             showErrorWindow(errors.iterator().next());
         } else {
-            if (window != null)
-                window.dispose();
+            setVisible(false);
         }
     }
 
+    public void setVisible(boolean b) {
+        if (window != null)
+            window.setVisible(b);
+    }
+
+    public void computeLocationForCell(JTable table, int row, int column) {
+        if (window != null)
+            window.computeLocationForCell(table, row, column);
+    }
 
     private class WindowDelegate extends JWindow {
 
@@ -58,7 +65,6 @@ public class ValidatorDialog<T> {
 
         @Override
         public synchronized void setVisible(boolean b) {
-
             if (b)
                 computeLocation();
             super.setVisible(b);
@@ -70,7 +76,8 @@ public class ValidatorDialog<T> {
             contentPane.setBackground(Color.white);
             contentPane.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
             pack();
-            computeLocation();
+
+
             component.addFocusListener(new FocusAdapter() {
                 @Override
                 public void focusLost(FocusEvent e) {
@@ -101,8 +108,16 @@ public class ValidatorDialog<T> {
         }
 
         private void computeLocation() {
+            computeLocationForCell(table, table.getSelectedRow(), table.getSelectedColumn());
+        }
+
+        protected void setLabel(String message) {
+            errorLabel.setText(message);
+        }
+
+        public void computeLocationForCell(JTable table, int row, int column) {
             try {
-                Rectangle rect = table.getCellRect(table.getSelectedRow(), table.getSelectedColumn(), true);
+                Rectangle rect = table.getCellRect(row, column, true);
                 Point cellLocationOnScreen = rect.getLocation();
                 Point tableLocationOnScreen = table.getLocationOnScreen();
                 int relativeX = tableLocationOnScreen.x + cellLocationOnScreen.x;
@@ -112,10 +127,6 @@ public class ValidatorDialog<T> {
                 System.out.println("Illegal component state");
                 //do nothing
             }
-        }
-
-        protected void setLabel(String message) {
-            errorLabel.setText(message);
         }
     }
 }

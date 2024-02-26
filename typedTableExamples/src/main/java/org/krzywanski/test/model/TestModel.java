@@ -21,6 +21,7 @@ public class TestModel implements Comparable<TestModel>, Serializable {
     private Date myDate = new Date();
     private TestEnum testEnum = TestEnum.MEDIUM;
     private Boolean booleanValue = true;
+    private String testFormatClass;
 
     public Integer getId() {
         return id;
@@ -76,6 +77,14 @@ public class TestModel implements Comparable<TestModel>, Serializable {
 
     public void setTestEnum(TestEnum testEnum) {
         this.testEnum = testEnum;
+    }
+
+    public String getTestFormatClass() {
+        return testFormatClass;
+    }
+
+    public void setTestFormatClass(String testFormatClass) {
+        this.testFormatClass = testFormatClass;
     }
 
     @Override

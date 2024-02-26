@@ -54,8 +54,9 @@ public class TestModelDto implements Comparable<TestModelDto>, Serializable {
     @MyTableColumn(label = "Priority", editable = true)
     private TestEnum testEnum = TestEnum.MEDIUM;
 
-    @MyTableColumn(label = "customFormatter")
-    TestFormatClass testFormatClass = new TestFormatClass("X");
+    @MyTableColumn(label = "customFormatter", editable = true)
+    @NotNull(message = "{field.not.empty}")
+    TestFormatClass testFormatClass;
 
     public Integer getId() {
         return id;

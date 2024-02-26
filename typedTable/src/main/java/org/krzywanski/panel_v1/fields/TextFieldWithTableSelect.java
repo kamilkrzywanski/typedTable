@@ -4,11 +4,16 @@ import net.miginfocom.swing.MigLayout;
 import org.krzywanski.table.TypedTablePanel;
 
 import javax.swing.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TextFieldWithTableSelect<T> extends JPanel {
+
+    /**
+     * Action listeners for the text field
+     */
+    final List<ActionListener> actionListeners = new ArrayList<>();
     /**
      * Currently selected value
      */
@@ -22,35 +27,65 @@ public class TextFieldWithTableSelect<T> extends JPanel {
      */
     final TypedTablePanel<T> table;
     final JButton button = new JButton("...");
-    final JButton okBUtton =  new JButton("OK");
+    final JButton okBUtton = new JButton("Ok");
+    final JButton emptyButton = new JButton("Empty");
 
     public TextFieldWithTableSelect(TypedTablePanel<T> table, String dialogTitle) {
         this.table = table;
         this.textField.setEditable(false);
 
-        button.addActionListener(e ->{
+        table.addTableMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    okBUtton.doClick();
+                }
+            }
+        });
+
+        table.addTableKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    okBUtton.doClick();
+                }
+            }
+        });
+
+
+        button.addActionListener(e -> {
             JDialog dialog = new JDialog(SwingUtilities.getWindowAncestor(table));
             dialog.setModal(true);
             dialog.setLayout(new MigLayout());
 
-            table.addTableKeyListener(new KeyAdapter() {
-                @Override
-                public void keyPressed(KeyEvent e) {
-                    if(e.getKeyCode() == KeyEvent.VK_ENTER){
-                        okBUtton.doClick();
-                    }
-                }
-            });
             dialog.setTitle(dialogTitle);
-            dialog.add(table, "grow, span 2, wrap");
-            dialog.add(new JButton("Cancel"));
+            dialog.add(table, "grow, span 3, wrap");
+            JButton cancelButton = new JButton("Cancel");
+            dialog.add(cancelButton);
 
-           okBUtton.addActionListener(e1 -> {
+
+            cancelButton.addActionListener(e1 -> {
+                dialog.dispose();
+                actionListeners.forEach(actionListener -> actionListener.actionPerformed(new ActionEvent(this, 0, "Cancel")));
+            });
+
+            dialog.add(okBUtton);
+            dialog.add(emptyButton, "wrap");
+
+            okBUtton.addActionListener(e1 -> {
                 currentValue = table.getSelectedItem();
                 textField.setText(currentValue.toString());
+
+                actionListeners.forEach(actionListener -> actionListener.actionPerformed(new ActionEvent(this, 0, "OK")));
                 dialog.dispose();
             });
-            dialog.add(okBUtton, "wrap");
+
+            emptyButton.addActionListener(evt -> {
+                textField.setText("");
+                currentValue = null;
+                actionListeners.forEach(actionListener -> actionListener.actionPerformed(new ActionEvent(this, 0, "OK")));
+                dialog.dispose();
+            });
 
             dialog.repaint();
             dialog.pack();
@@ -71,6 +106,8 @@ public class TextFieldWithTableSelect<T> extends JPanel {
             textField.setText(value.toString());
         else
             textField.setText("");
+
+        actionListeners.forEach(actionListener -> actionListener.actionPerformed(new ActionEvent(this, 0, "OK")));
     }
     public T getCurrentValue() {
         return currentValue;
@@ -88,4 +125,9 @@ public class TextFieldWithTableSelect<T> extends JPanel {
     public static <T> TextFieldWithTableSelect<T> getTextWithTableSelect(List<T> data, String dialogTitle) {
         return new TextFieldWithTableSelect<>(TypedTablePanel.getTableWithData(data, (Class<T>) data.get(0).getClass()), dialogTitle);
     }
+
+    public void addActionListener(ActionListener listener) {
+        actionListeners.add(listener);
+    }
+
 }

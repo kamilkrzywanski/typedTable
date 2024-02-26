@@ -9,7 +9,6 @@ import org.krzywanski.test.model.TestModel;
 
 public class TestModelService implements DataFlowAdapter<TestModelDto> {
     TestModelDao testModelDao = new TestModelDao(Main.sessionFactory);
-
     @Override
     public void remove(TestModelDto data) throws Exception{
         TestModel testModel = TestModelMapper.mapTestModelDto(data, new TestModel());

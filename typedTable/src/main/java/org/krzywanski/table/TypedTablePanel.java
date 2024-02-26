@@ -2,6 +2,7 @@ package org.krzywanski.table;
 
 import net.miginfocom.swing.MigLayout;
 import org.krzywanski.panel_v1.dataflow.Update;
+import org.krzywanski.panel_v1.fields.TextFieldWithTableSelect;
 import org.krzywanski.table.annot.TableFilters;
 import org.krzywanski.table.components.FilterDialog;
 import org.krzywanski.table.components.PopupDialog;
@@ -283,5 +284,21 @@ public class TypedTablePanel<T> extends JPanel {
 
     public void installDataUpdateAdapter(Update<T> update) {
         table.installDataUpdateAdapter(update);
+    }
+
+    public void setTextEditorForClass(Class<?> clazz, Function<String, ?> transformer) {
+        table.setTextEditorForClass(clazz, transformer);
+    }
+
+    public void setNumberEditorForClass(Class<?> clazz, Function<String, ?> transformer) {
+        table.setNumberEditorForClass(clazz, transformer);
+    }
+
+    public <C> void setComboBoxEditorForClass(Class<? extends C> clazz, C[] items) {
+        table.setComboBoxEditorForClass(clazz, items);
+    }
+
+    public <E> void setTableEditorForClass(Class<E> clazz, TextFieldWithTableSelect<E> tableSelect) {
+        table.setTableEditorForClass(clazz, tableSelect);
     }
 }

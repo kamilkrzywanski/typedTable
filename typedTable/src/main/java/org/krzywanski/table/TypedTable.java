@@ -1,6 +1,7 @@
 package org.krzywanski.table;
 
 import org.krzywanski.panel_v1.dataflow.Update;
+import org.krzywanski.panel_v1.fields.TextFieldWithTableSelect;
 import org.krzywanski.table.annot.EnableMultiSort;
 import org.krzywanski.table.annot.MyTableColumn;
 import org.krzywanski.table.annot.ReflectionSort;
@@ -9,9 +10,8 @@ import org.krzywanski.table.providers.*;
 import org.krzywanski.table.renderer.TypedTableRenderer;
 import org.krzywanski.table.utils.FieldMock;
 import org.krzywanski.table.utils.Page;
-import org.krzywanski.table.validation.GenericEditor;
-import org.krzywanski.table.validation.RevalidateDocumentListener;
-import org.krzywanski.table.validation.ValidatorDialog;
+import org.krzywanski.table.validation.ComboBoxEditor;
+import org.krzywanski.table.validation.*;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
@@ -110,6 +110,10 @@ public class TypedTable<T> extends JTable {
      */
     final ChangeHeaderNamePropertyChangeListener listener;
     /**
+     * action listeners for stop editing cell
+     */
+    final List<ActionListener> removeEditorListeners = new ArrayList<>();
+    /**
      * If true first row will be selected after data is loaded
      */
     private boolean selectFirstRow = true;
@@ -138,7 +142,7 @@ public class TypedTable<T> extends JTable {
         this.multiSortEnable = typeClass.isAnnotationPresent(EnableMultiSort.class);
         columnCreator = ((TypedTableModel) getModel()).getColumnCreator();
         this.listener = new ChangeHeaderNamePropertyChangeListener(columnCreator);
-        this.typeClass = (Class<T>) typeClass;
+        this.typeClass = typeClass;
         this.dataList = dataList;
         this.provider = provider;
         this.currentData = dataList;
@@ -556,21 +560,43 @@ public class TypedTable<T> extends JTable {
         setNumberEditorForClass(Float.class, Float::parseFloat);
         setNumberEditorForClass(Long.class, Long::parseLong);
         setNumberEditorForClass(Short.class, Short::parseShort);
-        setEditorForClass(String.class, s -> s);
+        setTextEditorForClass(String.class, s -> s);
+
+
+        Arrays.stream(getTypeClass().getDeclaredFields()).forEach(field -> {
+            if (field.getType().isEnum()) {
+                setComboBoxEditorForClass(field.getType(), field.getType().getEnumConstants());
+            }
+        });
+
     }
 
-    private void setEditorForClass(Class<?> clazz, Function<String, ?> transformer) {
+    protected void setTextEditorForClass(Class<?> clazz, Function<String, ?> transformer) {
         JFormattedTextField textField = new JFormattedTextField();
         ValidatorDialog<T> validatorDialog = new ValidatorDialog<>(textField, this);
         textField.getDocument().addDocumentListener(new RevalidateDocumentListener<>(this, textField, columnCreator, validatorDialog, transformer));
-        setDefaultEditor(clazz, new GenericEditor<>(textField, this, validatorDialog, transformer));
+        setDefaultEditor(clazz, new TextFieldEditor<>(textField, this, validatorDialog, transformer));
     }
 
-    private void setNumberEditorForClass(Class<?> clazz, Function<String, ?> transformer) {
+    protected void setNumberEditorForClass(Class<?> clazz, Function<String, ?> transformer) {
         JFormattedTextField textField = new JFormattedTextField();
         ValidatorDialog<T> validatorDialog = new ValidatorDialog<>(textField, this);
         textField.getDocument().addDocumentListener(new RevalidateDocumentListener<>(this, textField, columnCreator, validatorDialog, transformer));
-        setDefaultEditor(clazz, new GenericEditor<>(textField, this, validatorDialog, transformer));
+        setDefaultEditor(clazz, new TextFieldEditor<>(textField, this, validatorDialog, transformer));
+    }
+
+    protected <C> void setComboBoxEditorForClass(Class<? extends C> clazz, C[] items) {
+        JComboBox<C> comboBox = new JComboBox<>(items);
+        ValidatorDialog<T> validatorDialog = new ValidatorDialog<>(comboBox, this);
+        setDefaultEditor(clazz, new ComboBoxEditor<>(comboBox, this, validatorDialog));
+    }
+
+    protected <E> void setTableEditorForClass(Class<E> clazz, TextFieldWithTableSelect<E> tableSelect) {
+        ValidatorDialog<T> validatorDialog = new ValidatorDialog<>(tableSelect, this);
+
+        removeEditorListeners.add(e -> validatorDialog.setVisible(false));
+        setDefaultEditor(clazz, new TypedTableEditor<>(tableSelect, this, validatorDialog));
+
     }
 
     public ColumnCreator getColumnCreator() {
@@ -599,4 +625,11 @@ public class TypedTable<T> extends JTable {
 //            });
 //    return c;
 //    }
+
+
+    @Override
+    public void removeEditor() {
+        removeEditorListeners.forEach(listener -> listener.actionPerformed(null));
+        super.removeEditor();
+    }
 }

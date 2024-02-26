@@ -2,7 +2,9 @@ package org.krzywanski.test.model;
 
 import org.krzywanski.table.annot.MyTableColumn;
 
-public class TestFormatClass {
+import java.io.Serializable;
+
+public class TestFormatClass implements Serializable {
     @MyTableColumn
     private String value;
 
