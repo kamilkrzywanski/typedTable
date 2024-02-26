@@ -596,36 +596,11 @@ public class TypedTable<T> extends JTable {
 
         removeEditorListeners.add(e -> validatorDialog.setVisible(false));
         setDefaultEditor(clazz, new TypedTableEditor<>(tableSelect, this, validatorDialog));
-
     }
 
     public ColumnCreator getColumnCreator() {
         return columnCreator;
     }
-//TODO CHECK THIS WAY TO MAKE IT WORK
-//    @Override
-//    public Component prepareEditor(TableCellEditor editor, int row, int column) {
-//        Component c = super.prepareEditor(editor, row, column);
-//        if(c instanceof JTextField)
-//            ((JTextField)c).getDocument().addDocumentListener(new DocumentListener() {
-//                @Override
-//                public void insertUpdate(DocumentEvent e) {
-//                    System.out.println("insert");
-//                }
-//
-//                @Override
-//                public void removeUpdate(DocumentEvent e) {
-//                    System.out.println("remove");
-//                }
-//
-//                @Override
-//                public void changedUpdate(DocumentEvent e) {
-//                    System.out.println("change");
-//                }
-//            });
-//    return c;
-//    }
-
 
     @Override
     public void removeEditor() {
