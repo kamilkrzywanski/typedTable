@@ -57,7 +57,6 @@ public class ValidatorDialog<T> {
 
         public WindowDelegate(Window parent) {
             super(parent);
-            System.out.println("Creating window");
             errorLabel = new JLabel();
             errorLabel.setBorder(new LineBorder(Color.RED, 1));
             buildUI();
@@ -124,7 +123,6 @@ public class ValidatorDialog<T> {
                 int relativeY = tableLocationOnScreen.y + cellLocationOnScreen.y + rect.height;
                 setLocation(relativeX, relativeY);
             } catch (IllegalComponentStateException e) {
-                System.out.println("Illegal component state");
                 //do nothing
             }
         }
