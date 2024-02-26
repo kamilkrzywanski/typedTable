@@ -72,7 +72,6 @@ public class ValidatorDialog<T> {
         private void buildUI() {
             JPanel contentPane = (JPanel) getContentPane();
             contentPane.add(errorLabel);
-            contentPane.setBackground(Color.white);
             contentPane.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
             pack();
 
