@@ -12,6 +12,7 @@ public class MyTableColumnAnnotationResolver {
             if (!annotation.label().isEmpty()) {
                 return annotation.label();
             }
+            return field.getName();
         }
         return null;
     }
