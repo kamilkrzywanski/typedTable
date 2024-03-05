@@ -1,6 +1,7 @@
 package org.krzywanski.panel_v1;
 
 import org.krzywanski.panel_v1.fields.FieldControllerElement;
+import org.krzywanski.panel_v1.fields.TextFieldWithTableSelect;
 import org.krzywanski.panel_v1.validation.RevalidateDocumentListener;
 
 import javax.swing.*;
@@ -64,6 +65,10 @@ public class FieldToolKit {
                 JTextComponent textComponent = editor.getTextField();
                 textComponent.getDocument().addDocumentListener(new RevalidateDocumentListener(element));
             }
+        }
+        if (element.getEditorComponent() instanceof TextFieldWithTableSelect<?>) {
+            TextFieldWithTableSelect<?> textFieldWithTableSelect = (TextFieldWithTableSelect<?>) element.getEditorComponent();
+            textFieldWithTableSelect.getTextField().getDocument().addDocumentListener(new RevalidateDocumentListener(element));
         }
 
         return element;

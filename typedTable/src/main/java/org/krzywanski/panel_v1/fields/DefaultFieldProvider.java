@@ -3,24 +3,23 @@ package org.krzywanski.panel_v1.fields;
 import javax.swing.*;
 import java.util.function.Function;
 
-public class DefaultFieldProvider<T, R extends JComponent> implements FieldProvider<T>{
+public class DefaultFieldProvider<T, R extends JComponent> implements FieldProvider<T, R> {
 
-    final FieldValueController<T, JComponent> fieldValueController;
+    final Function<R, FieldValueController<T, R>> fieldValueController;
     final R component;
 
     @SuppressWarnings("unchecked")
     public DefaultFieldProvider(R component, Function<R, FieldValueController<T, R>> fieldValueController) {
-        this.fieldValueController = (FieldValueController<T, JComponent>) fieldValueController.apply(component);
+        this.fieldValueController = fieldValueController;
         this.component = component;
     }
 
     @Override
-    public JComponent getComponent() {
+    public R getComponent() {
         return component;
     }
 
-    @Override
-    public FieldValueController<T, JComponent> getController() {
-        return fieldValueController;
+    public FieldValueController<T, R> getController(JComponent component) {
+        return fieldValueController.apply((R) component);
     }
 }

@@ -1,6 +1,7 @@
 package org.krzywanski.test;
 
 import net.miginfocom.swing.MigLayout;
+import org.jdesktop.swingx.JXDatePicker;
 import org.krzywanski.panel_v1.PanelTableController;
 import org.krzywanski.panel_v1.autopanel.TypedAutoPanel;
 import org.krzywanski.panel_v1.autopanel.buttons.DefaultControllerValidator;
@@ -70,6 +71,7 @@ public class ExampleUI extends JFrame {
         JTextField textField = new JTextField();
         JTextField textField3 = new JTextField();
         JSpinner spinner = new JSpinner();
+        JXDatePicker datePicker = new JXDatePicker();
         TextFieldWithTableSelect<TestFormatClass> selectPanel = TextFieldWithTableSelect.getTextWithTableSelect(List.of(new TestFormatClass("A"), new TestFormatClass("B")), "TestFormatClass.class");
 
         TypedTablePanel<TestModelDto> table = TypedTablePanel.getTableWithData(Main.getAllData(), TestModelDto.class, 3);
@@ -80,7 +82,7 @@ public class ExampleUI extends JFrame {
         manualPanel.connectFieldWithPanel("columnB", spinner);
         manualPanel.connectFieldWithPanel("columnC", textField3);
         manualPanel.connectFieldWithPanel("testFormatClass", selectPanel);
-
+        manualPanel.connectFieldWithPanel("date", datePicker);
 
         controllPanel.add(new JLabel("ColumnA"));
         controllPanel.add(textField, "grow, wrap");
@@ -90,6 +92,8 @@ public class ExampleUI extends JFrame {
         controllPanel.add(textField3, "grow, wrap");
         controllPanel.add(new JLabel("TestFormatClass"));
         controllPanel.add(selectPanel, "grow, wrap");
+        controllPanel.add(new JLabel("Date"));
+        controllPanel.add(datePicker, "grow, wrap");
         controllPanel.add(manualPanel, "span, wrap");
 
 

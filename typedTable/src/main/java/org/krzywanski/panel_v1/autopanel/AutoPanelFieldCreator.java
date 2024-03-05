@@ -75,7 +75,7 @@ public class AutoPanelFieldCreator<T> implements FieldBuilder<T> {
         }
 
         if(TypedPanelFields.getField(field.getType()) != null) {
-            FieldProvider<?> fieldProvider = TypedPanelFields.getField(field.getType());
+            FieldProvider<?, ?> fieldProvider = TypedPanelFields.getField(field.getType());
 
             field.setFirstComponent(new JLabel(findLabel(field)));
             field.setSecondComponent(fieldProvider.getComponent());
