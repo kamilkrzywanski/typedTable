@@ -1,5 +1,6 @@
 package org.krzywanski.panel_v1.manualPanel;
 
+import org.krzywanski.panel_v1.TypedPanelFields;
 import org.krzywanski.panel_v1.fields.*;
 
 import javax.swing.*;
@@ -12,6 +13,12 @@ public class FieldControllerResolver {
     }
 
     public FieldValueController<?, ?> findFieldValueController(Class<?> dataClass, JComponent component) {
+
+        if (TypedPanelFields.getField(dataClass) != null) {
+            FieldProvider<?> fieldProvider = TypedPanelFields.getField(dataClass);
+
+            return fieldProvider.getController();
+        }
 
         if (component instanceof TextFieldWithTableSelect<?>) {
             return new TableValueController<>((TextFieldWithTableSelect<?>) component);
