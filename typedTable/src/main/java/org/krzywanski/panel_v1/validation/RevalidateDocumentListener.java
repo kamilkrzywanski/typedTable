@@ -1,6 +1,7 @@
 package org.krzywanski.panel_v1.validation;
 
 import org.krzywanski.panel_v1.fields.FieldControllerElement;
+import org.krzywanski.panel_v1.fields.TextFieldWithTableSelect;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -36,6 +37,10 @@ public class RevalidateDocumentListener implements DocumentListener {
                     element.validate();
             }
             return;
+        }
+
+        if (element.getEditorComponent() instanceof TextFieldWithTableSelect<?>) {
+            element.validate();
         }
 
 

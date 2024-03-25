@@ -15,10 +15,10 @@ public class FieldControllerResolver {
     public FieldValueController<?, ?> findFieldValueController(Class<?> dataClass, JComponent component) {
 
         if (TypedPanelFields.getField(dataClass) != null) {
-            FieldProvider<?> fieldProvider = TypedPanelFields.getField(dataClass);
-
-            return fieldProvider.getController();
+            FieldProvider<?, ?> fieldProvider = TypedPanelFields.getField(dataClass);
+            return fieldProvider.getController(component);
         }
+
 
         if (component instanceof TextFieldWithTableSelect<?>) {
             return new TableValueController<>((TextFieldWithTableSelect<?>) component);
