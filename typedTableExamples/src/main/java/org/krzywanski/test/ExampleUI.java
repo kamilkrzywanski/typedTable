@@ -12,6 +12,7 @@ import org.krzywanski.panel_v1.manualPanel.ManualPanel;
 import org.krzywanski.table.TypedTablePanel;
 import org.krzywanski.table.providers.DefaultDataPrivder;
 import org.krzywanski.test.dto.TestModelDto;
+import org.krzywanski.test.model.TestEnum;
 import org.krzywanski.test.model.TestFormatClass;
 import org.krzywanski.test.service.TestModelService;
 
@@ -47,7 +48,7 @@ public class ExampleUI extends JFrame {
         JFormattedTextField columnB = new JFormattedTextField();
         JFormattedTextField columnC = new JFormattedTextField();
         JXDatePicker date = new JXDatePicker();
-        JComboBox testEnum = new JComboBox();
+        JComboBox<TestEnum> testEnum = new JComboBox<>(TestEnum.values());
         TextFieldWithTableSelect<TestFormatClass> testFormatClass = new TextFieldWithTableSelect<>(selectPanel, "Select format class");
 
 
