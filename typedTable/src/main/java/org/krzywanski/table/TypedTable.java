@@ -459,15 +459,21 @@ public class TypedTable<T> extends JTable {
         columnCreator.getTableColumns().add(new FieldMock(columnName, columnClass, function, tableColumn, true));
         tableColumn.setHeaderValue(columnName);
         try {
-            SwingUtilities.invokeAndWait(() -> {
-                model.addColumn(columnName);
-                removeHeaderPropertyChangeListeners();
-                installHeaderPropertyChangeListener();
-                fixHeadersSize();
-            });
+
+            if (!SwingUtilities.isEventDispatchThread())
+                SwingUtilities.invokeAndWait(() -> addColumn(columnName));
+            else
+                addColumn(columnName);
         } catch (InterruptedException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void addColumn(String columnName) {
+        model.addColumn(columnName);
+        removeHeaderPropertyChangeListeners();
+        installHeaderPropertyChangeListener();
+        fixHeadersSize();
     }
 
     /**
