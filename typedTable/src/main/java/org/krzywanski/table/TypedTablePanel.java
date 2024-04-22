@@ -30,6 +30,8 @@ import java.util.logging.Logger;
  * @param <T>
  */
 public class TypedTablePanel<T> extends JPanel {
+    JPanel extraPanel = new JPanel(new MigLayout());
+    JPanel buttonsPanel = new JPanel(new MigLayout());
     PopupDialog popupDialog;
     JButton filterButton;
     JButton exportExcelButton;
@@ -62,6 +64,8 @@ public class TypedTablePanel<T> extends JPanel {
     private TypedTablePanel(List<T> dataList, Class<T> typeClass, TableDataProvider<T> provider, int id) {
         super(new MigLayout());
         table = new TypedTable<>(dataList, typeClass, provider, id);
+        add(extraPanel, "growx, split");
+        add(buttonsPanel, "wrap, al right");
         createButtons();
         filterDialog = new FilterDialog((e) -> firstPageAction(), table, this);
         table.addFistPageListener(e -> firstPageAction());
@@ -98,7 +102,7 @@ public class TypedTablePanel<T> extends JPanel {
             addButton(firstPageButton, "");
             addButton(prevPageButton, "");
         }
-        add(pageLabel);
+        buttonsPanel.add(pageLabel);
         if (table.isPaginationEnabled()) {
             addButton(nextPageButton, "");
             addButton(lastPageButton, "");
@@ -162,7 +166,7 @@ public class TypedTablePanel<T> extends JPanel {
         button.setMargin(new Insets(0, 0, 0, 0));
         button.setContentAreaFilled(false);
         button.setBorderPainted(false);
-        add(button, constraints);
+        buttonsPanel.add(button, constraints);
     }
 
 
@@ -300,5 +304,9 @@ public class TypedTablePanel<T> extends JPanel {
 
     public <E> void setTableEditorForClass(Class<E> clazz, TextFieldWithTableSelect<E> tableSelect) {
         table.setTableEditorForClass(clazz, tableSelect);
+    }
+
+    public void addExtraComponent(Component component) {
+        extraPanel.add(component);
     }
 }
