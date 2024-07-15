@@ -60,7 +60,7 @@
         <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>6.4.2.Final</version>
+            <version>6.5.2.Final</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
         <dependency>
@@ -71,7 +71,7 @@
         <dependency>
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf</artifactId>
-            <version>3.3</version>
+            <version>3.4.1</version>
         </dependency>
         <dependency>
             <groupId>org.swinglabs.swingx</groupId>

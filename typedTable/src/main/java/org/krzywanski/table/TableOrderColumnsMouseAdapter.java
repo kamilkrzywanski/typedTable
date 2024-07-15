@@ -2,6 +2,7 @@ package org.krzywanski.table;
 
 import net.miginfocom.swing.MigLayout;
 import org.krzywanski.table.annot.MyTableColumn;
+import org.krzywanski.table.annot.ReflectionSort;
 import org.krzywanski.table.constraints.TypedTableDefaults;
 import org.krzywanski.table.providers.TableWidthTool;
 import org.krzywanski.table.utils.FieldMock;
@@ -163,7 +164,7 @@ class TableOrderColumnsMouseAdapter extends MouseAdapter {
         if (field == null) return;
         MyTableColumn annotation = field.getAnnotation(MyTableColumn.class);
         if (annotation == null) return;
-        if (!annotation.sortable()) return;
+        if (annotation.sortable() & !isReflectionSortByAll(table.typeClass)) return;
 
         if (annotation.sortString() != null && !annotation.sortString().isEmpty()) {
             sortString = annotation.sortString();
@@ -175,6 +176,10 @@ class TableOrderColumnsMouseAdapter extends MouseAdapter {
         else singeColumnSortUpdate(sortString, column);
 
         table.getChangePageListeners().forEach(actionListener -> actionListener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "firstPageAction")));
+    }
+
+    private boolean isReflectionSortByAll(Class<?> typeClass) {
+        return typeClass.isAnnotationPresent(ReflectionSort.class) && typeClass.getAnnotation(ReflectionSort.class).allSortable();
     }
 
     private void multiColumnSortUpdate(String sortString, int column) {
