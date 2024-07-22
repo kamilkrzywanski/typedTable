@@ -48,7 +48,6 @@ public class ColumnCreator {
             throw new RuntimeException(e);
         }
         //Sort columns based on previous saved order
-        List<PropertyDescriptor> propertyDescriptors = Arrays.asList(beanInfo.getPropertyDescriptors());
         if (!columns.isEmpty()) {
             List<String> columnsNamesOrdered = new ArrayList<>(columns.keySet());
             fields.sort(Comparator.comparing(item -> columnsNamesOrdered.indexOf(item.getField().getName())));
@@ -58,6 +57,7 @@ public class ColumnCreator {
             throw new RuntimeException("No fields with MyTableColumn annotation at class " + classType.getCanonicalName());
         }
 
+        List<PropertyDescriptor> propertyDescriptors = Arrays.asList(beanInfo.getPropertyDescriptors());
         for (FieldMock field : fields) {
             PropertyDescriptor pd = propertyDescriptors.stream().
                     filter(propertyDescriptor -> propertyDescriptor.getName().equals(field.getName())).
