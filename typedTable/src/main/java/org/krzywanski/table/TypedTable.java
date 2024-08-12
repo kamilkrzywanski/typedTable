@@ -29,6 +29,8 @@ import java.text.Format;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Table which is created from Entity List
@@ -36,6 +38,8 @@ import java.util.function.Supplier;
  * @param <T> - type of table data
  */
 public class TypedTable<T> extends JTable {
+
+    private static final Logger log = Logger.getAnonymousLogger();
 
     static {
         TableWidthProvider.setProvider(new DefaultTableWidthProvider());
@@ -117,6 +121,7 @@ public class TypedTable<T> extends JTable {
      * If true first row will be selected after data is loaded
      */
     private boolean selectFirstRow = true;
+
     /**
      * Default constructor if you want to keep the same sizes for multiple tables
      *
@@ -200,7 +205,7 @@ public class TypedTable<T> extends JTable {
             listeners.forEach(genericSelectionListener -> genericSelectionListener.getSelectedItem(getItemAt(0)));
     }
 
-    private Vector<Object> createDataRow(T data){
+    private Vector<Object> createDataRow(T data) {
         Vector<Object> element = new Vector<>();
         columnCreator.getTableColumns().forEach(fieldMock -> {
             try {
@@ -219,23 +224,31 @@ public class TypedTable<T> extends JTable {
             BeanInfo beanInfo = Introspector.getBeanInfo(typeClass);
             final PropertyDescriptor sortByField = Arrays.stream(beanInfo.getPropertyDescriptors()).filter(propertyDescriptor -> propertyDescriptor.getName().equals(columnName)).findFirst().orElseThrow(() -> new RuntimeException("No such field"));
             Comparator<? super Comparable> oreder = Comparator.nullsLast(Comparator.naturalOrder());
-            data.sort(Comparator.comparing(entity -> {
-                try {
-                    Object fieldValue = sortByField.getReadMethod().invoke(entity);
-                    if (!(fieldValue instanceof Comparable<?>) && fieldValue != null) {
-                        throw new IllegalArgumentException("Field is not comparable!");
+            try {
+                data.sort(Comparator.comparing(entity -> {
+                    try {
+                        Object fieldValue = sortByField.getReadMethod().invoke(entity);
+                        if (!(fieldValue instanceof Comparable<?>) && fieldValue != null) {
+                            throw new IllegalArgumentException("Field is not comparable!");
+                        }
+                        return (Comparable) fieldValue;
+                    } catch (IllegalAccessException | InvocationTargetException e) {
+                        throw new RuntimeException(e);
                     }
-                    return (Comparable) fieldValue;
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    throw new RuntimeException(e);
-                }
-            }, oreder));
+                }, oreder));
+            } catch (UnsupportedOperationException uoe) {
+                log.log(Level.WARNING, "Collection for class {0} is immutable, cannot sort", getTypeClass().getName());
+            }
         } catch (IntrospectionException e) {
             throw new RuntimeException(e);
         }
 
-        if (sortOrder.equals(SortOrder.DESCENDING))
-            Collections.reverse(data);
+        try {
+            if (sortOrder.equals(SortOrder.DESCENDING))
+                Collections.reverse(data);
+        } catch (UnsupportedOperationException uoe) {
+            log.log(Level.WARNING, "Collection for class {0} is immutable, cannot sort", getTypeClass().getName());
+        }
 
     }
 
@@ -522,14 +535,14 @@ public class TypedTable<T> extends JTable {
     }
 
     public void setSelectFirstRow(boolean selectFirstRow) {
-        if(selectFirstRow)
+        if (selectFirstRow)
             setRowSelectionInterval(0, 0);
         else
             clearSelection();
         this.selectFirstRow = selectFirstRow;
     }
 
-    public void setDataAt(int row, T data){
+    public void setDataAt(int row, T data) {
         if (currentData.size() <= row)
             currentData.add(row, data);
         else
