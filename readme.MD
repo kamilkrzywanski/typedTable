@@ -1,4 +1,4 @@
-zSimple tool to map Entity to jtable in java
+Simple tool to map Entity to jtable in java
 @Author Kamil Krzywanski <br>
 
 Examples of usage yuo can find in:
