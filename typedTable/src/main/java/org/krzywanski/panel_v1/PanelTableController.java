@@ -21,8 +21,8 @@ public class PanelTableController<T> {
             if (action == DataAction.REMOVE || action == DataAction.INSERT) {
                 if (action == DataAction.REMOVE && table.table.getDataList() != null)
                     table.table.getDataList().remove(element);
-
-                table.refreshData();
+                int currentRow = table.table.getSelectedRow();
+                table.refreshData(currentRow - 1);
                 return;
             }
             int selectedRow = table.table.getSelectedRow();

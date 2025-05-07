@@ -539,8 +539,8 @@ public class TypedTable<T> extends JTable {
     /**
      * Refresh data in current page
      */
-    public Page refreshData() {
-        return paginationUtils.refreshData();
+    public Page refreshData(int goToIndex) {
+        return paginationUtils.refreshData(goToIndex);
     }
 
     public List<T> getDataList() {

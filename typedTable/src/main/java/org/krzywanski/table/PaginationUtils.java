@@ -85,8 +85,8 @@ public class PaginationUtils {
         return new Page(1, localLimit, dataSize);
     }
 
-    public Page refreshData() {
-        localAddData(ActionType.REFRESH);
+    public Page refreshData(int goToIndex) {
+        localAddData(ActionType.REFRESH, goToIndex);
 
         int dataSize = getValue(provider);
         int currentPage = offset / limit;
@@ -95,8 +95,16 @@ public class PaginationUtils {
     }
 
     private void localAddData(ActionType actionType) {
+        localAddData(actionType, 0);
+    }
+
+    private void localAddData(ActionType actionType, int goToIndex) {
         limit = computeLimit(limit, provider);
         tTypedTable.addData(limit, offset, actionType);
+        //select table at goToIndex index
+        if(goToIndex > 0) {
+            tTypedTable.setRowSelectionInterval(goToIndex -1, goToIndex);
+        }
     }
 
     private int getValue(TableDataProvider<?> privder){
