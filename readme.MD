@@ -3,21 +3,23 @@ Simple tool to map Entity to jtable in java
 
 Examples of usage yuo can find in:
 directory: [typedTableExamples](typedTableExamples)
+### Explore the Powerful Features of `typedTable`
 
--Autosave of columns visibility and width -> [autoSave](typedTable/features/table/autosave/autosave.md)
--You can hide columns -> [hideColumn](typedTable/features/table/hideColumn/hideColumn.md) <br>
--Add filters, custom filters -> [filters](typedTable/features/table/filters/filters.md) <br>
--Export to excel, csv <br>
--Define sortables columns -> [sorting](typedTable/features/table/sorting/sorting.md) <br>
--Simlplify add custom formatters -> [formatters](typedTable/features/table/customFormatters/customFormatters.md) <br>
--Custom renderers for fields with
-annotation -> [customRenderers](typedTable/features/table/customRenderers/customRenderers.md) <br>
--Add computed columns (functional
-style) -> [computedColumns](typedTable/features/table/computedColumns/computedColumns.md) <br>
--Add column with multiselect for selecting rows (objects<T>) - pagination
-friendly -> [multiSelect](typedTable/features/table/multiSelect/multiSelect.md) <br>
--Add translation for columns -> [translation](typedTable/features/table/translation/translation.md) <br>
--Make table editable -> [editable](typedTable/features/table/editable/editable.md) <br>
+Take your table management to the next level with these advanced features:
+
+- **Autosave Column Settings**: Automatically save column visibility and width preferences. [Learn more](typedTable/features/table/autosave/autosave.md)  
+- **Hide Columns**: Easily hide unnecessary columns for a cleaner view. [Learn more](typedTable/features/table/hideColumn/hideColumn.md)  
+- **Advanced Filtering**: Add filters or create custom ones to refine your data. [Learn more](typedTable/features/table/filters/filters.md)  
+- **Export Options**: Export your data effortlessly to Excel or CSV.  
+- **Sortable Columns**: Define sortable columns for better data organization. [Learn more](typedTable/features/table/sorting/sorting.md)  
+- **Custom Formatters**: Simplify the process of adding custom formatters. [Learn more](typedTable/features/table/customFormatters/customFormatters.md)  
+- **Custom Renderers**: Use annotations to create custom field renderers. [Learn more](typedTable/features/table/customRenderers/customRenderers.md)  
+- **Computed Columns**: Add functional-style computed columns for dynamic data. [Learn more](typedTable/features/table/computedColumns/computedColumns.md)  
+- **Multi-Select Columns**: Add a column with multi-select functionality, perfect for pagination-friendly row selection. [Learn more](typedTable/features/table/multiSelect/multiSelect.md)  
+- **Column Translations**: Add translations for column headers to support multiple languages. [Learn more](typedTable/features/table/translation/translation.md)  
+- **Editable Tables**: Make your table fully editable for seamless data updates. [Learn more](typedTable/features/table/editable/editable.md)  
+
+Discover how `typedTable` can simplify and enhance your table management experience!
 
 It's olny idea at the moment but by annotations you can create simple table
 like there with export to CSV, EXCEL, Sort mechanism: 
