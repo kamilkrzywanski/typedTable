@@ -45,7 +45,7 @@ public class ExampleUI extends JFrame {
         TreeSet<TestModelDto> collection = new TreeSet<>();
         table.addMultiSelectColumn("Multi select column", collection);
 
-        TypedAutoPanel<TestModelDto> autoPanel = new TypedAutoPanel<>(() -> table.getSelectedItem(), TestModelDto.class);
+        TypedAutoPanel<TestModelDto> autoPanel = new TypedAutoPanel<>(table::getSelectedItem, TestModelDto.class);
         autoPanel.setDataFlowAdapter(new TestModelService());
 
         TypedTablePanel<TestFormatClass> selectPanel = TypedTablePanel.getTableWithData(List.of(new TestFormatClass("A"), new TestFormatClass("B")), TestFormatClass.class);
@@ -76,7 +76,7 @@ public class ExampleUI extends JFrame {
 
         TypedTablePanel<TestModelDto> table = TypedTablePanel.getTableWithData(Main.getAllData(), TestModelDto.class, 3);
         table.installDataUpdateAdapter(new TestModelService());
-        ManualPanel<TestModelDto> manualPanel = new ManualPanel<>(() -> table.getSelectedItem(), TestModelDto.class);
+        ManualPanel<TestModelDto> manualPanel = new ManualPanel<>(table::getSelectedItem, TestModelDto.class);
         manualPanel.setDataFlowAdapter(new TestModelService());
         manualPanel.connectFieldWithPanel("columnA", textField);
         manualPanel.connectFieldWithPanel("columnB", spinner);

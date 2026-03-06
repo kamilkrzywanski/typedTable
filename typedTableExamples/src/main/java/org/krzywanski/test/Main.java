@@ -45,7 +45,7 @@ public class Main {
         UIManager.put("Table.showHorizontalLines", true);
 
 
-        TypedPanelFields.registerField(Date.class, new DefaultFieldProvider<>(new JXDatePicker(), component -> new DateValueController(component)));
+        TypedPanelFields.registerField(Date.class, new DefaultFieldProvider<>(new JXDatePicker(), DateValueController::new));
         TypedFrameworkConfiguration.addResourceBundle("Messages");
         TypedFrameworkConfiguration.addResourceBundle("TestModelDto");
 
